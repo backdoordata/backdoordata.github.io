@@ -1,0 +1,11 @@
+---
+title: "About"
+permalink: /about/
+header:
+    image: "/images/forest-about-header.jpg"
+---
+
+I am a recent college graduate from The University of Tennessee at Chattanooga, and hold a bachelors degree in Actuarial Science. I genuinenly love the study of Mathematics, but am specifically interested in the applied topics of Statistics, Operations Research, and studying recursive algorithms. Although it is globally undisputed that toning in your math skills is a *top-notch passtime*, I have to admit that I'm a bit of an Outdoorsman in my free time. Whether it be fishing, hiking, or just simply chilling on the back deck, I take every oppurtunity I get to clear my head, breathe fresh air, and photosynthesize! One more confession and then back to what this page is all about; I'm also a hobbiest/builder/creator/maker, whatever you want to call it.. Although sometimes I wish I could, I cannot stand spending my off-days lazily. I can hardly even sit through a whole movie it's so bad!! The most recent hobby of mine was (and still is) leatherworking, and the endeavor before that one was an online resale store fully operated out of my garage. Yea, I know, random right? 
+
+Anywho, the sole purpose of this page is simply an outlet for the personal hobby of mine in which I want to become my career. If you cannot tell by now, I would like to keep the nature of this portfolio a little less formal than it should be, and maybe a little too transparent as well. At the current time that this "About" page is being written, I have only been coding for a little less than a month. With that being said, being self-taught sometimes feels like trying to drink from a water hose and can be very discouraging at times since people tend to only post their best work and harldy ever disclose the journey it took them to get there.
+So feel free to come along with me on the unfiltered journey of an aspiring Data Scientist!
