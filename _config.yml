@@ -108,7 +108,7 @@ analytics:
 # Site Author
 author:
   name             : "Drew Woods"
-  avatar           : "/images/My_Profile_Picture.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/images/profile-picture.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Data Science Portfolio"
   location         : "Chattanooga, TN"
   email            :
