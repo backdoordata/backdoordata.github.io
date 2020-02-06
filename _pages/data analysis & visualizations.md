@@ -7,7 +7,6 @@ header:
     image: "/images/data-A&V-header.jpg"
 ---
 
-{% filter absolute_url %}
 {% include group-by-array collection=site.posts field="tag_archive" %}
 
 {% for tag in group_names %}
