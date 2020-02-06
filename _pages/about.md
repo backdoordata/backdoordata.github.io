@@ -1,11 +1,13 @@
 ---
-title: "Hello World,"
+title: ""Hello World","
 permalink: /about/
 header:
     image: "/images/forest-about-header.jpg"
 ---
 
-**and welcome to my "About" page!**  
-I am a recent college graduate from The University of Tennessee at Chattanooga, I hold a bachelors degree in Actuarial Science, I began teaching myself how to code early January of 2020, and I am an aspiring Data Scientist! I have a genuine passion Mathematics and am particularly interested in recursion, applied statistics, and operations research.  
-Although it is indisputable that toning in your math skills and analyzing datasets are two *top-tier passtimes*, some of my other hobbies include fishing, hiking, and leatherworking!  
-As I stated above, I only recently began learning how to write code; the purpose of this portfolio is to document my journey.
+**And Welcome To My About Page!**  
+I am a recent college graduate from The University of Tennessee at Chattanooga, I have my Bachelor's degree in Actuarial Science, and I'm an aspiring Data Scientist! While I was in undergrad, the topics that excited me the most were Statistics, Operations Research, and Matrix Theory. My passions are in Mathematics, solving puzzles, and I love to build and create things. Although it is indisputable that performing statistical analyses and finding data trends are *top-tier passtimes*, some of my other hobbies include fishing, hiking, and leatherworking!  
+  
+Shortly following graduation in early January of 2020, I wrote my first line of code -- I have been entirely self taught thus far.  
+I'd be lying if I said it was as easy as all the people on the forums and YouTube make it out to be. It's quite challenging, easily discouraging, and with the enormous amount of readily accessible information, it can often feel like you're trying to drink from a fire hose.
+>I created this portfolio to document my journey.
