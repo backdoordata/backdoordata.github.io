@@ -1,5 +1,5 @@
 ---
-title: ""Hello World","
+title: ' "Hello World", '
 permalink: /about/
 header:
     image: "/images/forest-about-header.jpg"
