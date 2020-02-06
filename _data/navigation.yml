@@ -3,7 +3,7 @@ main:
   - title: "About"
     url: /about/
   - title: "Data Analysis & Visualizations"
-    url: /categories/data-analysis-and-visualizations/
+    url: /data-analysis-and-visualizations/
   # - title: "Sample Posts"
   #   url: /year-archive/
   # - title: "Sample Collections"
