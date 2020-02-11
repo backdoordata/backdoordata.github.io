@@ -20,7 +20,7 @@ title                    : "Drew Woods"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "Drew Woods"
-description              : "Recent Graduate from UTC, B.S. in Actuarial Science, Aspiring Data Scientist"
+description              : "Data Science Portfolio"
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -109,7 +109,7 @@ analytics:
 author:
   name             : "Drew Woods"
   avatar           : "/images/profile-picture.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Data Science Portfolio"
+  bio              : "Recent Graduate from UTC, B.S. in Actuarial Science, Aspiring Data Scientist"
   location         : "Chattanooga, TN"
   email            :
   links:
