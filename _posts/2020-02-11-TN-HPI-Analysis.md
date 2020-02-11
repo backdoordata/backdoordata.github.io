@@ -1,3 +1,17 @@
+---
+title: "Visualizing Tennessee's Housing Market"
+date: 2020-02-11
+tags: [Data Analysis & Visualization]
+breadcrumbs: true
+header:
+    image: "/images/nash-header.jpg"
+excerpt: "Data Analysis & Visualization"
+
+toc: true
+toc_label: " Sights-to-See:"
+toc_icon: "hiking"
+---
+
 ```python
 import quandl
 import pandas as pd
@@ -104,114 +118,8 @@ for i in codes_array[0:]:
 for i in range(95):
     master_df.rename(columns = {master_df.columns[i]:names_array[i]+'_County_HPI'}, inplace = True)
         
-master_df.head(5)
 ```
-
-
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-7-9e2fd5917697> in <module>
-         10         master_df = working_df
-         11     else:
-    ---> 12         master_df = master_df.join(working_df)
-         13 
-         14 #properly renames columns
-
-
-    ~/opt/anaconda3/lib/python3.7/site-packages/pandas/core/frame.py in join(self, other, on, how, lsuffix, rsuffix, sort)
-       7244         # For SparseDataFrame's benefit
-       7245         return self._join_compat(
-    -> 7246             other, on=on, how=how, lsuffix=lsuffix, rsuffix=rsuffix, sort=sort
-       7247         )
-       7248 
-
-
-    ~/opt/anaconda3/lib/python3.7/site-packages/pandas/core/frame.py in _join_compat(self, other, on, how, lsuffix, rsuffix, sort)
-       7267                 right_index=True,
-       7268                 suffixes=(lsuffix, rsuffix),
-    -> 7269                 sort=sort,
-       7270             )
-       7271         else:
-
-
-    ~/opt/anaconda3/lib/python3.7/site-packages/pandas/core/reshape/merge.py in merge(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)
-         81         validate=validate,
-         82     )
-    ---> 83     return op.get_result()
-         84 
-         85 
-
-
-    ~/opt/anaconda3/lib/python3.7/site-packages/pandas/core/reshape/merge.py in get_result(self)
-        646 
-        647         llabels, rlabels = _items_overlap_with_suffix(
-    --> 648             ldata.items, lsuf, rdata.items, rsuf
-        649         )
-        650 
-
-
-    ~/opt/anaconda3/lib/python3.7/site-packages/pandas/core/reshape/merge.py in _items_overlap_with_suffix(left, lsuffix, right, rsuffix)
-       2009         raise ValueError(
-       2010             "columns overlap but no suffix specified: "
-    -> 2011             "{rename}".format(rename=to_rename)
-       2012         )
-       2013 
-
-
-    ValueError: columns overlap but no suffix specified: Index(['ZILLOW/CO455_ZHVIAH - Value', 'ZILLOW/CO1567_ZHVIAH - Value',
-           'ZILLOW/CO1913_ZHVIAH - Value', 'ZILLOW/CO1949_ZHVIAH - Value',
-           'ZILLOW/CO319_ZHVIAH - Value', 'ZILLOW/CO377_ZHVIAH - Value',
-           'ZILLOW/CO1607_ZHVIAH - Value', 'ZILLOW/CO1021_ZHVIAH - Value',
-           'ZILLOW/CO1745_ZHVIAH - Value', 'ZILLOW/CO543_ZHVIAH - Value',
-           'ZILLOW/CO701_ZHVIAH - Value', 'ZILLOW/CO964_ZHVIAH - Value',
-           'ZILLOW/CO1712_ZHVIAH - Not Found', 'ZILLOW/CO2405_ZHVIAH - Not Found',
-           'ZILLOW/CO1659_ZHVIAH - Value', 'ZILLOW/CO1514_ZHVIAH - Value',
-           'ZILLOW/CO2295_ZHVIAH - Value', 'ZILLOW/CO1495_ZHVIAH - Value',
-           'ZILLOW/CO69_ZHVIAH - Value', 'ZILLOW/CO1955_ZHVIAH - Value',
-           'ZILLOW/CO1879_ZHVIAH - Value', 'ZILLOW/CO597_ZHVIAH - Value',
-           'ZILLOW/CO2173_ZHVIAH - Value', 'ZILLOW/CO707_ZHVIAH - Value',
-           'ZILLOW/CO1890_ZHVIAH - Value', 'ZILLOW/CO1604_ZHVIAH - Value',
-           'ZILLOW/CO1531_ZHVIAH - Value', 'ZILLOW/CO1734_ZHVIAH - Value',
-           'ZILLOW/CO880_ZHVIAH - Value', 'ZILLOW/CO1447_ZHVIAH - Value',
-           'ZILLOW/CO2305_ZHVIAH - Value', 'ZILLOW/CO510_ZHVIAH - Value',
-           'ZILLOW/CO1209_ZHVIAH - Value', 'ZILLOW/CO3100_ZHVIAH - Not Found',
-           'ZILLOW/CO2192_ZHVIAH - Value', 'ZILLOW/CO1780_ZHVIAH - Value',
-           'ZILLOW/CO1492_ZHVIAH - Value', 'ZILLOW/CO2252_ZHVIAH - Value',
-           'ZILLOW/CO1759_ZHVIAH - Value', 'ZILLOW/CO1710_ZHVIAH - Value',
-           'ZILLOW/CO850_ZHVIAH - Value', 'ZILLOW/CO2395_ZHVIAH - Value',
-           'ZILLOW/CO1881_ZHVIAH - Value', 'ZILLOW/CO2336_ZHVIAH - Value',
-           'ZILLOW/CO582_ZHVIAH - Value', 'ZILLOW/CO1885_ZHVIAH - Value',
-           'ZILLOW/CO111_ZHVIAH - Value', 'ZILLOW/CO2407_ZHVIAH - Not Found',
-           'ZILLOW/CO2482_ZHVIAH - Value', 'ZILLOW/CO1598_ZHVIAH - Value',
-           'ZILLOW/CO3094_ZHVIAH - Value', 'ZILLOW/CO1691_ZHVIAH - Value',
-           'ZILLOW/CO608_ZHVIAH - Value', 'ZILLOW/CO890_ZHVIAH - Value',
-           'ZILLOW/CO381_ZHVIAH - Value', 'ZILLOW/CO1752_ZHVIAH - Value',
-           'ZILLOW/CO1725_ZHVIAH - Value', 'ZILLOW/CO1404_ZHVIAH - Value',
-           'ZILLOW/CO1520_ZHVIAH - Value', 'ZILLOW/CO1779_ZHVIAH - Value',
-           'ZILLOW/CO1956_ZHVIAH - Value', 'ZILLOW/CO1573_ZHVIAH - Value',
-           'ZILLOW/CO1275_ZHVIAH - Value', 'ZILLOW/CO3089_ZHVIAH - Not Found',
-           'ZILLOW/CO1837_ZHVIAH - Value', 'ZILLOW/CO1716_ZHVIAH - Value',
-           'ZILLOW/CO1835_ZHVIAH - Value', 'ZILLOW/CO2403_ZHVIAH - Not Found',
-           'ZILLOW/CO3098_ZHVIAH - Not Found', 'ZILLOW/CO967_ZHVIAH - Value',
-           'ZILLOW/CO1432_ZHVIAH - Value', 'ZILLOW/CO1715_ZHVIAH - Value',
-           'ZILLOW/CO1506_ZHVIAH - Value', 'ZILLOW/CO490_ZHVIAH - Value',
-           'ZILLOW/CO168_ZHVIAH - Value', 'ZILLOW/CO2225_ZHVIAH - Value',
-           'ZILLOW/CO1938_ZHVIAH - Value', 'ZILLOW/CO1381_ZHVIAH - Value',
-           'ZILLOW/CO35_ZHVIAH - Value', 'ZILLOW/CO931_ZHVIAH - Value',
-           'ZILLOW/CO1946_ZHVIAH - Value', 'ZILLOW/CO1286_ZHVIAH - Value',
-           'ZILLOW/CO257_ZHVIAH - Value', 'ZILLOW/CO520_ZHVIAH - Value',
-           'ZILLOW/CO1099_ZHVIAH - Value', 'ZILLOW/CO943_ZHVIAH - Value',
-           'ZILLOW/CO932_ZHVIAH - Value', 'ZILLOW/CO2438_ZHVIAH - Value',
-           'ZILLOW/CO1615_ZHVIAH - Value', 'ZILLOW/CO320_ZHVIAH - Value',
-           'ZILLOW/CO1903_ZHVIAH - Value', 'ZILLOW/CO1671_ZHVIAH - Value',
-           'ZILLOW/CO1787_ZHVIAH - Value', 'ZILLOW/CO226_ZHVIAH - Value',
-           'ZILLOW/CO341_ZHVIAH - Value'],
-          dtype='object')
-
-
-
+        
 ```python
 master_df.head(5)
 ```
