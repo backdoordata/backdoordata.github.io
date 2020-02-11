@@ -20,7 +20,7 @@ title                    : "Drew Woods"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "Drew Woods"
-description              : "Data Science Portfolio"
+description              : "Recent Graduate from UTC, B.S. in Actuarial Science, Aspiring Data Scientist"
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"

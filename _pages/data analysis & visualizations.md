@@ -1,7 +1,7 @@
 ---
 layout: archive
-permalink: /analyzing-data/
-title: "Analyzing Data"
+permalink: /data-science-projects/
+title: "Data Science Projects"
 author_profile: true
 breadcrumbs: true
 header:
