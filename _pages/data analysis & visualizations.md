@@ -6,7 +6,7 @@ author_profile: true
 breadcrumbs: true
 header:
     image: "/images/data-A&V-header.jpg"
-taxonomy: projects
+taxonomy: Analyzing Data
 path_type: ''
 ---
 
