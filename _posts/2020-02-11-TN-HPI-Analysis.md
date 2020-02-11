@@ -18,10 +18,10 @@ import pandas as pd
 import numpy as np
 ```
 
-# Building the Dataset
+# Building The Dataset
 To start off this project, I will be using Housing Price Index (HPI) data of Tennessee counties collected by the well-known real estate company Zillow.
 
-## Querying
+## Querying Our Data
 I begin by bringing in a table of the names of all 95 Tennessee counties and their corresponding Zillow county codes, which can be found here alongside the actual datasets: https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation.  
 We need this table to seamlessly process our Quandl query. However, it was undetectable by the native Pandas web-scraper, so I used Excel to clean and format the data.
 
