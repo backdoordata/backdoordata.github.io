@@ -1,6 +1,6 @@
 ---
 layout: category
-permalink: /categories/#analyzing-data/
+permalink: /#analyzing-data/
 title: "Analyzing Data"
 author_profile: true
 breadcrumbs: true
