@@ -7,6 +7,6 @@ breadcrumbs: true
 header:
     image: "/images/data-A&V-header.jpg"
 taxonomy: Analyzing Data
-path_type: ''
+path_type: '#'
 ---
 
