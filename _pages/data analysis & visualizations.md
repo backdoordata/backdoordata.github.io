@@ -1,12 +1,12 @@
 ---
 layout: category
-permalink: /data-analysis-and-visualizations/
-title: "Data Analysis & Visualizations"
+permalink: /analyzing-data/
+title: "Analyzing Data"
 author_profile: true
 breadcrumbs: true
 header:
     image: "/images/data-A&V-header.jpg"
 taxonomy: projects
-path_type: '#'
+path_type: ''
 ---
 
