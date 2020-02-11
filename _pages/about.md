@@ -1,6 +1,7 @@
 ---
 title: ' "Hello World!", '
 permalink: /about/
+breadcrumbs: true
 header:
     image: "/images/night-nooga-header.jpg"
 ---
