@@ -109,7 +109,7 @@ analytics:
 author:
   name             : "Drew Woods"
   avatar           : "/images/profile-picture.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Recent Graduate from UTC <br>B.S. in Actuarial Science <br>Aspiring Data Scientist"
+  bio              : "Recent College Graduate <br>Bachelor's in Actuarial Science <br>Aspiring Data Scientist"
   location         : "Chattanooga, TN"
   email            :
   links:
