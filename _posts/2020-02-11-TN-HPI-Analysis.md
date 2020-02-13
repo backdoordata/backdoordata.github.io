@@ -633,7 +633,7 @@ plt.legend(fontsize= 'xx-large', numpoints= 4)
 ```
 
 
-![png](HPI_Matplotlib_plot.png)
+![png](/images/HPI_Matplotlib_plot.png)
 
 Although this is not definitively correct, I find it to be useful thinking of this as an aeriel view of a "3-Dimensional Density Plot", where time is the additional variable.  
 This isn't really that far-fetched either. I say this because, in our case, the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of each shaded region accurately depicts of the density of data in that interval.  
@@ -729,8 +729,8 @@ for i in range(12,19):
     biyearly_dates.append(may)
     biyearly_dates.append(sept)
 
-biyearly_dates = pd.Series(biyearly_dates).astype( dtype=str)
-df2['Date'] = df2['Date'].astype( dtype=str)
+biyearly_dates = pd.Series(biyearly_dates).astype(dtype=str)
+df2['Date'] = df2['Date'].astype(dtype=str)
 
 dfFig = df2[df2['Date'].isin(biyearly_dates)]
 dfFig.reset_index(drop = True, inplace = True)
@@ -892,13 +892,14 @@ fig.update_geos(fitbounds = "locations", visible = False)
 fig.show()
 ```
 
-{% include notebook path="/assets/html_file/TennHPI_Choropleth.html" %}
+{% include notebook path="/assets/html_files/TennHPI_Choropleth.html" %}
 
 
-As you can see, making use of plots with interactive widgets is a great way to get the most out of your visualization. In our figure, we can use the date slider to choose which data we want to see, watch the map evolve as it cycles through the dates autonomously, and if you hover over any given county you'll see its data pop up!  
-  
-We saw in our last graph how rapidly the HPI is increasing in Davidson County, but here we can see that not only the bordering counties, but every county in middle Tennessee is being influenced by Nashville's growth!  
+As you can see, making use of plots with interactive widgets is a great way to get the most out of your visualization. In our figure, we can use the date slider to choose which data we want to see, watch the map evolve as it cycles through the dates autonomously, and if you see any given county's data by simply hovering your mouse over it!  
   
   
-In the continuation of this analysis, we will begin a digging into some of the underlying reasons that have caused Nashville homes to double in value so rapidly.  
-Home values have nearly doubled in less than a decade, does that mean that income has as well? How much longer is this velocity even sustainable? 
+We saw in our last graph how rapidly the HPI is increasing in Davidson County, but here we can see that not only the bordering counties, but every county in middle Tennessee is being influenced by Nashville's growth...  
+If home values have nearly doubled in less than a decade, does that mean that income has as well? How long can this velocity be sustained?  
+  
+In the continuation of this analysis, we dig deeper into a few of the underlying reasons of  Nashville's rapid HPI growth and attempt to answer a few of these questions.  
+
