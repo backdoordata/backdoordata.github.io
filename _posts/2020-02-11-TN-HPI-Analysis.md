@@ -505,9 +505,400 @@ df
 <p>270 rows × 88 columns</p>
 </div>
 
-
+One characteristic that's easily described by an area's HPI is how desirable it is to live there, aka the demand.  
+Truncating the data to start at a more recent date is will magnify small, yet important, details since HPI data from 1996 isn't very indicative of upcoming/future HPI trends. Only as of lately can you begin to see noticable variation in the housing price index of different counties. More specifically, the standard deviation has increased 34% since 1996 (notice the "widening" of different HPI curves below).
 
 
 ```python
-
+df.plot(title = 'Housing Price Index ($)' ,legend= False);
 ```
+
+
+![png](/images/HPI_linegraph.png)
+
+
+It comes to no surprise that the counties are positively correlated, but it's important to acknowledge this because it typically implies that we need to manipulate and/or normalize the data in order to see even small amounts of detail.  
+  
+The Great Recession 'officially' ended June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, we truncate the dataframe using an approximation of when the housing market actually began to recover from the recession.
+
+
+```python
+df_09_plus = df.loc['2009-6-30':]
+min_months = []
+
+#creates list of post recession turning-point dates
+for i in np.arange(0,88):
+    itter_county = df_09_plus.iloc[:,i]
+    local_min = min(itter_county)
+    min_mo = df_09_plus.index.where(itter_county == local_min).dropna().values
+    min_mo = pd.to_datetime(min_mo.item(0))
+    min_months.append(min_mo)
+    
+#returns the most observed date from list 
+#truncates df at that point
+start_date = max(set(min_months), key=min_months.count)
+df = df[df.index >= start_date]
+```
+
+Having this, May 2012, as the data's earliest entry is ideal.  
+Why? By focusing on the housing market only during the recent economic upturn can show us a multitude of things, such as which areas are deemed 'most attractive' now that people are financially sound again, which markets are more stable and fluctuate the least, which areas are technologically/business progressive, which areas to invest in, etc..  
+Lot's of these same characteristics can be seen in markets during the time leading up to the recession as well!  
+  
+We use percent change as a basis in which to evaluate these characteristics.  
+The following code produces the necessary dataframe.
+
+
+```python
+#create new dataframe with entries as %change in HPI from May 2012
+pct_func = lambda x : round(100*(x/(df.iloc[0].values) - 1),1)
+df2 = pct_func(df.iloc[:])
+
+#relabel columns of the new dataframe
+new_cols = []
+for i in df2.columns:
+    pct_col = i.strip('_HPI')+'_pct'
+    new_cols = np.append(new_cols, pct_col)
+    
+df2.columns = new_cols
+df2
+```
+## Visualizing With Matplotib
+To avoid another plot of 88 HPI curves, I took advantage of summary statistics for each of the monthly observations. Then using Matplotlib, I create a time series line plot describing the HPI mean growth and the first, second, and third standard deviations.
+
+
+```python
+DataFrame of summary statistics for our plot
+d = {'mean':df2.transpose().mean(), 
+     'std':df2.transpose().std(), 
+     'mean+std':df2.transpose().mean()+df2.transpose().std(),
+     'mean-std':df2.transpose().mean()-df2.transpose().std(),
+     'mean+2std':df2.transpose().mean()+2*(df2.transpose().std()),
+     'mean-2std':df2.transpose().mean()-2*(df2.transpose().std()),
+     'mean+3std':df2.transpose().mean()+3*(df2.transpose().std()),
+     'mean-3std':df2.transpose().mean()-3*(df2.transpose().std())
+     }
+df2_info = pd.DataFrame(index = df2.index, data= d)
+
+
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+
+figure(figsize=[12.8, 9.6])
+plt.margins(0,0)
+plt.style.use('seaborn-darkgrid')
+
+#mean curve
+plt.plot(df2_info.index, df2_info['mean'], color= 'g', label= 'Mean HPI Growth', linewidth= 5, alpha= .7)
+
+#1st standard deviation curves & shading
+plt.plot(df2_info.index, df2_info['mean+std'], color= 'g', linestyle = '--', alpha= .45)
+plt.plot(df2_info.index, df2_info['mean-std'], color= 'g', linestyle = '--', alpha= .45, label= '+/- 1 std')
+plt.fill_between(x= df2_info.index, y1= df2_info['mean'], y2= df2_info['mean+std'], where= (df2_info['mean'] < df2_info['mean+std']), color= 'g', alpha= .3)
+plt.fill_between(x= df2_info.index, y1= df2_info['mean'], y2= df2_info['mean-std'], where= (df2_info['mean'] > df2_info['mean-std']), color= 'g', alpha= .3)
+
+#2nd standard deviation curves & shading
+plt.plot(df2_info.index, df2_info['mean+2std'], color= 'g', linestyle = '-.', alpha= .35)
+plt.plot(df2_info.index, df2_info['mean-2std'], color= 'g', linestyle = '-.', alpha= .35, label= '+/- 2 std')
+plt.fill_between(x= df2_info.index, y1= df2_info['mean'], y2= df2_info['mean+2std'], where= (df2_info['mean'] < df2_info['mean+2std']), color= 'g', alpha= .2)
+plt.fill_between(x= df2_info.index, y1= df2_info['mean'], y2= df2_info['mean-2std'], where= (df2_info['mean'] > df2_info['mean-2std']), color= 'g', alpha= .2)
+
+#3rd standard deviation curves & shading
+plt.plot(df2_info.index, df2_info['mean+3std'], color= 'g', linestyle = 'dotted', alpha= .15)
+plt.plot(df2_info.index, df2_info['mean-3std'], color= 'g', linestyle = 'dotted', alpha= .15, label= '+/- 3 std')
+plt.fill_between(x= df2_info.index, y1= df2_info['mean'], y2= df2_info['mean+3std'], where= (df2_info['mean'] < df2_info['mean+3std']), color= 'g', alpha= .1)
+plt.fill_between(x= df2_info.index, y1= df2_info['mean'], y2= df2_info['mean-3std'], where= (df2_info['mean'] > df2_info['mean-3std']), color= 'g', alpha= .1)
+
+#datapoints of max growth county
+plt.plot(df2.index, df2['Davidson_County_pct'], 'bo', markersize= 1.2) #notice we use df2 here, not df2_info
+plt.annotate("Max HPI Growth\n(Davidson Co.)",
+            xy=(df2_info.index[43], 42), xycoords= 'data',
+            xytext=(df2_info.index[31], 46), textcoords= 'data',
+            arrowprops=dict(arrowstyle= "->", connectionstyle= "arc3, rad= -0.3", color= 'b'), 
+            )
+
+#datapoints of min growth county
+plt.plot(df2.index, df2['Weakley_County_pct'], 'ro', markersize= 1.2) #notice we use df2 here, not df2_info
+plt.annotate("Min HPI Growth\n(Weakley Co.)",
+            xy=(df2_info.index[52], 4), xycoords= 'data',
+            xytext=(df2_info.index[42], -8), textcoords= 'data',
+            arrowprops=dict( arrowstyle= "->", connectionstyle= "arc3, rad= 0.3", color= 'r'), 
+            )
+
+plt.title("Tennessee Housing Price Index (HPI)\nPost-Recession Recovery", fontsize= 25)
+plt.xlabel("Year", fontsize= 20)
+plt.ylabel("Percent(%)",fontsize= 20)
+plt.tick_params(axis= 'x', labelsize= 'x-large', labelrotation= 30)
+plt.tick_params(axis= 'y', labelsize= 'x-large')
+plt.legend(fontsize= 'xx-large', numpoints= 4)
+```
+
+
+![png](HPI_Matplotlib_plot.png)
+
+Although this is not definitively correct, I find it to be useful thinking of this as an aeriel view of a "3-Dimensional Density Plot", where time is the additional variable.  
+This isn't really that far-fetched either. I say this because, in our case, the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of each shaded region accurately depicts of the density of data in that interval.  
+  
+Also plotted are the individual data points of the two counties at either end of the distribution. Davidson County (aka Nashville) nearly doubled its HPI, having the highest overall increase of 93%; the lowest in the state was Weakley County only increasing a minor 9%.  
+  
+Later on in this analysis, we will look deeper into some of the underlying aspects of Nashvilles sudden growth in popularity.  
+## An Interactive Choropleth Map With Plotly 
+Thus far, we've:
+1. graphed the 1996-2018 HPI curves for all 88 counties 
+2. used summary statistics to build an illustration of the post-recession HPI growth in Tennessee.  
+  
+But still yet, neither figure is successful in showing both individual county data *and* the Tennessee housing market as a whole. The first graph contains so much detail that practically all detail is lost, and our second figure lacks detail at the county level. This happens to be the most common issue with static figures.  
+  
+To include both individual county data and the housing market in Tennessee as a whole, we look towards the extremely powerful and interactive data analysis toolset found in the Plotly library. Specifically, we will be making an interactive thematic geo-map of the state.  
+  
+To do this, we need to make a few adjustments to our current DataFrame. First, and most importantly, we need the Federal Information Processing Standards (FIPS) county specific codes, which we will use later to define the geographical boundaries of each county on our map.
+
+
+```python
+import plotly.express as px
+import plotly.figure_factory as ff
+
+tn_locations = pd.read_excel("/Users/DrewWoods/Desktop/Py_Project_1/US_FIPS_GEOcodes.xlsx", sheet_name= 'TNcounty_FIPS')
+tn_locations.set_index('County_PCT', inplace=True)
+
+# join DataFrames to match county names to their FIPS codes 
+df2 = df2.transpose()
+df2.index = tn_locations.index
+df2 = df2.join(tn_locations, on= df2.index)
+
+# rearrange column order
+cols = df2.columns.tolist()
+cols = cols[-1:]+cols[-2:-1]+cols[:-2]
+df2 = df2[cols]
+```
+
+Plotly figures function more smoothly with "tidy data" having few columns and many rows, so we tidy up our dataframe using the Pandas melt method.
+
+
+```python
+#tidying df2 for use in Plotly figure
+cols_to_melt = df2.columns.values[2:]
+df2 = pd.melt(df2, id_vars= ['FIPS_code', 'County_Name'],
+             value_vars = cols_to_melt, 
+             var_name = 'Date', 
+             value_name= 'Percent_Change')
+
+df2.sort_values(['County_Name', 'Date'],inplace = True)
+df2.reset_index(drop = True, inplace= True)
+```
+
+We will format our first dataframe this way too so that we can include the original HPI data in the figure as well.
+
+
+```python
+# tidying df to insert 'HPI' column into df2
+df = df.transpose()
+df.reset_index(inplace= True)
+
+df = pd.melt(df, id_vars= 'index',
+                value_vars = df.columns.values[1:],
+                var_name = 'Date',
+                value_name= 'HPI')
+
+df.sort_values(['index', 'Date'],inplace = True)
+df.reset_index(drop=True, inplace=True)
+
+# adding 'HPI' column
+df2['HPI'] = df['HPI'].astype(int) 
+
+# fixing column order again...
+cols = df2.columns.to_list()
+cols = cols[0:3] + cols[-1:] + cols[-2:-1]
+df2 = df2[cols]
+```
+
+One downside to the choropleth map is that it can be very computationally expensive. The more traces your figure has, the more times the algorithm has to itterate through the data, matching the county names to the data, to the FIPS codes, and then the FIPS codes to the correct latitude and longitude coordinates that define the county boundaries. Since our map will be interactive, it will have a **lot** of traces.  
+  
+To mitigate the number of traces and the complexity of our figure, we reduce the number of observations we pass to it.
+
+
+```python
+biyearly_dates = []
+
+for i in range(12,19):
+    if i < 10:
+        may = '200'+str(i)+'-05-31'
+        sept = '200'+str(i)+'-09-30'
+    else:
+        may = '20'+str(i)+'-05-31'
+        sept = '20'+str(i)+'-09-30'
+    biyearly_dates.append(may)
+    biyearly_dates.append(sept)
+
+biyearly_dates = pd.Series(biyearly_dates).astype( dtype=str)
+df2['Date'] = df2['Date'].astype( dtype=str)
+
+dfFig = df2[df2['Date'].isin(biyearly_dates)]
+dfFig.reset_index(drop = True, inplace = True)
+```
+
+
+```python
+dfFig
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>FIPS_code</th>
+      <th>County_Name</th>
+      <th>Date</th>
+      <th>HPI</th>
+      <th>Percent_Change</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>47001</td>
+      <td>Anderson County</td>
+      <td>2012-05-31</td>
+      <td>106800</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>47001</td>
+      <td>Anderson County</td>
+      <td>2012-09-30</td>
+      <td>106800</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>47001</td>
+      <td>Anderson County</td>
+      <td>2013-05-31</td>
+      <td>109000</td>
+      <td>2.1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>47001</td>
+      <td>Anderson County</td>
+      <td>2013-09-30</td>
+      <td>108200</td>
+      <td>1.3</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>47001</td>
+      <td>Anderson County</td>
+      <td>2014-05-31</td>
+      <td>110300</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>1227</td>
+      <td>47189</td>
+      <td>Wilson County</td>
+      <td>2016-09-30</td>
+      <td>237600</td>
+      <td>39.1</td>
+    </tr>
+    <tr>
+      <td>1228</td>
+      <td>47189</td>
+      <td>Wilson County</td>
+      <td>2017-05-31</td>
+      <td>256600</td>
+      <td>50.2</td>
+    </tr>
+    <tr>
+      <td>1229</td>
+      <td>47189</td>
+      <td>Wilson County</td>
+      <td>2017-09-30</td>
+      <td>260100</td>
+      <td>52.3</td>
+    </tr>
+    <tr>
+      <td>1230</td>
+      <td>47189</td>
+      <td>Wilson County</td>
+      <td>2018-05-31</td>
+      <td>272900</td>
+      <td>59.8</td>
+    </tr>
+    <tr>
+      <td>1231</td>
+      <td>47189</td>
+      <td>Wilson County</td>
+      <td>2018-09-30</td>
+      <td>278500</td>
+      <td>63.1</td>
+    </tr>
+  </tbody>
+</table>
+<p>1232 rows × 5 columns</p>
+</div>
+
+
+
+Now that the figure data is prepared and is stored in a new DataFrame, all that remains is to bring in a json file with the coordinates for the counties!
+
+
+```python
+from urllib.request import urlopen
+import json
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    
+fig = px.choropleth(
+        dfFig, 
+        geojson= counties,                    
+        scope='usa',                 
+        center= dict(lat=35.860119,lon=-86.660156),
+        locations= 'FIPS_code',
+        color= 'Percent_Change',
+        hover_name= 'County_Name',
+        hover_data=['HPI'],
+        animation_frame= 'Date',
+        animation_group= 'FIPS_code',
+        color_continuous_scale = 'thermal',
+        range_color=(-10, 93)
+                   )
+fig.update_geos(fitbounds = "locations", visible = False)
+fig.show()
+```
+
+{% include notebook path="/assets/html_file/TennHPI_Choropleth.html" %}
+
+
+As you can see, making use of plots with interactive widgets is a great way to get the most out of your visualization. In our figure, we can use the date slider to choose which data we want to see, watch the map evolve as it cycles through the dates autonomously, and if you hover over any given county you'll see its data pop up!  
+  
+We saw in our last graph how rapidly the HPI is increasing in Davidson County, but here we can see that not only the bordering counties, but every county in middle Tennessee is being influenced by Nashville's growth!  
+  
+  
+In the continuation of this analysis, we will begin a digging into some of the underlying reasons that have caused Nashville homes to double in value so rapidly.  
+Home values have nearly doubled in less than a decade, does that mean that income has as well? How much longer is this velocity even sustainable? 
