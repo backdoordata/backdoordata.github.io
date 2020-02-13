@@ -892,7 +892,7 @@ fig.update_geos(fitbounds = "locations", visible = False)
 fig.show()
 ```
 
-{% include notebook path="/assets/html_files/TennHPI_Choropleth.html" %}
+{% include notebook path="file:///Users/DrewWoods/Desktop/backdoordata.github.io/assets/html_files/TennHPI_Choropleth.html" %}
 
 
 As you can see, making use of plots with interactive widgets is a great way to get the most out of your visualization. In our figure, we can use the date slider to choose which data we want to see, watch the map evolve as it cycles through the dates autonomously, and if you see any given county's data by simply hovering your mouse over it!  
