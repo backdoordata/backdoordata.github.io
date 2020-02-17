@@ -12,20 +12,20 @@ toc_label: " Sights-to-See:"
 toc_icon: "hiking"
 ---
 
-If you live in Tennessee also, you'll agree that it'd be impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or have just been completely oblivious to this fact) you've come to the right place; hopefully this post will show you what I mean!
+If you live in Tennessee, you'll agree that it'd be impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or you've just been completely oblivious to this fact) you've come to the right place!
 
-If you're only interested in a specific section, I included some shortcuts for you to the right of this text!
+If you're only interested in a specific section, I included some shortcuts in the "Sights-to-See" box on your right!
   
   
 # The Data
 The Housing Price Index (HPI) data used in this project was collected by Zillow, and can be found in the Quandl databases.  
   
-All of the data offered by Quandl is open-source, and can be easily obtained with a free account. To grab the data for all 95 Tennessee counties, the method I used was to query each individual county dataset by itteratively calling the quandl.get method on the respective URL's, and then joining them into a pandas dataframe at the end of each iteration. Since all of the data is of the same measure, and just for one states counties, the URL's only differed by a 3-4 digit section, which can easily be scraped from the documentation page. More information on this can be found [here](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation). Note that if you wish to use this method, the column labels will just be URL's, so make sure to have the county names at hand and in the same order that you queried the data!  
+On the Quandl website, you'll find lots of open-source data that's easily accessable with a free account. To grab the data for all 95 Tennessee counties, the method I used was to query each individual county's dataset by itteratively calling the quandl.get method on the respective URL's, and then joining them together in a pandas dataframe at the end of each iteration. Since all of the data is of the same measure, and for the same state, the URL's only differed by a 3-4 digit section, which can easily be scraped from the documentation page. More information on this can be found [here](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation). Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!  
   
 ## Assessing NaN Values
-From what I've seen, Zillow does a good job structuring their data and making it easily explorable. There wasn't much cleaning necessary for our datset to become workable except for assessing the NaN entries! A few of my columns were completely empty, and it turns out Zillow doesn't service those seven counties so I just dropped them from the dataframe.  
+Zillow does a good job structuring their data and making it easily explorable, so there wasn't much cleaning needed for our datset to become workable except for assessing the NaN valued entries! Seven of the columns were completely missing since Zillow doesn't service those counties apparently, so I just dropped them from the dataframe.  
   
-Next, I noticed some counties were missing entries from either the beginning of the collection, or from the end. Since our dataframe contains the monthly HPI from 1996-2018 and we are only using the latter portion our visualization, the early missing entries weren't of much concern. However, I went ahead and took care of them anyways incase I decide to revisit this dataset later on. As you'll soon see, the counties are highly correlated with one another when it comes to the housing market; taking advantage of this, I used the following code to approximate and fill the missing values:
+Next, I noticed some missing entries from either the beginning of the collection, or from the end. Since our dataframe contains the monthly HPI from 1996-2018 and we are only using the latter portion our visualization, the early missing entries weren't of much concern. However, I went ahead and filled them too incase I decide to revisit this dataset. As you'll soon see, the counties are highly correlated with one another when it comes to the housing market; taking advantage of this, I used the following code to approximate and fill the missing values:
 
 
 
@@ -55,14 +55,14 @@ def Replace_NANcounty(county_name, replacement_county):
 ```
 
 
-Using Matplotlib's basic .plot() function, we can now take a peak at what the dataset looks like!  
+Using Matplotlib's basic plot function, we can now take a peak at the dataset.  
 
 ![png](/images/HPI_linegraph.png)
 
 # Creating Visualizations
-The graph above is not what we want, it's so detailed that it's hard to see anything besides the correlation between the counties. However, you can already see the increasing variation in the later years as the HPI curves begin to uncluster after the '08 recession. To focus on this, we will look only at the recovering housing market.  
+The graph above is not what we want, it's so detailed that it's hard to see anything besides the correlation between the counties. However, you can already see the variation increasing after the '08 recession as the HPI curves begin to uncluster. To focus on this, we will look only at the recovering housing market.  
   
-The Great Recession 'officially' ended June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, we truncate the dataframe using an approximation of when the housing market actually began to recover from the recession.
+The Great Recession 'officially' ended June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, I truncated the dataframe using an approximation of when the housing market actually began to recover from the recession.
 
 
 ```python
@@ -83,8 +83,7 @@ start_date = max(set(min_months), key=min_months.count)
 df = df[df.index >= start_date]
 ```
 
-As we aren't concerned with the earlier years, we also aren't concerned with the existing values of each counties HPI. Rather, we use percentages as a basis to evaluate change.  
-The following code produces the necessary dataframe.
+As we aren't concerned with the earlier years, we also aren't concerned with the pre-existing HPI of each county. Rather, we use percentages as a basis to evaluate change. The following code returns the necessary dataframe.
 
 
 ```python
@@ -101,25 +100,25 @@ for i in df2.columns:
 df2.columns = new_cols
 ```
 ## Visualizing Post-Recession Growth
-To avoid another graph of 88 HPI curves, we can plot summary statistics instead! The figure below was created using the graphical plotting library in the Matplotlib package.
+To avoid another graph of 88 HPI curves, we can plot summary statistics instead! The figure below was created using the graphical plotting library in Matplotlib.
 
 
 ![png](/images/HPI_Matplotlib_plot.png)
 
-Although this is not definitively correct, I find it to be useful thinking of this as an aeriel view of a "3-Dimensional Density Plot", where time is the additional variable.  
-This isn't too far-fetched either. I say this because, in our case, the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of each shaded region accurately depicts the density of points in that interval.  
+Although this is not definitively correct, I find it to be useful thinking of this as an aeriel view of a 3-Dimensional Density Plot, where time is the additional variable.  
+This isn't too far-fetched either. I say this because the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of the shaded regions accurately depict the density of datapoints in each interval.  
   
 Also included are the individual data points of the two counties at either end of the distribution. Davidson County (Nashville) had the highest overall increase of 93%, nearly doubling its HPI; the lowest in the state was Weakley County, only increasing 9%.  
 
 ## Building An Interactive Choropleth Map
-To show individual county data **and** the housing market as a whole in a single figure, I utilized the extremely powerful and interactive data analysis toolset found in the Plotly Express library. Specifically, we will be making an interactive choropleth map, which is a thematic geo-map of Tennessee partioned by its counties.  
+To show individual county data **and** the housing market as a whole in a single figure, I utilized the extremely powerful data analysis toolset found in the Plotly Express library. Specifically, an interactive thematic geo-map of Tennessee partioned by its counties.  
   
-To define the geographical boundaries for the map, I used county specific codes from the Federal Information Processing Standards (FIPS) and a json file containing the corresponding latitude and longitude strings, which can be found [here](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json).  
-Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. However, I did this for both dataframes so I could include both the HPI and the percent change of each county in the figure.  
+To define the geographical boundaries of the map, I used county specific codes from the Federal Information Processing Standards (FIPS) and a json file containing the corresponding latitude and longitude strings, which can be found [here](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json).  
+Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. I did this for both dataframes so I could include both the percent change and the HPI of each county in the figure.  
   
-The major downside to the choropleth map is that it can be very computationally expensive. Since this is an interactive map, it has to reitterate through the data each frame, increasingly introducing latency.  
+The major downside to the choropleth map is that it can be very computationally expensive. Since this is an interactive map, it has to reiterate through the data each frame, introducing increasingly more latency.  
   
-To mitigate the complexity of our figure, I reduced the number of observation dates we pass to it.
+To mitigate complexity of the figure, I reduced the number of observation dates we pass to it.
 
 
 ```python
