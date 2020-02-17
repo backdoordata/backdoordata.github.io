@@ -55,7 +55,7 @@ def Replace_NANcounty(county_name, replacement_county):
 ```
 
 
-Using Matplotlib's basic .plot() function, we can now take a peak at the dataset looks like as a whole!  
+Using Matplotlib's basic .plot() function, we can now take a peak at what the dataset looks like!  
 
 ![png](/images/HPI_linegraph.png)
 
@@ -114,7 +114,8 @@ Also included are the individual data points of the two counties at either end o
 ## An Interactive Choropleth Map
 To show individual county data **and** the housing market as a whole in a single figure, I utilized the extremely powerful and interactive data analysis toolset found in the Plotly Express library. Specifically, we will be making an interactive choropleth map, which is a thematic geo-map of Tennessee partioned by its counties.  
   
-To define the geographical boundaries for the map, I used county specific codes from the Federal Information Processing Standards (FIPS) and a json file containing the corresponding latitude and longitude strings [https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json). Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. However, I did this for both dataframes so I could include both the HPI and the percent change of each county in the figure.  
+To define the geographical boundaries for the map, I used county specific codes from the Federal Information Processing Standards (FIPS) and a json file containing the corresponding latitude and longitude strings [https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json).  
+Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. However, I did this for both dataframes so I could include both the HPI and the percent change of each county in the figure.  
   
 The major downside to the choropleth map is that it can be very computationally expensive. Since this is an interactive map, it has to reitterate through the data each frame, increasingly introducing latency.  
   
