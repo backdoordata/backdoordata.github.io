@@ -17,14 +17,14 @@ If you live in Tennessee, you'll agree that it'd be impossible to ignore the rec
 # The Data
 The Housing Price Index (HPI) data used in this project was collected by Zillow, and can be found in the Quandl databases.  
   
-On the Quandl website, you'll find lots of open-source data that can be easily accessed with a free account. To grab the data for all 95 Tennessee counties, I made a query for each individual county dataset by itteratively calling the quandl.get method on the respective URL's, and then joining them together in a pandas dataframe at the end of each iteration. Since all of the data is of the same measure, and for the same state, the URL's only differed by a 3-4 digit section, which can easily be scraped from the documentation page. More information on this can be found [here](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation). Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!  
+On the Quandl website, you'll find lots of open-source data that can be easily accessed with a free account. To grab the data for all 95 Tennessee counties, I made a query for each individual county dataset by itteratively calling the quandl.get method on the respective URL's, and then merging them to a pandas dataframe at the end of each iteration. Since all of the data is of the same measure and same state, the URL's only differed by a 3-4 digit string, which can easily be scraped from the [documentation page](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation).  
+*Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!*  
   
 ## Assessing NaN Values
 Zillow does a good job structuring their data and making it easily explorable, so there wasn't much cleaning needed for our datset to become workable except for assessing the NaN valued entries! Seven of the columns were completely missing since Zillow doesn't service those counties apparently, so I just dropped them from the dataframe.  
   
-Next, I noticed some missing entries from either the beginning or end of the collection. Since our dataframe contains the monthly HPI from 1996-2018, and we are only using the latter portion our visualization, the early missing entries weren't of much concern. However, I went ahead and filled them too incase I decide to revisit this dataset. As you'll soon see, the counties are highly correlated with one another. Taking advantage of this, the following code approximates and fills the missing values.
-
-
+Next, I noticed some missing entries from either the beginning or end of the collection. Since our dataframe contains the monthly HPI from 1996-2018, and we are only using the latter portion for our visualization, the missing early entries weren't of much concern. However, I went ahead and filled them too incase I decide to revisit this dataset later.  
+As you'll soon see, the counties are highly correlated with one another. Taking advantage of this, the following code approximates and fills the missing values.
 
 
 ```python
@@ -52,21 +52,23 @@ def Replace_NANcounty(county_name, replacement_county):
 ```
 
 
-Using Matplotlib's basic plot function, we can now take a peak at the dataset.  
+Using a very basic plot, we can now take a peak at the dataset.  
 
-![png](/images/HPI_linegraph.png)
+<p align="center">
+  <img src="/images/HPI_linegraph.png">
+</p>
 
 # Creating Visualizations
-The graph above is not what we want, it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, you can already see the variation increasing after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
+The graph above is not ideal, it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice the increasing variation after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
   
-The Great Recession 'officially' ended June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, I truncated the dataframe using an approximation of when the housing market actually began to recover from the recession.
+The Great Recession 'officially' ended in June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, the dataframe is altered to only include years of post-recession recovery.
 
 
 ```python
 df_09_plus = df.loc['2009-6-30':]
 min_months = []
 
-#creates list of post recession turning-point dates
+# creates list of post recession turning-point dates
 for i in np.arange(0,88):
     itter_county = df_09_plus.iloc[:,i]
     local_min = min(itter_county)
@@ -74,21 +76,21 @@ for i in np.arange(0,88):
     min_mo = pd.to_datetime(min_mo.item(0))
     min_months.append(min_mo)
     
-#returns the most observed date from list 
-#truncates df at that point
+# returns the most observed date from list 
+# truncates df at that point
 start_date = max(set(min_months), key=min_months.count)
 df = df[df.index >= start_date]
 ```
 
-As we aren't concerned with the earlier years, we also aren't concerned with the pre-existing HPI of each county. Rather, we use percentages as a basis to evaluate growth. The following code returns the necessary dataframe.
+As I'm not concerned with previous years, I'm also not concerned with the HPI values from those years. Rather, I will use percentages as a measure of growth and improvement. The following lines produce the desired dataframe.
 
 
 ```python
-#create new dataframe with entries as %change in HPI from May 2012
+# create new dataframe with entries as %change in HPI from May 2012
 pct_func = lambda x : round(100*(x/(df.iloc[0].values) - 1),1)
 df2 = pct_func(df.iloc[:])
 
-#relabel columns of the new dataframe
+# relabel columns of the new dataframe
 new_cols = []
 for i in df2.columns:
     pct_col = i.strip('_HPI')+'_pct'
@@ -101,6 +103,10 @@ To avoid another graph of 88 HPI curves, we can plot summary statistics instead!
 
 
 ![png](/images/HPI_Matplotlib_plot.png)
+
+<p align="center">
+  <img src="/images/HPI_Matplotlib_plot.png">
+</p>
 
 Although this is not definitively correct, I find it to be useful thinking of this as an aeriel view of a 3-Dimensional Density Plot, where time is the additional variable.  
 This isn't too far-fetched either. I say this because the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of the shaded regions accurately depict the density of datapoints in each interval.  
