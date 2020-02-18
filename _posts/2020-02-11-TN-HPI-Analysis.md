@@ -52,14 +52,14 @@ def Replace_NANcounty(county_name, replacement_county):
     print(master_df[county_name])
 ```
 
-
-Making a very basic plot, we can now take a peak at the dataset.  
+  
+Making a very basic plot, we can now take a peak at the dataset!  
 
 <p align="center">
   <img src="/images/HPI_linegraph.png">
 </p>
 
-The graph above is not ideal, it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice the increasing variation after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
+The graph above is not exactly ideal; it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice the increasing variation after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
 
 # Creating Visualizations
 The Great Recession 'officially' ended in June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, the dataframe is altered to only include years of post-recession recovery.
@@ -100,7 +100,7 @@ for i in df2.columns:
 df2.columns = new_cols
 ```
 ## Visualizing Post-Recession Growth
-To avoid another graph of 88 HPI curves, we can plot summary statistics instead! I created the figure below using the graphical plotting library in Matplotlib.
+To make a figure more interpretable than a graph with 88 HPI curves, we can plot summary statistics instead! I created the figure below using the graphical plotting library in Matplotlib.
 
 
 <p align="center">
@@ -116,9 +116,9 @@ Also included are the individual data points of the two counties at either end o
 To show individual county data **and** the housing market as a whole in a single figure, I utilized the extremely powerful data analysis toolset found in the Plotly Express library. Specifically, an interactive thematic geo-map of Tennessee partioned by its counties.  
   
 To define the geographical boundaries of the map, I used county specific codes from the Federal Information Processing Standards (FIPS) and a json file containing the corresponding latitude and longitude strings, which can be found [here](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json).  
-Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. I did this for both dataframes so I could include both the percent change and the HPI of each county in the figure.  
+Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. I did this for both dataframes to include both the percent change and the HPI of each county in the figure.  
   
-The major downside to the choropleth map is that it can be very computationally expensive. Since this is an interactive map, it has to reiterate through the data each frame, introducing increasingly more latency.  
+The major downside to a choropleth map is that it can be very computationally expensive. Since this is an interactive map, it has to reiterate through the data each frame, increasingly introducing more latency.  
   
 To mitigate complexity of the figure, I reduced the number of observation dates we pass to it.
 
@@ -142,8 +142,12 @@ dfFig.reset_index(drop = True, inplace = True)
 
 The dataframe used in the figure below, dfFig, consists of two observations for each year in 2012-2018, and the five columns: 'FIPS_code', 'County_Name', 'Date', 'HPI', 'Percent_Change'.
 
-
   
 {% include TennHPI_Choropleth.html %}
  
+  
+# Conclusion
+Both types of visualizations, static and interactive, have their place in Data Analysis. In this project, the static Matplotlib visualizations excels in relaying the bulk summary of the data very efficiently and quickly, but lacks valuable details of the individual counties. The interactive Plotly figure contains the individual datapoints and is also easily interpretable, but it wouldn't be the type of content you'd want to bring into a meeting or to present to a crowd since it entirely relies on user input. Aside from the Static vs. Interactive comparison, geographical data is almost ALWAYS best visualized using some form of a thematic map!  
+  
+Personally, I think the most enjoyable part of making visualizations is that there's never just one right answer, or one "Go-To" figure for all the different datasets. Sure it's easy to make some pretty atrocious visualizations, but there's a thousand different ways to skin a cat, right? It's up to you to determine which way's the best way.
 
