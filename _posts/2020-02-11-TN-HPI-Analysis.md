@@ -5,7 +5,7 @@ tags: [Data Analysis & Visualization]
 breadcrumbs: true
 header:
     image: "/images/nash-header.jpg"
-excerpt: "Data Analysis & Visualization"
+excerpt: "Data Analysis & Visualizations"
 
 toc: true
 toc_label: " Sights-to-See:"
