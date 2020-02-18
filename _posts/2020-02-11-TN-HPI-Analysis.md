@@ -12,13 +12,14 @@ toc_label: " Sights-to-See:"
 toc_icon: "hiking"
 ---
 
-If you live in Tennessee, you'll agree that it'd be impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or you've just been completely oblivious to this fact) you've come to the right place!
+If you live in Tennessee, you'll agree that it'd be near impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or you've just been completely oblivious to this fact) you've come to the right place!
   
 # The Data
 The Housing Price Index (HPI) data used in this project was collected by Zillow, and can be found in the Quandl databases.  
-  
+
+## Query
 On the Quandl website, you'll find lots of open-source data that can be easily accessed with a free account. To grab the data for all 95 Tennessee counties, I made a query for each individual county dataset by itteratively calling the quandl.get method on the respective URL's, and then merging them to a pandas dataframe at the end of each iteration. Since all of the data is of the same measure and same state, the URL's only differed by a 3-4 digit string, which can easily be scraped from the [documentation page](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation).  
-*Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!*  
+**Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!*  
   
 ## Assessing NaN Values
 Zillow does a good job structuring their data and making it easily explorable, so there wasn't much cleaning needed for our datset to become workable except for assessing the NaN valued entries! Seven of the columns were completely missing since Zillow doesn't service those counties apparently, so I just dropped them from the dataframe.  
@@ -52,15 +53,15 @@ def Replace_NANcounty(county_name, replacement_county):
 ```
 
 
-Using a very basic plot, we can now take a peak at the dataset.  
+Making a very basic plot, we can now take a peak at the dataset.  
 
 <p align="center">
   <img src="/images/HPI_linegraph.png">
 </p>
 
-# Creating Visualizations
 The graph above is not ideal, it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice the increasing variation after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
-  
+
+# Creating Visualizations
 The Great Recession 'officially' ended in June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, the dataframe is altered to only include years of post-recession recovery.
 
 
@@ -102,13 +103,11 @@ df2.columns = new_cols
 To avoid another graph of 88 HPI curves, we can plot summary statistics instead! I created the figure below using the graphical plotting library in Matplotlib.
 
 
-![png](/images/HPI_Matplotlib_plot.png)
-
 <p align="center">
   <img src="/images/HPI_Matplotlib_plot.png">
 </p>
 
-Although this is not definitively correct, I find it to be useful thinking of this as an aeriel view of a 3-Dimensional Density Plot, where time is the additional variable.  
+Although this is not definitively correct, I find it useful to think of this as an overhead view of a 3-Dimensional Density Plot, where time is the additional variable.  
 This isn't too far-fetched either. I say this because the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of the shaded regions accurately depict the density of datapoints in each interval.  
   
 Also included are the individual data points of the two counties at either end of the distribution. Davidson County (Nashville) had the highest overall increase of 93%, nearly doubling its HPI; the lowest in the state was Weakley County, only increasing 9%.  
@@ -128,12 +127,9 @@ To mitigate complexity of the figure, I reduced the number of observation dates 
 biyearly_dates = []
 
 for i in range(12,19):
-    if i < 10:
-        may = '200'+str(i)+'-05-31'
-        sept = '200'+str(i)+'-09-30'
-    else:
-        may = '20'+str(i)+'-05-31'
-        sept = '20'+str(i)+'-09-30'
+    may = '20'+str(i)+'-05-31'
+    sept = '20'+str(i)+'-09-30'
+
     biyearly_dates.append(may)
     biyearly_dates.append(sept)
 
@@ -144,7 +140,7 @@ dfFig = df2[df2['Date'].isin(biyearly_dates)]
 dfFig.reset_index(drop = True, inplace = True)
 ```
 
-The dataframe used in the figure below, dfFig, consists of two observations for each year in 2012-2018, and the five columns labeled: 'FIPS_code', 'County_Name', 'Date', 'HPI', 'Percent_Change'.
+The dataframe used in the figure below, dfFig, consists of two observations for each year in 2012-2018, and the five columns: 'FIPS_code', 'County_Name', 'Date', 'HPI', 'Percent_Change'.
 
 
   
