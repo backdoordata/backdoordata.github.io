@@ -29,7 +29,7 @@ Next, I noticed some missing entries from either the beginning or end of the col
 As you'll soon see, the counties are highly correlated with one another. Taking advantage of this, the following code approximates and fills the missing values.
 
 
-```Jupyter-Notebook
+```python
 def Find_Most_Similar(county_name):
     """Finds and sorts remaining counties by difference in average HPI, prints top 5, and 
     plots the county (county_name) alongside the top 2 most similar"""
