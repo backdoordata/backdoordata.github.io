@@ -12,7 +12,7 @@ toc_label: " Sights-to-See:"
 toc_icon: "hiking"
 ---
 
-If you live in Tennessee like I do, you'll agree that it'd be near impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or you've just been completely oblivious to this fact) you've come to the right place!
+If you live in Tennessee, you've probably noticed the recent growth in popularity of Middle Tennessee. If you don't live in Tennessee, or have been completely oblivious to this fact, you've come to the right place!
   
 # The Data
 The Housing Price Index (HPI) data used in this project was collected by Zillow, and can be found in the Quandl databases.  
@@ -29,7 +29,7 @@ Next, I noticed some missing entries from either the beginning or end of the col
 As you'll soon see, the counties are highly correlated with one another. Taking advantage of this, the following code approximates and fills the missing values.
 
 
-```python
+```JupyterNotebook
 def Find_Most_Similar(county_name):
     """Finds and sorts remaining counties by difference in average HPI, prints top 5, and 
     plots the county (county_name) alongside the top 2 most similar"""
