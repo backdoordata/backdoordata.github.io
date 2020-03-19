@@ -12,16 +12,17 @@ toc_label: " Sights-to-See:"
 toc_icon: "hiking"
 ---
 
-If you live in Tennessee, you'll agree that it'd be near impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or you've just been completely oblivious to this fact) you've come to the right place!
+If you live in Tennessee like I do, you'll agree that it'd be near impossible to ignore the recent growth of middle Tennessee. If you don't live in Tennessee (or you've just been completely oblivious to this fact) you've come to the right place!
   
 # The Data
 The Housing Price Index (HPI) data used in this project was collected by Zillow, and can be found in the Quandl databases.  
 
 ## Query
 On the Quandl website, you'll find lots of open-source data that can be easily accessed with a free account. To grab the data for all 95 Tennessee counties, I made a query for each individual county dataset by itteratively calling the quandl.get method on the respective URL's, and then merging them to a pandas dataframe at the end of each iteration. Since all of the data is of the same measure and same state, the URL's only differed by a 3-4 digit string, which can easily be scraped from the [documentation page](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation).  
+  
 **Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!*  
   
-## Assessing NaN Values
+## Data Preparation
 Zillow does a good job structuring their data and making it easily explorable, so there wasn't much cleaning needed for our datset to become workable except for assessing the NaN valued entries! Seven of the columns were completely missing since Zillow doesn't service those counties apparently, so I just dropped them from the dataframe.  
   
 Next, I noticed some missing entries from either the beginning or end of the collection. Since our dataframe contains the monthly HPI from 1996-2018, and we are only using the latter portion for our visualization, the missing early entries weren't of much concern. However, I went ahead and filled them too incase I decide to revisit this dataset later.  
