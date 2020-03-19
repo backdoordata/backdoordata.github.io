@@ -12,7 +12,7 @@
 
 # theme                  : "minimal-mistakes-jekyll"
 # remote_theme           : "mmistakes/minimal-mistakes"
-minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "default", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin    : "dirt" # "air", "aqua", "contrast", "default", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
 locale                   : "en-US"
@@ -199,7 +199,7 @@ encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
 
-# Conversion
+# Conversion (code blocks)
 markdown: kramdown
 highlighter: rouge
 lsi: false
@@ -207,7 +207,7 @@ excerpt_separator: "\n\n"
 incremental: false
 
 
-# Markdown Processing
+# Markdown Processing (code blocks)
 kramdown:
   input: GFM
   hard_wrap: false
@@ -217,6 +217,7 @@ kramdown:
   toc_levels: 1..6
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   enable_coderay: false
+  # code block line numbers
   syntax_highlighter_opts:
     block:
       line_numbers: true
