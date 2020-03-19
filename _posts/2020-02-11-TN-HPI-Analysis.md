@@ -4,7 +4,12 @@ date: 2020-02-11
 tags: [Data Analysis & Visualization]
 breadcrumbs: true
 header:
-    image: "/images/nash-header.jpg"
+    # image: "/images/nash-header.jpg"
+    overlay_image: "/images/nash-header.jpg"
+    caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
+    actions:
+      - label: "More Info"
+        url: "https://unsplash.com"
 excerpt: "Data Analysis & Visualizations"
 
 toc: true
