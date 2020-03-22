@@ -15,9 +15,9 @@ toc: true
 toc_label: " Workflow:"
 toc_icon: "hiking"
 ---
-I never liked math throughout my youth, but I was always good at it. However, I fell in love with it when I got to college, so I decided to pursue a bachelors degree in it (specifically, a B.S. in actuarial science). Around this time I also started noticing how other students either loved math, or they absolutely dreaded it and would say something along the lines of:  
+I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how everybody either **loved** math, or they absolutely dreaded it and would say something along the lines of:  
   
-"I'm just not good at math"  
+"I'm just not a math person"  
   
 I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is the statement "I'm just not good at math" a legitimate explanation to their failing grades? *Is having a mathematically adept mind biological?*  
   
@@ -330,7 +330,7 @@ print(stud.corr()['G3'].sort_values(ascending= False))
     Name: G3, dtype: float64
 
 
-To reiterate on my previous statement, notice that the order of correlation with the actual final grade seems a bit more logical than with the 0-1 target variable.
+To emphasize my previous statement, notice that the order of correlation with the actual final grade seems a bit more logical than with the 0-1 target variable.
   
   
 To see all correlations, I will use seaborn to make a heatmap of the full correlation matrix!
