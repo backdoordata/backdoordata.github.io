@@ -153,9 +153,9 @@ sns.catplot(x = 'Medu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= 
 sns.catplot(x = 'Fedu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Fathers Education Level');
 ```
 
-![](/images/math_ML_imgs/output_12_0.png =300x254) ![](/images/math_ML_imgs/output_12_1.png =300x254)
+![](./images/math_ML_imgs/output_12_0.png =300x254) ![](./images/math_ML_imgs/output_12_1.png =300x254)
 
-![](/images/math_ML_imgs/output_12_2.png =400x337) ![](/images/math_ML_imgs/output_12_3.png =400x337)
+![](./images/math_ML_imgs/output_12_2.png =400x337) ![](./images/math_ML_imgs/output_12_3.png =400x337)
 
 
 ```python
