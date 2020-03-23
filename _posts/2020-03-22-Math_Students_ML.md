@@ -126,7 +126,7 @@ I'm building a classifier to predict whether a student will either pass or fail 
 stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 ```
 
-<h3><center>Target Correlation</center><h3>
+<h3><center>Target Correlation</center></h3>
 
 First, I want to evaluate how the individual features correlate to the target variable. I will use seaborn to help visualize the pass/fail frequencies of each feature.  
   
