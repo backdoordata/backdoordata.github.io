@@ -17,15 +17,15 @@ toc_icon: "hiking"
 ---
 I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how everybody either **loved** math, or they absolutely dreaded it and would say something along the lines of:  
   
-"I'm just not a math person"  
+<center>"I'm just not a math person"</center>
   
-I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is the statement "I'm just not good at math" a legitimate explanation to their failing grades? *Is mathematical ability genetic?*  
+I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation to their failing grades? *Is mathematical ability genetic?*  
   
 In this project, I am looking to build a model that takes seemingly irrelevant details about a student and uses them to predict their mathematical ability. 
 
 
-# Data Exploration
-This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for two term grades the final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. The two term grades, G1 and G2, will not be included in the actual analysis since they essentially compose the final grade.  
+<h1><center>Data Exploration</center></h1>
+This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for the two term grades and final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. The two term grades, G1 and G2, will not be included in the actual analysis since they essentially compose the final grade.  
   
   
   
@@ -36,7 +36,7 @@ This is a dataset from the UCI repository that contains the final scores of 395 
    * Target Correlation
    * Feature Correlation
 
-## Variable Identification
+<h2><center>Variable Identification</center></h2>
 
 The 30 predictive features are all categorical, and consist of both ordinal and nominal data.  
   
@@ -87,7 +87,7 @@ The 30 predictive features are all categorical, and consist of both ordinal and 
   
 **At the top of the page is a link that will redirect you to the Kaggle post where this dataset can be found!**
 
-## Univariate Analysis
+<h2><center>Univariate Analysis</center></h2>
 The ordinal features are all integer values, and the nominal features are all strings. Let's take a look at the distributions of the 13 ordinal features.
 
 
@@ -116,7 +116,7 @@ Right away we can see that some of the features have categories with hardly any 
   
 The shift in distributions of the three grades is rather interesting. You can see how the grades were more spread out and typically worse in the first term (G1), the students started to pick their grades up a bit in the second term (G2), and then the final grade (G3) resembles a normal distributaion (excluding the 0 values) with mean ~11.
 
-## Bivariate Analysis
+<h2><center>Bivariate Analysis</center></h2>
 
 I'm building a classifier to predict whether a student will either pass or fail the course, so I need to define a threshold for G3 (which ranges from 0-20). The minimum passing grade in the U.S. education system is typically considered to be D minus. In the case at hand, any student whose G3 value is less than 12 will be classified as failed, and the rest are classified as passing.  
 (**Note:** In this section the target labels are "pass"/"fail", but afterwards they will just be 0's and 1's.)
@@ -126,7 +126,7 @@ I'm building a classifier to predict whether a student will either pass or fail 
 stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 ```
 
-<h3><center>Target Correlation</center></h3>
+### Target Correlation
 
 First, I want to evaluate how the individual features correlate to the target variable. I will use seaborn to help visualize the pass/fail frequencies of each feature.  
   
@@ -326,7 +326,7 @@ print("On average, females spend",
     However, 47.06 % of males scored a passing grade, while the female percentage was only 35.58 %.
 
 
-# Data Cleaning
+<h1><center>Data Cleaning</center></h1>
 With only 395 samples, I'd like to retain as many of them as possible. However, including the underrepresented categories we saw in the univariate analysis would ultimately result in a poor model.  
 Let's take another look at them.
 
@@ -500,7 +500,7 @@ There are still a few features I feel like would be irrelevant to passing a math
   
 Furthermore, the resulting dataset has 27 features, and 385 samples.  
 
-# Model Selection
+<h1><center>Model Selection</center></h1>
 * K-Nearest Neighbors
 * Suport Vector Classifier
 * Logistic Regression
