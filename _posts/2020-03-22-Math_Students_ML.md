@@ -138,7 +138,7 @@ First, I want to evaluate how the individual features correlate to the target va
   
 You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because many of the nominal features only have two categories and they can be observed independently very easily in bivariate plots.  
   
-**Note that** in my study, I evaluated all 30 features alongside the target variable. However, many of the features yeild little-to-no correlation with the target variable, and were simply not interesting. Thus, the features that *are* interesting are plotted below!
+**Note that** in my study, I evaluated all 30 features alongside the target variable. However, many of the features yeild little-to-no correlation with the target variable, and were simply not interesting -- the features that *are* interesting are plotted below!
 
 
 ```python
@@ -153,28 +153,9 @@ sns.catplot(x = 'Medu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= 
 sns.catplot(x = 'Fedu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Fathers Education Level');
 ```
 
-![]("/images/math_ML_imgs/output_12_0.png) ![](/images/math_ML_imgs/output_12_1.png)
+![](/images/math_ML_imgs/output_12_0.png) ![](/images/math_ML_imgs/output_12_1.png)
 
-
-
-
-<!-- <p align="center">
-  <img src="/images/math_ML_imgs/output_12_1.png">
-</p> -->
-
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_12_2.png">
-</p>
-
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_12_3.png">
-</p>
-
-
+![](/images/math_ML_imgs/output_12_2.png) ![](/images/math_ML_imgs/output_12_3.png)
 
 
 ```python
