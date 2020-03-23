@@ -154,14 +154,14 @@ sns.catplot(x = 'Fedu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= 
 ```
 
 <p align="center">
-  <img src="/images/math_ML_imgs/output_12_0.png">
+  <img src="/images/math_ML_imgs/output_12_0.png"><img src="/images/math_ML_imgs/output_12_1.png">
 </p>
 
 
 
-<p align="center">
+<!-- <p align="center">
   <img src="/images/math_ML_imgs/output_12_1.png">
-</p>
+</p> -->
 
 
 
