@@ -138,35 +138,15 @@ First, I want to evaluate how the individual features correlate to the target va
   
 You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because many of the nominal features only have two categories and they can be observed independently very easily in bivariate plots.  
   
-**Note that** in my study, I evaluated all 30 features alongside the target variable. However, many of the features yeild little-to-no correlation with the target variable, and were simply not interesting -- the features that *are* interesting are plotted below!
-
-
-```python
-# the interesting categorical plots of the ordinal features
-
-sns.catplot(x = 'studytime', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title= 'Study Time')
-
-sns.catplot(x = 'goout', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Go Out w/ Friends')
-
-sns.catplot(x = 'Medu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Mothers Education Level')
-
-sns.catplot(x = 'Fedu', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Fathers Education Level');
-```
+**Note that** in my study, I evaluated all 30 features alongside the target variable. However, many of the features yeild little-to-no correlation with the target variable, and were simply not interesting -- the ones that *are interesting* are plotted below!  
+  
+**The Interesting Ordinal Features**
 
 ![](/images/math_ML_imgs/output_12_0.png) ![](/images/math_ML_imgs/output_12_1.png)
 
 ![](/images/math_ML_imgs/output_12_2.png) ![](/images/math_ML_imgs/output_12_3.png)
-
-
-```python
-# the interesting categorical plots of the nominal features
-
-sns.catplot(x = 'sex', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Sex')
-
-sns.catplot(x = 'famsize', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Family Size')
-
-sns.catplot(x = 'activities', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Extra-Curricular Activities');
-```
+  
+**The Interesting Nominal Features**
 
 ![](/images/math_ML_imgs/output_13_0.png) ![](/images/math_ML_imgs/output_13_1.png) ![](/images/math_ML_imgs/output_13_2.png)
 
