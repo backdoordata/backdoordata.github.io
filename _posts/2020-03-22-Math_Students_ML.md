@@ -134,7 +134,7 @@ stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 
 ### Target Correlation
 
-First, I want to evaluate how the individual features correlate to the target variable. I will use seaborn to help visualize the pass/fail frequency per category of each feature.  
+First, I want to evaluate how the individual features correlate to the target variable. I will use seaborn to help visualize the pass/fail frequencies of each feature.  
   
 You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because many of the nominal features only have two categories and they can be observed independently very easily in bivariate plots.  
   
@@ -450,22 +450,10 @@ plt.figure(figsize= (40,40))
     75      1
     Name: absences, dtype: int64
 
-
-
-
-
-    <Figure size 2880x2880 with 0 Axes>
-
-
-
 <p align="center">
   <img src="/images/math_ML_imgs/output_30_2.png">
 </p>
 
-
-
-
-    <Figure size 2880x2880 with 0 Axes>
 
 
 For absences, there are 46 samples belonging to categories with no more than 5 observations each, so it's not practical to simply just drop them. However, we can see that every instance of 25+ absences resulted in the same outcome (a failed course, shocker!), and hence we can bin these values together. Although this only accounts for nine of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
