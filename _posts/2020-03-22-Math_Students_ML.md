@@ -1,5 +1,5 @@
 ---
-title: "Using Machine Learning to Predict Academic Success"
+title: "Machine Learning for Predicting Student Success"
 date: 2020-03-22
 tags: [Data Analysis & Visualization] # Make Changes
 breadcrumbs: true
@@ -12,14 +12,14 @@ header:
 excerpt: "Data Analysis & Visualizations"
 
 toc: true
-toc_label: " Workflow:"
+toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
 I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how everybody either **loved** math, or they absolutely dreaded it and would say something along the lines of:  
   
 "I'm just not a math person"  
   
-I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is the statement "I'm just not good at math" a legitimate explanation to their failing grades? *Is having a mathematically adept mind biological?*  
+I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is the statement "I'm just not good at math" a legitimate explanation to their failing grades? *Is mathematical ability genetic?*  
   
 In this project, I am looking to build a model that takes seemingly irrelevant details about a student and uses them to predict their mathematical ability. 
 
