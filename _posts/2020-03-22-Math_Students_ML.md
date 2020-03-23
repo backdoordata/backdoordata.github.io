@@ -168,22 +168,7 @@ sns.catplot(x = 'famsize', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_orde
 sns.catplot(x = 'activities', data= stud, hue= 'PASS/FAIL', kind= 'count', hue_order= ['PASS', 'FAIL'], palette= 'Set2').set(title = 'Extra-Curricular Activities');
 ```
 
-<p align="center">
-  <img src="/images/math_ML_imgs/output_13_0.png">
-</p>
-
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_13_1.png">
-</p>
-
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_13_2.png">
-</p>
-
+![](/images/math_ML_imgs/output_13_0.png) ![](/images/math_ML_imgs/output_13_1.png) ![](/images/math_ML_imgs/output_13_2.png)
 
 
 It's not too surprising that there's not any individual features that directly correlate to the target variable. That is, a student's pass/fail status is the outcome of an entire semester's work, it's more complex than just a single test grade. Similarly, making a "pass" or "fail" prediction for a student is more complex than just looking at one single detail of their life!  
