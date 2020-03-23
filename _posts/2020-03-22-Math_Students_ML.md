@@ -24,17 +24,6 @@ I've always assumed that these people just never truly gave themselves the oppur
 In this project, I am looking to build a model that takes seemingly irrelevant details about a student and uses them to predict their mathematical ability. 
 
 
-```python
-import numpy as np
-import pandas as pd
-```
-
-
-```python
-pd.options.display.max_columns = None
-stud = pd.read_csv('student-math.csv')
-```
-
 # Data Exploration
 This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for two term grades the final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. The two term grades, G1 and G2, will not be included in the actual analysis since they essentially compose the final grade.  
   
@@ -103,8 +92,13 @@ The ordinal features are all integer values, and the nominal features are all st
 
 
 ```python
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# load in dataset
+stud = pd.read_csv('student-math.csv')
 ```
 
 
@@ -132,7 +126,9 @@ I'm building a classifier to predict whether a student will either pass or fail 
 stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 ```
 
+<div align="center">
 ### Target Correlation
+</div>
 
 First, I want to evaluate how the individual features correlate to the target variable. I will use seaborn to help visualize the pass/fail frequencies of each feature.  
   
