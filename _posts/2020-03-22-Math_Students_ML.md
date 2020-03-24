@@ -1,5 +1,5 @@
 ---
-title: "Machine Learning for Predicting Student Success"
+title: "Predict Student Success with Machine Learning"
 date: 2020-03-22
 tags: [Data Analysis & Visualization] # Make Changes
 breadcrumbs: true
@@ -17,26 +17,25 @@ toc_icon: "hiking"
 ---
 I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how everybody either **loved** math, or they absolutely dreaded it and would say something along the lines of:  
   
-<center>"I'm just not a math person"</center>
+<center>"I'm just not a math person"</center>  
   
 I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation to their failing grades? *Is mathematical ability genetic?*  
   
-In this project, I am looking to build a model that takes seemingly irrelevant details about a student and uses them to predict their mathematical ability. 
+For this project, I am looking to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
 
 
 <h1><center>Data Exploration</center></h1>
-This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for the two term grades and final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. The two term grades, G1 and G2, will not be included in the actual analysis since they essentially compose the final grade.  
+This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for the two term grades and final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
   
   
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Outline:**
-1.  Variable Identification
-2.  Univariate Analysis
-3.  Bivariate Analysis
-   * Target Correlation
-   * Feature Correlation  
-
-I'll import the dataset along with a few libraries I'll be using.  
+1.) Variable Identification
+2.) Univariate Analysis
+3.) Bivariate Analysis
+3a.) Target Correlation
+3b.) Feature Correlation  
+ 
 
 ```python
 import numpy as np
@@ -50,7 +49,7 @@ stud = pd.read_csv('student-math.csv')
 
 <h2><center>Variable Identification</center></h2>
 
-The 30 predictive features are all categorical, and consist of both ordinal and nominal data.  
+The 30 predictive features are all categorical, and consist of a mix of numeric and nonnumeric data types.  
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**
 1.	age - student's age (numeric: from 15 to 22) 
@@ -113,14 +112,14 @@ stud.hist(figsize= (20,15), color= 'b');
 </p>
 
 
-Right away we can see that some of the features have categories with hardly any occurances (ex: Fedu, Medu, age, and absences), which isn't much of a surprise having a small sample size. These outliers may cause issues later on down the road since they will likely overfit the model; I will take note of this now, and will evaluate them a little deeoer in the upcoming sections.  
+We can see right away that some of the features have categories with hardly any occurances (ex: Fedu, Medu, age, and absences), which isn't a surprise having a small sample size. These outliers may cause issues later on down the road since they will likely overfit the model; I will take note of this now, and will evaluate them further in the upcoming sections.  
   
-The shift in distributions of the three grades is rather interesting. You can see how the grades were more spread out and typically worse in the first term (G1), the students started to pick their grades up a bit in the second term (G2), and then the final grade (G3) resembles a normal distributaion (excluding the 0 values) with mean ~11.
+The shift in distributions of the three grades is rather interesting. You can see how the grades were more spread out and typically worse in the first term (G1), the students started to pick their grades up a bit in the second term (G2), and then the final grade (G3) resembles a normal distribution (excluding the 0 values) with mean ~11.
 
 <h2><center>Bivariate Analysis</center></h2>
 
-To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. education system is typically considered to be a D-, so in our case, a 12/20 is the minimum passing grade. 
-*(In this section the target labels are "pass"/"fail", but afterwards they will just be 0's and 1's.)*
+To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the minimum passing grade. 
+*(In this section the target labels are pass or fail, but in following sections they will just be 0's and 1's.)*
 
 
 ```python
@@ -146,11 +145,11 @@ You may have noticed that I only included the ordinal features in the previous s
 ![](/images/math_ML_imgs/output_13_0.png) ![](/images/math_ML_imgs/output_13_1.png) ![](/images/math_ML_imgs/output_13_2.png)
 
 
-What's important to acknowldge here is that a student's pass/fail status is the outcome of an entire semester's work; it's more complex than just a single test grade. Similarly, making a "pass" or "fail" prediction for a student is more difficult than just evaluating one feature!  
+What's important to acknowldge here is that a student's pass/fail status is the outcome of an entire semester's work; it's more complex than just a single test grade. Similarly, making a pass/fail prediction for a student is more difficult than just evaluating one feature!  
 With this being said, I suspect the features will show more correlation with the actual 0-20 final grade. *Being in a relationship with someone probably won't cause them to fail all of their classes, but it may very easily affect their final grade by a few points.*  
 
 ### Feature Correlation
-Now we'll take a look at how all of the features correlate with eachother as well. I will first need to encode the nominal feature values with numerical representations.
+Now we'll take a look at all corrolations. I'll first need to encode the features with nonnumeric values.
 
 
 ```python
@@ -195,11 +194,7 @@ print(stud.corr()['G3'].sort_values(ascending= False))
 ![](/images/math_ML_imgs/target_corr.png) ![](/images/math_ML_imgs/G3_corr.png)
 
 
-To emphasize my previous statement, notice that the order of correlation with the actual final grade seems a bit more logical than with the 0-1 target variable.
-  
-  
-To see all correlations, I will use seaborn to make a heatmap of the full correlation matrix!
-
+To emphasize on my previous statement, notice how the order of correlation with the actual final grade seems more logical than with the 0-1 target variable. Thus, I'll use G3 for making a heatmap of the correlation matrix.
 
 ```python
 # sorted correlation matrix
@@ -223,19 +218,19 @@ sns.heatmap(G3_corr,
 
 
 **Positive Correlations:**
-1. 'address' and 'traveltime'
+* 'address' and 'traveltime'
   
-2. 'Dalc', 'Walc', 'goout', and 'freetime'
+* 'Dalc', 'Walc', 'goout', and 'freetime'
   
-3. 'famsup' and 'paid'
+* 'famsup' and 'paid'
   
   
 **Negative Correlations:**
-1. 'Dalc', 'Walc', and 'studytime'
+* 'Dalc', 'Walc', and 'studytime'
   
-2. 'studytime' and 'sex'  
+* 'studytime' and 'sex'  
   
-These correlations are rather intuitive, but the inverse correlation between the sex of a student and their average time spent studying is worth noting. As a male, I will openly admit I'm not too surprised that we fall short to our female counterparts in this area. But what's intersting is that..
+These correlations are seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is worth noting. I'll openly admit that I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
 
 
 ```python
@@ -251,8 +246,8 @@ print("On average, females spend",
 
 
 <h1><center>Data Cleaning</center></h1>
-With only 395 samples, I'd like to retain as many of them as possible. However, including the underrepresented categories we saw in the univariate analysis would ultimately result in a poor model.  
-Let's take another look at them.
+With only 395 samples, I'd like to retain as many of them as possible. However, including the underrepresented categories would ultimately result in a poor model.  
+Let's take another look at the ones we saw earlier.
 
 
 ```python
@@ -264,10 +259,10 @@ print(stud['Fedu'].value_counts())
 ![](/images/math_ML_imgs/Medu_counts.png) ![](/images/math_ML_imgs/Fedu_counts.png)
 
 
-I will have to exclude the samples with 0 values for Medu/Fedu entirely since they are vastly in the minority, even in comparison to the next smallest categories.  
+I will have to exclude the samples with 0 values for Medu/Fedu entirely since they are greatly underrepresented, even in comparison to the next smallest categories.  
   
   
-**Note:** In the following graphs, the green bars denote the number of students who passed, and the red who failed.
+**Note:** In the following plots, the green bars denote the number of students who passed, and the red who failed.
 
 
 ```python
@@ -276,8 +271,11 @@ print(stud['age'].value_counts())
 sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 0], palette= 'Set2').set(title = 'Age')
 ```
 
-![](/images/math_ML_imgs/age_counts.png) ![](/images/math_ML_imgs/output_28_1.png)
+![](/images/math_ML_imgs/age_counts.png)
 
+<p align="center">
+  <img src="/images/math_ML_imgs/output_28_1.png">
+</p>
 
 I am inclined to keep the samples whose age is >=20 since there is a definite correlation between the students' age and pass rate. Yet it would be far-fetched to consider samples of sizes three, one, and one as accuracte representations of *any* populations.
 
@@ -288,13 +286,16 @@ sns.catplot(x = 'absences', data= stud, hue= 'target', kind= 'count', hue_order=
 plt.figure(figsize= (40,40))
 ```
 
-![](/images/math_ML_imgs/absences_counts.png) ![](/images/math_ML_imgs/output_30_2.png)
+![](/images/math_ML_imgs/absences_counts.png)
 
+<p align="center">
+  <img src="/images/math_ML_imgs/output_30_2.png">
+</p>
 
-For absences, there are 46 samples belonging to categories with no more than 5 observations each, so it's not practical to simply just drop them. However, we can see that every instance of 25+ absences resulted in the same outcome (a failed course, shocker!), and hence we can bin these values together. Although this only accounts for nine of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
+For absences, there's 46 samples in categories with no more than 5 total observations, and it's not ideal to simply drop them all. However, we can see that every instance of 25+ absences resulted in the same outcome (a failed course, shocker!), and hence we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
 
   
-It only seems natural to use '25' to denote the 25+ bin, but using a slighly larger integer, say 30, may benefit certain models where the Euclidean distance of the datapoints are of importance.
+It only seems natural to use '25' to denote the 25+ bin, but using a number that's slighly larger, say 30, may benefit certain models where Euclidean distance is of importance.
 
 
 ```python
@@ -326,28 +327,12 @@ sns.catplot(x = 'Pstatus', data= stud, hue= 'target', kind= 'count', hue_order= 
 sns.catplot(x = 'higher', data= stud, hue= 'target', kind= 'count', hue_order= [1, 0], palette= 'Set2').set(title = 'Higher Education');
 ```
 
-<p align="center">
-  <img src="/images/math_ML_imgs/output_34_0.png">
-</p>
-
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_34_1.png">
-</p>
-
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_34_2.png">
-</p>
-
+![](/images/math_ML_imgs/output_34_0.png) ![](/images/math_ML_imgs/output_34_1.png) ![](/images/math_ML_imgs/output_34_2.png)
 
 
 Each of these features have a dominate category by roughly 90% selection, so there's not much, if any, information to be gained by their inclusion. 
 
-Consider the feature of whether or not a student plans on furthering their education, 'higher'. If a student does not plan on furthering their education, many ML models would predecit that they are going to fail the course solely due to the lack of information (18 students to 367).
-  
+Consider the feature of whether or not a student plans on furthering their education, 'higher'. If a student does not plan on furthering their education, many ML models would predecit that they are going to fail the course solely due to the lack of information (18 students to 367).  
 These features will not be included in the model.
 
 
@@ -355,9 +340,9 @@ These features will not be included in the model.
 stud = stud.drop(columns=['school', 'Pstatus', 'higher'])
 ```
 
-There are still a few features I feel like would be irrelevant to passing a math class, but at this point, I cannot confirm that any one feature won't be useful to my model.  
+The resulting dataset has 27 features and 385 samples.  
   
-Furthermore, the resulting dataset has 27 features, and 385 samples.  
+There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any one feature won't be useful to the model.    
 
 <h1><center>Model Selection</center></h1>
 * K-Nearest Neighbors
@@ -411,7 +396,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.metrics import accuracy_score
 
-# seperating target variable from feature set
+# seperate target variable from feature set
 Y = stud['target']
 X = stud.drop(columns=['G3', 'target'])
 
@@ -425,7 +410,7 @@ preprocessor = make_column_transformer(
     (MinMaxScaler(), num_feats),
     (OneHotEncoder(drop= 'first'), cat_feats))
 
-# computing and storing each model's average CV accuracy
+# computie and store each model's average CV accuracy
 names = []
 scores = []
 for name, model in models:
@@ -436,7 +421,7 @@ for name, model in models:
     names.append(name)
     scores.append(score)
     
-# bar chart displaying the results
+# plot results
 model_CVscores = pd.DataFrame({'Name': names, 'Score': scores})
 model_CVscores.sort_values(by= 'Score', ascending= False).plot(kind='bar', 
                                                                x= 'Name', 
@@ -445,6 +430,7 @@ model_CVscores.sort_values(by= 'Score', ascending= False).plot(kind='bar',
                                                                rot= 0, 
                                                                legend= False)
 
+# print results
 print(model_CVscores.sort_values(by= 'Score', ascending= False))
 ```
 
