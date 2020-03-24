@@ -261,18 +261,7 @@ print(stud['Medu'].value_counts())
 print(stud['Fedu'].value_counts())
 ```
 
-    4    131
-    2    103
-    3     99
-    1     59
-    0      3
-    Name: Medu, dtype: int64
-    2    115
-    3    100
-    4     96
-    1     82
-    0      2
-    Name: Fedu, dtype: int64
+![](/images/math_ML_imgs/Medu_counts.png) ![](/images/math_ML_imgs/Fedu_counts.png)
 
 
 I will have to exclude the samples with 0 values for Medu/Fedu entirely since they are vastly in the minority, even in comparison to the next smallest categories.  
@@ -284,23 +273,10 @@ I will have to exclude the samples with 0 values for Medu/Fedu entirely since th
 ```python
 # student age counts
 print(stud['age'].value_counts())
-sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 0], palette= 'Set2').set(title = 'Age');
+sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 0], palette= 'Set2').set(title = 'Age')
 ```
 
-    16    104
-    17     98
-    18     82
-    15     82
-    19     24
-    20      3
-    22      1
-    21      1
-    Name: age, dtype: int64
-
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_28_1.png">
-</p>
+![](/images/math_ML_imgs/age_counts.png) ![](/images/math_ML_imgs/output_28_1.png)
 
 
 I am inclined to keep the samples whose age is >=20 since there is a definite correlation between the students' age and pass rate. Yet it would be far-fetched to consider samples of sizes three, one, and one as accuracte representations of *any* populations.
@@ -312,46 +288,7 @@ sns.catplot(x = 'absences', data= stud, hue= 'target', kind= 'count', hue_order=
 plt.figure(figsize= (40,40))
 ```
 
-    0     115
-    2      65
-    4      53
-    6      31
-    8      22
-    10     17
-    14     12
-    12     12
-    3       8
-    7       7
-    16      7
-    18      5
-    5       5
-    20      4
-    22      3
-    13      3
-    1       3
-    9       3
-    11      3
-    15      3
-    23      1
-    24      1
-    21      1
-    25      1
-    56      1
-    26      1
-    28      1
-    30      1
-    17      1
-    38      1
-    40      1
-    54      1
-    19      1
-    75      1
-    Name: absences, dtype: int64
-
-<p align="center">
-  <img src="/images/math_ML_imgs/output_30_2.png">
-</p>
-
+![](/images/math_ML_imgs/absences_counts.png) ![](/images/math_ML_imgs/output_30_2.png)
 
 
 For absences, there are 46 samples belonging to categories with no more than 5 observations each, so it's not practical to simply just drop them. However, we can see that every instance of 25+ absences resulted in the same outcome (a failed course, shocker!), and hence we can bin these values together. Although this only accounts for nine of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
@@ -361,11 +298,14 @@ It only seems natural to use '25' to denote the 25+ bin, but using a slighly lar
 
 
 ```python
+# drop outlying samples
 stud = stud[stud['Medu'] != 0]
 stud = stud[stud['Fedu'] != 0]
 stud = stud[stud['age'] != 20]
 stud = stud[stud['age'] != 21]
 stud = stud[stud['age'] != 22]
+
+# make outlying 'absences' bin
 stud['absences'] = stud['absences'].replace({25:30,
                                             26:30,
                                             28:30,
@@ -413,11 +353,6 @@ These features will not be included in the model.
 
 ```python
 stud = stud.drop(columns=['school', 'Pstatus', 'higher'])
-```
-
-
-```python
-stud.to_csv("stud_FeatEngineer_1.csv")
 ```
 
 There are still a few features I feel like would be irrelevant to passing a math class, but at this point, I cannot confirm that any one feature won't be useful to my model.  
