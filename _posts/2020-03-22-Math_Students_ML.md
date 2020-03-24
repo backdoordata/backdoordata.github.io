@@ -273,9 +273,7 @@ sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 
 
 ![](/images/math_ML_imgs/age_counts.png)
 
-<p align="center">
-  <img src="/images/math_ML_imgs/output_28_1.png">
-</p>
+![](/images/math_ML_imgs/output_28_1.png)
 
 I am inclined to keep the samples whose age is >=20 since there is a definite correlation between the students' age and pass rate. Yet it would be far-fetched to consider samples of sizes three, one, and one as accuracte representations of *any* populations.
 
@@ -332,7 +330,7 @@ sns.catplot(x = 'higher', data= stud, hue= 'target', kind= 'count', hue_order= [
 
 Each of these features have a dominate category by roughly 90% selection, so there's not much, if any, information to be gained by their inclusion. 
 
-Consider the feature of whether or not a student plans on furthering their education, 'higher'. If a student does not plan on furthering their education, many ML models would predecit that they are going to fail the course solely due to the lack of information (18 students to 367).  
+That is, consider the feature 'higher'. If a student does not plan on furthering their education, many ML models would predecit that they would fail the course solely due to lack of information (18 students to 367).  
 These features will not be included in the model.
 
 
@@ -434,19 +432,8 @@ model_CVscores.sort_values(by= 'Score', ascending= False).plot(kind='bar',
 print(model_CVscores.sort_values(by= 'Score', ascending= False))
 ```
 
-      Name     Score
-    2   LR  0.658182
-    5   RF  0.651948
-    1  SVC  0.636364
-    4  GNB  0.628312
-    6   GB  0.622078
-    3   DT  0.591429
-    0  KNN  0.566234
+![](/images/math_ML_imgs/model_scores.png)
+![](/images/math_ML_imgs/output_43_1.png)
 
 
-<p align="center">
-  <img src="/images/math_ML_imgs/output_43_1.png">
-</p>
-
-
-Logistic Regession and Random Forest seem to be the best two classifiers both scoring over 65% accuracy right out of the box with default parameters, minimal data cleaning, and no feature selection.
+Logistic Regession and Random Forest seem to be the best two classifiers. Both scored over 65% accuracy right out of the box with default parameters, minimal data cleaning, and no feature selection.
