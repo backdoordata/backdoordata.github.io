@@ -29,18 +29,30 @@ This is a dataset from the UCI repository that contains the final scores of 395 
   
   
   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Outline:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Outline:**
 1.  Variable Identification
 2.  Univariate Analysis
 3.  Bivariate Analysis
    * Target Correlation
-   * Feature Correlation
+   * Feature Correlation  
+
+I'll import the dataset along with a few libraries I'll be using.  
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# load in dataset
+stud = pd.read_csv('student-math.csv')
+```
 
 <h2><center>Variable Identification</center></h2>
 
 The 30 predictive features are all categorical, and consist of both ordinal and nominal data.  
   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**
 1.	age - student's age (numeric: from 15 to 22) 
 2.	Medu - mother's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education) 
 3.	Fedu - father's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education) 
@@ -57,7 +69,7 @@ The 30 predictive features are all categorical, and consist of both ordinal and 
   
   
   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Nominal Features:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Nominal Features:**
 1.	school - student's school (binary: 'GP' - Gabriel Pereira or 'MS' - Mousinho da Silveira)
 2.	higher - wants to take higher education (binary: yes or no)
 3.  sex - student's sex (binary: 'F' - female or 'M' - male)
@@ -79,7 +91,7 @@ The 30 predictive features are all categorical, and consist of both ordinal and 
   
   
   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Grade Columns:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Grade Columns:**
 1.  G1 - first term grade (numeric: from 0 to 20) 
 2.  G2 - second term grade (numeric: from 0 to 20) 
 3.  G3 - final grade (numeric: from 0 to 20, output target)  
@@ -88,18 +100,7 @@ The 30 predictive features are all categorical, and consist of both ordinal and 
 **At the top of the page is a link that will redirect you to the Kaggle post where this dataset can be found!**
 
 <h2><center>Univariate Analysis</center></h2>
-The ordinal features are all integer values, and the nominal features are all strings. Let's take a look at the distributions of the 13 ordinal features.
-
-
-```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# load in dataset
-stud = pd.read_csv('student-math.csv')
-```
+The ordinal features are all integer values, and the nominal features are all strings. Let's take a look at the distributions of the numeric columns.
 
 
 ```python
@@ -118,8 +119,8 @@ The shift in distributions of the three grades is rather interesting. You can se
 
 <h2><center>Bivariate Analysis</center></h2>
 
-I'm building a classifier to predict whether a student will either pass or fail the course, so I need to define a threshold for G3 (which ranges from 0-20). The minimum passing grade in the U.S. education system is typically considered to be D minus. In the case at hand, any student whose G3 value is less than 12 will be classified as failed, and the rest are classified as passing.  
-(**Note:** In this section the target labels are "pass"/"fail", but afterwards they will just be 0's and 1's.)
+To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. education system is typically considered to be a D-, so in our case, a 12/20 is the minimum passing grade. 
+*(In this section the target labels are "pass"/"fail", but afterwards they will just be 0's and 1's.)*
 
 
 ```python
@@ -132,35 +133,34 @@ First, I want to evaluate how the individual features correlate to the target va
   
 You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because many of the nominal features only have two categories and they can be observed independently very easily in bivariate plots.  
   
-**Note that** in my study, I evaluated all 30 features alongside the target variable. However, many of the features yeild little-to-no correlation with the target variable, and were simply not interesting -- the ones that *are interesting* are plotted below!  
+**Note that** I did evaluate the entire feature set. However, many of the features have little-to-no correlation with the target variable and were uninteresting, so I did not include them here -- the ones that *are interesting* are plotted below!  
   
-**The Interesting Ordinal Features**
+**Ordinal features...**
 
 ![](/images/math_ML_imgs/output_12_0.png) ![](/images/math_ML_imgs/output_12_1.png)
 
 ![](/images/math_ML_imgs/output_12_2.png) ![](/images/math_ML_imgs/output_12_3.png)
   
-**The Interesting Nominal Features**
+**Nominal features...**
 
 ![](/images/math_ML_imgs/output_13_0.png) ![](/images/math_ML_imgs/output_13_1.png) ![](/images/math_ML_imgs/output_13_2.png)
 
 
-It's not too surprising that there's not any individual features that directly correlate to the target variable. That is, a student's pass/fail status is the outcome of an entire semester's work, it's more complex than just a single test grade. Similarly, making a "pass" or "fail" prediction for a student is more complex than just looking at one single detail of their life!  
-With that being said, I suspect the individual features will show more correlation with the actual 0-20 final grade, G3. For example, being in a romantic relationship probably won't cause you to fail all of your classes, but it may very easily affect your final grade by a few points.  
+What's important to acknowldge here is that a student's pass/fail status is the outcome of an entire semester's work; it's more complex than just a single test grade. Similarly, making a "pass" or "fail" prediction for a student is more difficult than just evaluating one feature!  
+With this being said, I suspect the features will show more correlation with the actual 0-20 final grade. *Being in a relationship with someone probably won't cause them to fail all of their classes, but it may very easily affect their final grade by a few points.*  
 
 ### Feature Correlation
 Now we'll take a look at how all of the features correlate with eachother as well. I will first need to encode the nominal feature values with numerical representations.
 
 
 ```python
+# drop term grades and old pass/fail target
 stud = stud.drop(columns= ['G1', 'G2', 'PASS/FAIL'])
+
+# define new target column
 stud['target'] = stud['G3'].apply(lambda x: 0 if x<12 else 1)
-```
 
-
-```python
-# encoding boolean categorical features with binary values
-
+# encode boolean categorical's with binary values
 # school--> [0=GP, 1=MS]
 stud['school'] = stud['school'].apply(lambda x: 0 if x=='GP' else 1)
 # sex--> [0=F, 1=M]
@@ -176,13 +176,9 @@ stud['Pstatus'] = stud['Pstatus'].apply(lambda x: 0 if x=='T' else 1)
 yesno_feats = ['schoolsup','famsup','paid','activities','nursery','internet','romantic','higher']
 for feat in yesno_feats:
     stud[feat] = stud[feat].apply(lambda x: 0 if x=='no' else 1)
-```
 
-
-```python
 # encoding multi-categorical features (alphabetically) to integer values
 nominal_cols = ['Mjob','Fjob','reason', 'guardian']
-
 for col in nominal_cols:
     stud[col] = stud[col].astype('category').cat.codes
 ```
@@ -191,82 +187,12 @@ for col in nominal_cols:
 ```python
 # feature correlation to target variable
 print(stud.corr()['target'].sort_values(ascending= False))
-```
 
-    target        1.000000
-    G3            0.730890
-    Medu          0.181728
-    Fedu          0.144512
-    sex           0.116555
-    higher        0.098660
-    reason        0.092036
-    internet      0.069929
-    studytime     0.069135
-    Mjob          0.044176
-    Fjob          0.038649
-    freetime      0.019907
-    activities    0.016108
-    nursery       0.015556
-    famrel        0.011626
-    Pstatus       0.003119
-    paid         -0.002406
-    romantic     -0.023315
-    health       -0.043807
-    famsup       -0.055478
-    school       -0.062031
-    Dalc         -0.063204
-    famsize      -0.070946
-    guardian     -0.078864
-    address      -0.100083
-    Walc         -0.104700
-    traveltime   -0.107819
-    absences     -0.111943
-    goout        -0.127932
-    age          -0.140488
-    schoolsup    -0.182913
-    failures     -0.257365
-    Name: target, dtype: float64
-
-
-
-```python
-# feature correlation to final grade
+# feature correlation to target variable
 print(stud.corr()['G3'].sort_values(ascending= False))
 ```
 
-    G3            1.000000
-    target        0.730890
-    Medu          0.217147
-    higher        0.182465
-    Fedu          0.152457
-    reason        0.121994
-    sex           0.103456
-    Mjob          0.102082
-    paid          0.101996
-    internet      0.098483
-    studytime     0.097820
-    Pstatus       0.058009
-    nursery       0.051568
-    famrel        0.051363
-    Fjob          0.042286
-    absences      0.034247
-    activities    0.016100
-    freetime      0.011307
-    famsup       -0.039157
-    school       -0.045017
-    Walc         -0.051939
-    Dalc         -0.054660
-    health       -0.061335
-    guardian     -0.070109
-    famsize      -0.081407
-    schoolsup    -0.082788
-    address      -0.105756
-    traveltime   -0.117142
-    romantic     -0.129970
-    goout        -0.132791
-    age          -0.161579
-    failures     -0.360415
-    Name: G3, dtype: float64
+![](images/math_ML_imgs/target_corr.png) ![](images/math_ML_imgs/G3_corr.png)
 
 
 To emphasize my previous statement, notice that the order of correlation with the actual final grade seems a bit more logical than with the 0-1 target variable.
