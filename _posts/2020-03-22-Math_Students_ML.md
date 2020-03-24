@@ -192,7 +192,7 @@ print(stud.corr()['target'].sort_values(ascending= False))
 print(stud.corr()['G3'].sort_values(ascending= False))
 ```
 
-![](images/math_ML_imgs/target_corr.png) ![](images/math_ML_imgs/G3_corr.png)
+![](/images/math_ML_imgs/target_corr.png) ![](/images/math_ML_imgs/G3_corr.png)
 
 
 To emphasize my previous statement, notice that the order of correlation with the actual final grade seems a bit more logical than with the 0-1 target variable.
@@ -247,9 +247,7 @@ print("On average, females spend",
      np.round((stud[stud['sex'] == 0]['target'].sum()/stud[stud['sex'] == 0]['sex'].count())*100, 2), 
      "%.")
 ```
-
-    On average, females spend 29.13 % longer each week studying than males do. 
-    However, 47.06 % of males scored a passing grade, while the female percentage was only 35.58 %.
+![](/images/math_ML_imgs/sex_comparison.png)
 
 
 <h1><center>Data Cleaning</center></h1>
