@@ -15,9 +15,9 @@ toc: true
 toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
-I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how people either **loved** math, or they absolutely hated it and would say something along the lines of "I'm just not a math person".  
+I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it and would say something along the lines of "I'm just not a math person".  
   
-I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? *Is mathematical ability genetic?*  
+I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? **Is mathematical ability genetic?** 
   
 For this project, I am looking to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
 
@@ -27,7 +27,7 @@ This is a dataset from the UCI repository that contains the final scores of 395 
   
   
   
-&nbsp;&nbsp;&nbsp;&nbsp; **Outline:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Outline:**  
 1.) Variable Identification  
 2.) Univariate Analysis  
 3.) Bivariate Analysis  
@@ -47,7 +47,7 @@ stud = pd.read_csv('student-math.csv')
 
 <h2><center>Variable Identification</center></h2>
 
-The 30 predictive features are all categorical, and consist of a mix of numeric and nonnumeric data types.  
+The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric data types.  
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**
 1.	age - student's age (numeric: from 15 to 22) 
@@ -428,10 +428,9 @@ model_CVscores.sort_values(by= 'Score', ascending= False).plot(kind='bar',
 # print results
 print(model_CVscores.sort_values(by= 'Score', ascending= False))
 ```
-
-![](/images/math_ML_imgs/model_scores.png)
-  
 ![](/images/math_ML_imgs/output_43_1.png)
+  
+![](/images/math_ML_imgs/model_scores.png)
 
 
 Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.
