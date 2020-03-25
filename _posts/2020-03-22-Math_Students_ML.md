@@ -350,8 +350,8 @@ There are still a few features I feel aren't relevant to passing a math class, b
 I will revisit feature selection soon, but for now I will evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
   
 **If you've made it this far, you deserve a little honesty..**  
-Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn.  
-Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent :-)
+* Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn.*  
+*Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent.*
  
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -428,9 +428,467 @@ model_CVscores.sort_values(by= 'Score', ascending= False).plot(kind='bar',
 # print results
 print(model_CVscores.sort_values(by= 'Score', ascending= False))
 ```
-![](/images/math_ML_imgs/output_43_1.png)
+![](/images/math_ML_imgs/output_43_1.png) ![](/images/math_ML_imgs/model_scores.png)
+
+
+Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.  
   
-![](/images/math_ML_imgs/model_scores.png)
+<h1><center>Constructing The Models</center></h1>
+
+First I need to split the data into training and testing sets, and then I will build each model individually and compare their predictions on the testing set at the end.  
+Here's what this will look like:  
+*  **Random Forest**
+  * Feature Selection
+  * Hyperparameter Tuning
+* **Logistic Regression**
+  * Feature Selection
+  * Hyperparameter Tuning
+*  **Model Performances**
 
 
-Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.
+
+```python
+from sklearn.model_selection import train_test_split
+
+# instantiating base models
+rfc = RandomForestClassifier()
+logreg = LogisticRegression()
+
+# 269-116 stratified sample split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size= 0.3, stratify= Y, random_state= 777)
+```
+
+
+```python
+# proportion of passing students in train and test sets
+print("Train Set: ", Y_train.sum()/Y_train.size)
+print("Test Set: ", Y_test.sum()/Y_test.size)
+```
+
+    Train Set:  0.40892193308550184
+    Test Set:  0.4051724137931034
+
+
+For feature selection, I will create a copy of X_train using dummy encoding to retain the column names of the selected features.
+
+```python
+X_Dummy = pd.get_dummies(X_train, columns= cat_feats, drop_first= True)
+X_Dummy[num_feats] = MinMaxScaler().fit_transform(X_Dummy[num_feats])
+```
+
+I'll use the simple function below to measure performance increases/decreases during this stage. 
+
+
+```python
+def pct_change(old, new):
+    """Calculate percent change from old to new"""
+    change = new - old
+    pct = np.round((change/old)*100, 2)
+    print("Change :", pct, "%")
+```
+
+<h1><center>Random Forest</center></h1>
+
+### RF - Feature Selection
+Here, I will be using a cross validated recursive selection method to help ensure that any potential deeper corrolations between the features do not go unnoticed.
+
+
+```python
+from sklearn.preprocessing import LabelEncoder
+from sklearn.feature_selection import RFECV
+
+rep_kfold2 = RepeatedStratifiedKFold(n_splits= 10, n_repeats= 4)
+
+# recursive feature elimination
+rfecv_rfc = RFECV(estimator=rfc,
+              step=1,
+              cv= rep_kfold2,
+              scoring='roc_auc')
+rfecv_rfc.fit_transform(X_Dummy, Y_train);
+
+# print optimal number of features for rfc
+print("Optimal number of features :", rfecv_rfc.n_features_)
+
+# optimal features for rfc
+best_rfc_feats = X_Dummy.columns[rfecv_rfc.get_support(indices= True)].values
+print("Optimal features :", best_rfc_feats)
+
+# plot number of features VS. AUC scores
+plt.style.use('ggplot')
+plt.figure(figsize=(15,10))
+plt.xlabel("Number of features")
+plt.ylabel("AUC")
+plt.plot(range(1, len(rfecv_rfc.grid_scores_) + 1), rfecv_rfc.grid_scores_)
+plt.show()
+```
+
+    Optimal number of features : 25
+    Optimal features : ['age' 'Medu' 'Fedu' 'traveltime' 'studytime' 'failures' 'famrel'
+     'freetime' 'goout' 'Dalc' 'Walc' 'health' 'absences' 'sex_M' 'address_U'
+     'famsize_LE3' 'schoolsup_yes' 'famsup_yes' 'paid_yes' 'activities_yes'
+     'romantic_yes' 'Mjob_other' 'Fjob_other' 'reason_home'
+     'reason_reputation']
+
+
+
+<p align="center">
+  <img src="/images/math_ML_imgs/output_2_13_1.png">
+</p>
+
+
+We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are included. This translates to including 24 of the 27 original features, the three not selected were 'nursery', 'internet', 'guardian'.
+
+### RF - Hyperparameter Tuning
+I'll now perform a grid search on the random forest model using it's optimal set of features with 5-fold cross validation.
+
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+# instantiating rfc parameter grid
+rfc_grid = {
+            "n_estimators": np.arange(100, 501, 100),
+            "criterion": ["gini", "entropy"],
+            "max_features": [None, "sqrt", "log2"],
+            "max_depth": [None, 5, 10, 15, 20],
+            "min_samples_split": [2, 5, 10, 20],
+            "min_samples_leaf": [1, 3, 5]
+            }
+
+# performing cross validated grid search
+rfc_gscv = GridSearchCV(rfc, rfc_grid, cv= 5, scoring= 'roc_auc')
+rfc_gscv.fit(X_Dummy[best_rfc_feats], Y_train)
+
+# results
+print(rfc_gscv.best_score_)
+print(pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_))
+print(rfc_gscv.best_params_)
+```
+
+    0.7709310850439882
+    {'criterion': 'entropy', 'max_depth': 10, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 100}
+
+
+
+```python
+def pct_change(old, new):
+    """Calculate percent change from old to new"""
+    change = new - old
+    pct = np.round((change/old)*100, 2)
+    print("Change :", pct, "%")
+
+# increase in AUC from the feature selection score
+pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_)
+```
+
+    Change : 7.74 %
+
+
+The best set of parameters from the grid search improved the AUC score from before by roughly 8.1%. An AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed, an AUC of 0.5 is no better than randomly guessing; the random forest model is right in the middle.  
+  
+As long as the model performs better than guessing, we've done alright.. Right?  
+Well let's just hope the logistic regression model performs better.
+
+<h1><center>Logistic Regression</center></h1>
+I will be using the same methods of feature selection and hyperparameter tuning here that I used for the random forest model.
+
+### LR - Feature Selection
+
+```python
+# recursive feature elimination
+rfecv_logreg = RFECV(estimator=logreg,
+              step=1,
+              cv= rep_kfold2,
+              scoring='roc_auc')
+rfecv_logreg.fit_transform(X_Dummy, Y_train);
+
+# print optimal number of features for logreg
+print("Optimal number of features :", rfecv_logreg.n_features_)
+
+# optimal features for logreg
+best_logreg_feats = X_Dummy.columns[rfecv_logreg.get_support(indices= True)].values
+print("Optimal features :", best_logreg_feats)
+
+# plot number of features VS. AUC scores
+plt.style.use('ggplot')
+plt.figure(figsize=(15,10))
+plt.xlabel("Number of features")
+plt.ylabel("AUC")
+plt.plot(range(1, len(rfecv_logreg.grid_scores_) + 1), rfecv_logreg.grid_scores_)
+plt.show()
+```
+
+    Optimal number of features : 3
+    Optimal features : ['age' 'failures' 'schoolsup_yes']
+
+
+<p align="center">
+  <img src="/images/math_ML_imgs/output_2_21_1.png">
+</p>
+
+
+
+Of the 27 original features, only three were selected. This doesn't seem right, and it's because sklearn's default logistic regression model uses ridge regression. Ridge regression is a method of regularization that applies penalty for nonessential model complexity, which is great if the dataset doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
+  
+Lasso regression, or l1 regularization, simply shinks the coeficients of the irrelevant features to zero so that they're ignored from the model.  
+The past result is insightful, but it doesn't seem to be the most reliable. Instead, I will fit a new model to see which features get excluded by l1 regularization.
+
+
+```python
+from sklearn.feature_selection import SelectFromModel
+
+# logreg using lasso regression
+lassoLR = LogisticRegression(penalty= 'l1', max_iter= 2000, solver= 'liblinear')
+
+# feature selector
+sel_ = SelectFromModel(lassoLR)
+sel_.fit(X_Dummy, Y_train)
+
+# selected features
+best_lassoLR_feats = X_Dummy.columns[sel_.get_support(indices= True)].values
+print("Number of features :", len(best_lassoLR_feats))
+print(best_lassoLR_feats)
+```
+
+    Number of features : 26
+    ['age' 'Medu' 'Fedu' 'traveltime' 'studytime' 'failures' 'famrel' 'goout'
+     'Walc' 'health' 'sex_M' 'address_U' 'famsize_LE3' 'schoolsup_yes'
+     'famsup_yes' 'paid_yes' 'internet_yes' 'romantic_yes' 'Mjob_other'
+     'Mjob_services' 'Mjob_teacher' 'Fjob_health' 'Fjob_teacher' 'reason_home'
+     'reason_other' 'reason_reputation']
+
+
+### LR - Hyperparameter Tuning
+
+
+```python
+# logreg with lasso regression grid
+logreg_l1_grid = { "penalty": ['l1'],
+                   "max_iter": [2000],
+                   "C": np.linspace(0,100,21),
+                   "solver": ['liblinear', 'saga']}
+
+# performing cross validated grid search
+logreg_l1_gscv = GridSearchCV(logreg, logreg_l1_grid, cv= 5, scoring= 'roc_auc')
+logreg_l1_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
+print('Logistic Regression w/ Lasso - Results')
+print(logreg_l1_gscv.best_score_)
+print(logreg_l1_gscv.best_params_)
+
+
+
+# logreg with ridge regression grid
+logreg_l2_grid = { "penalty": ['l2'],
+                   "max_iter": [2000],
+                   "C": np.linspace(0,100,21),
+                   "solver": ['liblinear', 'saga', 'sag', 'newton-cg', 'lbfgs']}
+
+# performing cross validated grid search
+logreg_l2_gscv = GridSearchCV(logreg, logreg_l2_grid, cv= 5, scoring= 'roc_auc')
+logreg_l2_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
+print('Logistic Regression w/ Ridge - Results')
+print(logreg_l2_gscv.best_score_)
+print(logreg_l2_gscv.best_params_)
+```
+
+    Logistic Regression w/ Lasso - Results
+    0.7582019794721407
+    {'C': 100.0, 'max_iter': 2000, 'penalty': 'l1', 'solver': 'saga'}
+    Logistic Regression w/ Ridge - Results
+    0.7593383431085045
+    {'C': 10.0, 'max_iter': 2000, 'penalty': 'l2', 'solver': 'liblinear'}
+
+
+Using l2 regularization results in a slighly better performing model, and the higher value for the parameter 'C' means less regularization was needed. To me, both of these results are indicative of successful feature selection!  
+Now I'll focus in on finding the best value for C. 
+
+
+```python
+# logreg with l2 regularization
+logreg2 = LogisticRegression(penalty= 'l2', max_iter= 2000, solver= 'liblinear')
+
+# searching 100 values of C within its known optimal range
+C_grid = {"C": np.linspace(7.5, 12.5, 100)}
+C_gscv = GridSearchCV(logreg2, C_grid, cv= 5, scoring= 'roc_auc')
+C_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
+
+print(C_gscv.best_score_)
+# AUC inc/dec from C = 10
+print(pct_change(logreg_l2_gscv.best_score_, C_gscv.best_score_))
+print(C_gscv.best_params_)
+```
+
+    0.7593383431085045
+    Change : 0.0 %
+    None
+    {'C': 9.772727272727273}
+
+
+No performance increase resulted from the refined search; C = 10 is optimal.
+
+<h1><center>Model Performance</center></h1>
+It's finally time to test the models on unseen data!  
+  
+First, I need to make new X_train and X_test sets for both models so that they include only their best features, respectively. 
+
+
+```python
+# irrelevant features for Random Forest 
+# irrelevant features for Logistic Regression 
+RFCfeat_drop = ['nursery', 'internet', 'guardian']
+LRfeat_drop = ['freetime', 'Dalc', 'absences', 'activities', 'nursery', 'guardian']
+
+
+# multi-categorical feature changes for Random Forest
+# multi-categorical feature changes for Logistic Regression
+# unselected feature category -> 'un_imp'
+RFCfeat_replace = {'Mjob' : {'at_home' : 'un_imp', 
+                             'health' : 'un_imp', 
+                             'teacher' : 'un_imp', 
+                             'services' : 'un_imp'
+                            },
+                   'Fjob' : {'at_home' : 'un_imp', 
+                             'health' : 'un_imp', 
+                             'teacher' : 'un_imp', 
+                             'services' : 'un_imp'
+                            },
+                   'reason' : {'course' : 'un_imp', 
+                               'other' : 'un_imp'
+                              }}
+LRfeat_replace = {'Mjob' : {'at_home' : 'un_imp', 
+                            'health' : 'un_imp'
+                           },
+                  'Fjob' : {'at_home':'un_imp', 
+                            'other':'un_imp', 
+                            'services':'un_imp'
+                           }}
+
+# New RFC Train/Test Sets
+X_train_rfc = X_train.drop(columns= RFCfeat_drop)
+X_test_rfc = X_test.drop(columns= RFCfeat_drop)
+X_train_rfc.replace(RFCfeat_replace, inplace = True)
+X_test_rfc.replace(RFCfeat_replace, inplace = True)
+
+# New LogReg Train/Test Sets
+X_train_lr = X_train.drop(columns= LRfeat_drop)
+X_test_lr = X_test.drop(columns= LRfeat_drop)
+X_train_lr.replace(LRfeat_replace, inplace= True)
+X_test_lr.replace(LRfeat_replace, inplace= True)
+```
+
+The models will also require slightly different preprocessors since they don't take the same features as input.
+
+
+```python
+# seperating data types for preprocessing - RFC
+num_feats_rfc = X_train_rfc.select_dtypes('int').columns.to_list()
+cat_feats_rfc = X_train_rfc.select_dtypes('object').columns.to_list()
+
+# seperating data types for preprocessing - LogReg
+num_feats_lr = X_train_lr.select_dtypes('int').columns.to_list()
+cat_feats_lr = X_train_lr.select_dtypes('object').columns.to_list()
+
+# Random Forest preprocessor
+preprocessor_rfc = make_column_transformer(
+                        (MinMaxScaler(), num_feats_rfc),
+                        (OneHotEncoder(drop= 'first'), cat_feats_rfc))
+
+# Logistic Regression preprocessor
+preprocessor_lr = make_column_transformer(
+                        (MinMaxScaler(), num_feats_lr),
+                        (OneHotEncoder(drop= 'first'), cat_feats_lr))
+```
+
+Technically I lied earlier - NOW we're ready to test the models!  
+  
+  
+&nbsp;&nbsp;&nbsp;&nbsp; **Workflow:**
+1.  Instantiate final models
+2.  Make pipelines
+3.  Get CV accuracies on training sets for comparison
+4.  Train the models (in the pipes)
+5.  Make predictions 
+6.  Evaluate results
+
+
+```python
+logreg_model = logreg_l2_gscv.best_estimator_
+
+rfc_pipe = make_pipeline(preprocessor, rfc_gscv.best_estimator_)
+logreg_pipe = make_pipeline(preprocessor, SelectFromModel(logreg_gscv.best_estimator_), logreg_gscv.best_estimator_)
+
+rfc_pipe.fit(X_train, y_train)
+logreg_pipe.fit(X_train, y_train)
+
+print("Logistic Regression:", logreg_pipe.score(X_test, y_test))
+print("Random Forest:", rfc_pipe.score(X_test, y_test))
+```
+
+
+```python
+# Instantiate Final Models
+RFC_model = rfc_gscv.best_estimator_
+LogReg_model = logreg_l2_gscv.best_estimator_
+
+# Make Preprocessing->Model Pipelines 
+RFC_pipe = make_pipeline(preprocessor_rfc, RFC_model)
+LogReg_pipe = make_pipeline(preprocessor_lr, LogReg_model)
+
+# Compute CV Scores on Training Sets
+CVscore_RFC = cross_val_score(RFC_pipe, X_train_rfc, Y_train, cv= 10, scoring= 'accuracy').mean()
+CVscore_LogReg = cross_val_score(LogReg_pipe, X_train_lr, Y_train, cv= 10, scoring= 'accuracy').mean() 
+
+# Train the Models
+RFC_pipe.fit(X_train_rfc, Y_train)
+LogReg_pipe.fit(X_train_lr, Y_train)
+
+# Predict on Test Sets
+Test_RFC = RFC_pipe.score(X_test_rfc, Y_test)
+Test_LogReg = LogReg_pipe.score(X_test_lr, Y_test)
+
+# Results
+print("RFC CV Accuracy :", np.round(CVscore_RFC*100, 2), "%")
+print("LogReg CV Accuracy :", np.round(CVscore_LogReg*100, 2), "%")
+print("RFC Prediction Accuracy :", np.round(Test_RFC*100, 2), "%")
+print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
+```
+
+    RFC CV Accuracy : 71.37 %
+    LogReg CV Accuracy : 68.05 %
+    RFC Prediction Accuracy : 60.34 %
+    LogReg Prediction Accuracy : 62.07 %
+
+
+<h1><center>Conclusion</center></h1>
+With this being my first project in machine learning, I was **very** determined to obtain a high accuracy model. After much effort, I've realized it can't be done.  
+  
+At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
+Then, I experimented with different models. Many, many different models.  
+Then I learned about stacking classifiers and using a meta model to make predictions based off the results of the ensemble.  
+I even used regression to estimate the individual G1, G2, and G3 scores to use as additional features in my models here.  
+  
+Some of the models performed better than these, but some also performed worse. However, I learned a very valuable lesson here.  
+**If the data won't tell you what you want to hear, it's probably because it can't**.  
+  
+  
+It turns out that a student's track record is the best predictor of whether or not they will pass or fail their courses in math.  
+Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included in their model and acheived a classification accuracy score of 90%.  
+  
+Of course it would be very interesting (and just down right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but our result is still valuable nonetheless. For instance, devoting a bit more time exploring this concept in depth, K-12 schools could potentially be able to make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help educators identify the "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
+
+<h1><center>Post-Op: Continued Study</center></h1>
+
+As I may have hinted towards, I wasn't exactly "satisified" with the conclusion of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first project in machine learning just yet. I decided to narrow my search, and try to predict on a more *niche* group; the honor roll students.  
+  
+Essentially, I repeated everything in this post, but using 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%!  
+It turns out that the group of students in the 90th percentile have a lot in common! The most important of which being: 
+* age
+* health
+* weekly alcohol consumption
+* parents' education levels (both)
+* quality of family relationships  
+  
+For now, I'll just leave you with the results, but I may decide to create a seperate post for this later.  
+If you've made it this far, thank you so very much; I hope that you found reading this as enjoyble as I found making it!  
+  
+I welcome all forms of advice and constructive criticism; the best way to contact me is through LinkedIn. Please feel free to message me!
