@@ -15,11 +15,9 @@ toc: true
 toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
-I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how everybody either **loved** math, or they absolutely dreaded it and would say something along the lines of:  
+I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how people either **loved** math, or they absolutely hated it and would say something along the lines of "I'm just not a math person".  
   
-<center>"I'm just not a math person"</center>  
-  
-I've always assumed that these people just never truly gave themselves the oppurtunity to love mathematics because they never really tried to to do well and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation to their failing grades? *Is mathematical ability genetic?*  
+I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? *Is mathematical ability genetic?*  
   
 For this project, I am looking to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
 
@@ -30,12 +28,12 @@ This is a dataset from the UCI repository that contains the final scores of 395 
   
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Outline:**
-1.) Variable Identification
-2.) Univariate Analysis
-3.) Bivariate Analysis
-3a.) Target Correlation
+1.) Variable Identification  
+2.) Univariate Analysis  
+3.) Bivariate Analysis  
+3a.) Target Correlation  
 3b.) Feature Correlation  
- 
+  
 
 ```python
 import numpy as np
@@ -118,7 +116,7 @@ The shift in distributions of the three grades is rather interesting. You can se
 
 <h2><center>Bivariate Analysis</center></h2>
 
-To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the minimum passing grade. 
+To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the threshold for a minimum passing grade. 
 *(In this section the target labels are pass or fail, but in following sections they will just be 0's and 1's.)*
 
 
@@ -128,7 +126,7 @@ stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 
 ### Target Correlation
 
-First, I want to evaluate how the individual features correlate to the target variable. I will use seaborn to help visualize the pass/fail frequencies of each feature.  
+First, I want to evaluate how the individual features correlate with the target variable. I will use seaborn to visualize the pass/fail frequencies of each feature.  
   
 You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because many of the nominal features only have two categories and they can be observed independently very easily in bivariate plots.  
   
@@ -149,7 +147,7 @@ What's important to acknowldge here is that a student's pass/fail status is the 
 With this being said, I suspect the features will show more correlation with the actual 0-20 final grade. *Being in a relationship with someone probably won't cause them to fail all of their classes, but it may very easily affect their final grade by a few points.*  
 
 ### Feature Correlation
-Now we'll take a look at all corrolations. I'll first need to encode the features with nonnumeric values.
+Now we'll take a look at all corrolations. I'll first need to encode the features who have nonnumeric entries.
 
 
 ```python
@@ -181,7 +179,7 @@ nominal_cols = ['Mjob','Fjob','reason', 'guardian']
 for col in nominal_cols:
     stud[col] = stud[col].astype('category').cat.codes
 ```
-
+To emphasize on my prior statement, notice how the order of correlation with the actual final grade seems more logical than with the 0-1 target variable.
 
 ```python
 # feature correlation to target variable
@@ -194,7 +192,7 @@ print(stud.corr()['G3'].sort_values(ascending= False))
 ![](/images/math_ML_imgs/target_corr.png) ![](/images/math_ML_imgs/G3_corr.png)
 
 
-To emphasize on my previous statement, notice how the order of correlation with the actual final grade seems more logical than with the 0-1 target variable. Thus, I'll use G3 for making a heatmap of the correlation matrix.
+Thus, I'll use G3 for making a correlation matrix heatmap.
 
 ```python
 # sorted correlation matrix
@@ -230,7 +228,7 @@ sns.heatmap(G3_corr,
   
 * 'studytime' and 'sex'  
   
-These correlations are seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is worth noting. I'll openly admit that I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
+These correlations are seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is interesting. I'll openly admit that I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
 
 
 ```python
@@ -246,7 +244,7 @@ print("On average, females spend",
 
 
 <h1><center>Data Cleaning</center></h1>
-With only 395 samples, I'd like to retain as many of them as possible. However, including the underrepresented categories would ultimately result in a poor model.  
+With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model.  
 Let's take another look at the ones we saw earlier.
 
 
@@ -260,9 +258,6 @@ print(stud['Fedu'].value_counts())
 
 
 I will have to exclude the samples with 0 values for Medu/Fedu entirely since they are greatly underrepresented, even in comparison to the next smallest categories.  
-  
-  
-**Note:** In the following plots, the green bars denote the number of students who passed, and the red who failed.
 
 
 ```python
@@ -275,7 +270,8 @@ sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 
 
 ![](/images/math_ML_imgs/output_28_1.png)
 
-I am inclined to keep the samples whose age is >=20 since there is a definite correlation between the students' age and pass rate. Yet it would be far-fetched to consider samples of sizes three, one, and one as accuracte representations of *any* populations.
+It would be far-fetched to consider samples of sizes three, one, and one as accurate representations of *any* populations.  
+This feature is an interesting one nonetheless.
 
 
 ```python
@@ -290,10 +286,10 @@ plt.figure(figsize= (40,40))
   <img src="/images/math_ML_imgs/output_30_2.png">
 </p>
 
-For absences, there's 46 samples in categories with no more than 5 total observations, and it's not ideal to simply drop them all. However, we can see that every instance of 25+ absences resulted in the same outcome (a failed course, shocker!), and hence we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
+For 'absences', there's 46 samples in categories with no more than 5 total observations, and it's not ideal to simply drop them all. However, we can see that every instance where 'absences' > 24 resulted in the same outcome, a failed course. Hence, we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
 
   
-It only seems natural to use '25' to denote the 25+ bin, but using a number that's slighly larger, say 30, may benefit certain models where Euclidean distance is of importance.
+It only seems natural to use '25' to denote the 25+ bin, but using a slighly larger integer, say 30, may benefit certain models where Euclidean distance is of importance.
 
 
 ```python
@@ -316,7 +312,7 @@ stud['absences'] = stud['absences'].replace({25:30,
                                             75:30})
 ```
 
-A few other features stood out to me while evaluating the bivariate graphs that I'd like to see again. 
+A few other features stood out to me while evaluating the bivariate graphs. 
 
 
 ```python
@@ -328,7 +324,7 @@ sns.catplot(x = 'higher', data= stud, hue= 'target', kind= 'count', hue_order= [
 ![](/images/math_ML_imgs/output_34_0.png) ![](/images/math_ML_imgs/output_34_1.png) ![](/images/math_ML_imgs/output_34_2.png)
 
 
-Each of these features have a dominate category by roughly 90% selection, so there's not much, if any, information to be gained by their inclusion. 
+Each of these features have a dominate category with roughly 90% selection, so there's not much, if any, information to be gained by their inclusion. 
 
 That is, consider the feature 'higher'. If a student does not plan on furthering their education, many ML models would predecit that they would fail the course solely due to lack of information (18 students to 367).  
 These features will not be included in the model.
@@ -340,7 +336,7 @@ stud = stud.drop(columns=['school', 'Pstatus', 'higher'])
 
 The resulting dataset has 27 features and 385 samples.  
   
-There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any one feature won't be useful to the model.    
+There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any of the remaining features won't be useful to the model.    
 
 <h1><center>Model Selection</center></h1>
 * K-Nearest Neighbors
@@ -354,7 +350,8 @@ There are still a few features I feel aren't relevant to passing a math class, b
 I will revisit feature selection soon, but for now I will evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
   
 **If you've made it this far, you deserve a little honesty..**  
-Prior to this very moment, my only exposure to machine learning was roughly 2 class periods in mathematical statistics my junior year when we slightly went over linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as a learning experience. Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent :-)
+Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn.  
+Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent :-)
  
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -376,14 +373,14 @@ models.append(('RF', RandomForestClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 ```
 
-Although this dataset is from Kaggle, I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features that remain, and would like my model to be able to predict on new data as well.  
+Although this dataset is from Kaggle, I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features, and would like my model to be able to predict on new data as well.  
 For this to happen, I must estabalish a few precautionary measures.  
   
 **High Variance**  
-The dataset contains a less than preferrable amount of samples, and because of this, the testing accuracy will be highly subject to variation. I want the two best performing models of the group, but I do not want the best two if they can't fit to new data. In attempt to mitigate this, I will use 10 repititions of 5-fold stratified cross validation to estimate each model's out-of-sample accuracy.  
+The dataset contains a less than preferrable number of samples, and because of this, the testing accuracy will be highly subject to variation. I want the two best performing models of the group, but I do not want them if they can't fit to new data. In attempt to mitigate this, I will use 10 repititions of 5-fold stratified cross validation when estimating each model's out-of-sample accuracy.  
   
 **Data Leakage**  
-Instead of passing the actual models to cross_val_score, I will cross validate pipelines which contain the models **and** the preprocessing steps. Thus, the dataset will be split into new training/test sets at each fold, then will be preprocessed separately, and the chances of data leakage will be near-to-none!
+Instead of passing the actual models to cross_val_score, I will cross validated pipelines containing both the model **and** the preprocessing steps. Thus, when the dataset is split into new training/test sets at each fold, the two sets will be preprocessed separately, and the chances of data leakage will be near-to-none!
 
 
 ```python
@@ -433,7 +430,8 @@ print(model_CVscores.sort_values(by= 'Score', ascending= False))
 ```
 
 ![](/images/math_ML_imgs/model_scores.png)
+  
 ![](/images/math_ML_imgs/output_43_1.png)
 
 
-Logistic Regession and Random Forest seem to be the best two classifiers. Both scored over 65% accuracy right out of the box with default parameters, minimal data cleaning, and no feature selection.
+Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.
