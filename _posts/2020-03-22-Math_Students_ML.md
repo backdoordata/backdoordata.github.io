@@ -355,7 +355,11 @@ There are still a few features I feel aren't relevant to passing a math class, b
 * Gradient Boosting Classifier   
   
 I will revisit feature selection soon, but for now I'll evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
-  
+
+<p align="center">
+  <img src="https://media.giphy.com/media/gHVxVv3VKxdAkeFcDf/giphy.gif" width="480" height="259">
+</p>  
+
 **If you've made it this far, you deserve a little honesty..**  
 *Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. So, I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
 *Plus, this way will give me two different models to learn head-to-toe that I know will at least perform somewhat decent!*
@@ -438,6 +442,10 @@ print(model_CVscores.sort_values(by= 'Score', ascending= False))
 
 
 Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.  
+
+<p align="center">
+  <img src="https://media.giphy.com/media/MOWPkhRAUbR7i/giphy.gif" width="480" height="217">
+</p> 
   
 # <center>Constructing The Models</center>
 
@@ -713,7 +721,11 @@ No performance increase from the refined search; C = 10 is optimal.
 
 # <center>Model Performance</center>
 It's finally time to test the models on unseen data!  
-  
+
+<p align="center">
+  <img src="https://media.giphy.com/media/MOWPkhRAUbR7i/giphy.gif" width="480" height="217">
+</p> 
+
 First, I need to make new X_train and X_test sets for both models so that they include only their best features (respectively). 
 
 
