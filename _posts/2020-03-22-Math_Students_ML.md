@@ -16,22 +16,23 @@ toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
 I was always good at math growing up, but it was never my main interest. Somehow, it found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
-I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? **Is mathematical ability genetic?** 
+I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for failing grades? **Is mathematical ability genetic?** **Is it situational?**
   
-For this project, I am attempting to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
+In this project, I attempt to build a machine learning model that uses seemingly irrelevant information about a student to predict their mathematical ability. 
 
 
 # <center>Data Exploration</center>
-This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for the two term grades and final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
+The dataset I will be using is one from the UCI repository that contains the final scores of 395 students at the end of a math program, and several features that may or may not impact the futures of these young adults. The data consists of 30 predictive features, columns for the two term grades, and the final grade (G1, G2, and G3, respectively).  
+The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
   
   
   
-&nbsp;&nbsp;&nbsp;&nbsp; **Outline:**  
-**1.** Variable Identification  
-**2.** Univariate Analysis  
-**3.** Bivariate Analysis  
-&nbsp;&nbsp;&nbsp; **a.** Target Correlation  
-&nbsp;&nbsp;&nbsp; **b.** Feature Correlation  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Outline:**  
+&nbsp;&nbsp;&nbsp;&nbsp;**1.** Variable Identification  
+&nbsp;&nbsp;&nbsp;&nbsp;**2.** Univariate Analysis  
+&nbsp;&nbsp;&nbsp;&nbsp;**3.** Bivariate Analysis  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **a.** Target Correlation  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **b.** Feature Correlation  
   
 
 ```python
