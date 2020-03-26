@@ -1,7 +1,6 @@
 ---
 title: 'About'
 permalink: /about/
-tags: [About]
 breadcrumbs: true
 header:
     overlay_image: "/images/night-nooga-header.jpg"
@@ -9,6 +8,7 @@ header:
     actions:
       - label: "Contact"
         url: "https://www.linkedin.com/in/drew-woods-4b609b17a/"
+excerpt: "Drew Woods"
 ---
 
 ## **"Hello World!"**
