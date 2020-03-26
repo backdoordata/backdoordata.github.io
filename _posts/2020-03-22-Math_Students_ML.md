@@ -1,7 +1,7 @@
 ---
 title: "Predicting Student Success with Machine Learning"
 date: 2020-03-22
-tags: [Machine Learning] # Make Changes
+tags: [Machine Learning] 
 breadcrumbs: true
 header:
     overlay_image: "/images/classroom-header.png"

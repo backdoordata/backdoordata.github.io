@@ -1,6 +1,7 @@
 ---
 title: 'About'
 permalink: /about/
+tags: [About]
 breadcrumbs: true
 header:
     overlay_image: "/images/night-nooga-header.jpg"
