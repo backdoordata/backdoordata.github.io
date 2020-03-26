@@ -152,7 +152,7 @@ The dataframe used in the figure below, dfFig, consists of two observations for 
  
   
 # Conclusion
-Both types of visualizations, static and interactive, have their place in Data Analysis. In this project, the static Matplotlib visualizations excels in relaying the bulk summary of the data very efficiently and quickly, but lacks valuable details of the individual counties. The interactive Plotly figure contains the individual datapoints and is also easily interpretable, but it wouldn't be the type of content you'd want to bring into a meeting or to present to a crowd since it entirely relies on user input. Aside from the Static vs. Interactive comparison, geographical data is almost ALWAYS best visualized using some form of a thematic map!  
+Both types of visualizations, static and interactive, have their place in data analysis. In this project, the static Matplotlib visualizations excels in relaying the bulk summary of the data very efficiently and quickly, but lacks valuable details of the individual counties. The interactive Plotly figure contains the individual datapoints and is also easily interpretable, but it wouldn't be the type of content you'd want to bring into a meeting or to present to a crowd since it entirely relies on user input. Aside from the Static vs. Interactive comparison, geographical data is almost ALWAYS best visualized using some form of a thematic map!  
   
 Personally, I think the most enjoyable part of making visualizations is that there's never just one right answer, or one "Go-To" figure for all the different datasets. Sure it's easy to make some pretty atrocious visualizations, but there's a thousand different ways to skin a cat, right? It's up to you to determine which way's the best way.
 

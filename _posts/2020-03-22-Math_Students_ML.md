@@ -1,5 +1,5 @@
 ---
-title: "Predict Student Success with Machine Learning"
+title: "Predicting Student Success with Machine Learning"
 date: 2020-03-22
 tags: [Data Analysis & Visualization] # Make Changes
 breadcrumbs: true
@@ -714,7 +714,7 @@ LRfeat_drop = ['freetime', 'Dalc', 'absences', 'activities', 'nursery', 'guardia
 
 
 # multi-categorical feature changes for Random Forest
-# unselected feature category -> 'un_imp'
+# unselected category -> 'un_imp'
 RFCfeat_replace = {'Mjob' : {'at_home' : 'un_imp', 
                              'health' : 'un_imp', 
                              'teacher' : 'un_imp', 
@@ -730,7 +730,7 @@ RFCfeat_replace = {'Mjob' : {'at_home' : 'un_imp',
                               }}
 
 # multi-categorical feature changes for Logistic Regression
-# unselected feature category -> 'un_imp'
+# unselected category -> 'un_imp'
 LRfeat_replace = {'Mjob' : {'at_home' : 'un_imp', 
                             'health' : 'un_imp'
                            },
@@ -781,7 +781,7 @@ Technically I lied earlier -- NOW we're ready to test the models!
 &nbsp;&nbsp;&nbsp;&nbsp; **Steps :**  
 **1.** Instantiate final models  
 **2.** Make pipelines  
-**3.** Get CV accuracies on training sets for comparison  
+**3.** Get CV accuracies for comparison  
 **4.** Train the models (in the pipes)  
 **5.** Make predictions  
 **6.** Evaluate results  
@@ -831,17 +831,17 @@ Using logistic regression as a 'meta model', I made a stacked ensemble of classi
   
 I even used regression models to estimate the individual G1, G2, and G3 test scores to use as additional features in my models here. Still, I had no luck.  
   
-Some of the models performed better than these here, but some also performed worse. However, I learned a very valuable lesson here.  
+Some of the models performed better than these here, but some also performed worse. However, I learned a very valuable lesson here:  
 **If the data won't tell you what you want to hear, it's probably because it can't**.  
   
   
-It turns out that the best predictor of whether or not a student will pass or fail their a course is their track record. Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included in their model, and acheived a classification accuracy of 90%.  
+It turns out that the best predictor of whether or not a student will pass or fail their a course is their track record. Another user on Kaggle posted [their study](https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included, and acheived a classification accuracy of 90%.  
   
 Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to explore this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
 ## <center>Post-Op: Continued Study</center>
-&nbsp;&nbsp;&nbsp;&nbsp; *2 weeks later*  
-As I may have hinted at earlier, I wasn't exactly "satisified" with the results of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capabilities, and focus on a more *niche* group; the honor roll students.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *two weeks later...*  
+As I may have hinted at earlier, I wasn't exactly "satisified" with the results of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capacity, and focus on a more *niche* group; the honor roll students.  
   
 In sum, I essentially just repeated this process, but used 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the honor roll students have a lot in common!  
   
@@ -852,8 +852,7 @@ In no specific order, the most important features were:
 * parents' education levels (both)
 * quality of family relationships  
   
-I may decide to create a stand alone post for this later, but I'd like to keep my "My First Machine Learning Project" genuine. So for now, I'll just leave you with the results. I welcome all forms of criticism and/or advice, the best way to get in contact is by messaging me on LinkedIn!  
+I may decide to create a stand alone post for this later, but I'd like to keep my "My First Machine Learning Project" genuine. So for now, I'll just leave you with the results. I welcome all forms of criticism and/or advice, and the best way to get in contact with me is through LinkedIn!  
   
 If you've made it this far, thank you so very much. I hope that you found reading this post as enjoyble as I found making it!  
-  
-&nbsp;&nbsp;&nbsp;&nbsp; - Drew
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Drew Woods
