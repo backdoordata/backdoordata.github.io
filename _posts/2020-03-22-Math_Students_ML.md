@@ -350,8 +350,8 @@ There are still a few features I feel aren't relevant to passing a math class, b
 I will revisit feature selection soon, but for now I will evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
   
 **If you've made it this far, you deserve a little honesty..**  
-* Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn.*  
-*Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent.*
+*Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
+*Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent!*
  
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -373,7 +373,7 @@ models.append(('RF', RandomForestClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 ```
 
-Although this dataset is from Kaggle, I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features, and would like my model to be able to predict on new data as well.  
+This dataset is from Kaggle, but I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features, and would like my model to be able to predict on new data as well.  
 For this to happen, I must estabalish a few precautionary measures.  
   
 **High Variance**  
@@ -439,8 +439,8 @@ First I need to split the data into training and testing sets, and then I will b
 Here's what this will look like:  
 *  **Random Forest**
   * Feature Selection
-  * Hyperparameter Tuning
-* **Logistic Regression**
+  * Hyperparameter Tuning  
+*  **Logistic Regression**
   * Feature Selection
   * Hyperparameter Tuning
 *  **Model Performances**
@@ -457,7 +457,7 @@ logreg = LogisticRegression()
 # 269-116 stratified sample split
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size= 0.3, stratify= Y, random_state= 777)
 ```
-
+And just to make sure the sets are both split equally,
 
 ```python
 # proportion of passing students in train and test sets
@@ -469,14 +469,14 @@ print("Test Set: ", Y_test.sum()/Y_test.size)
     Test Set:  0.4051724137931034
 
 
-For feature selection, I will create a copy of X_train using dummy encoding to retain the column names of the selected features.
+For feature selection, I will create a copy of X_train using dummy encoding to retain column labels of the transformed features.
 
 ```python
 X_Dummy = pd.get_dummies(X_train, columns= cat_feats, drop_first= True)
 X_Dummy[num_feats] = MinMaxScaler().fit_transform(X_Dummy[num_feats])
 ```
 
-I'll use the simple function below to measure performance increases/decreases during this stage. 
+I'll use the simple function below to measure performance inhancements during this stage. 
 
 
 ```python
@@ -487,10 +487,10 @@ def pct_change(old, new):
     print("Change :", pct, "%")
 ```
 
-<h1><center>Random Forest</center></h1>
+<h2><center>Random Forest</center></h2>
 
 ### RF - Feature Selection
-Here, I will be using a cross validated recursive selection method to help ensure that any potential deeper corrolations between the features do not go unnoticed.
+Here, I will be using a cross validated recursive selection method to help ensure that any deeper corrolations between the features do not go unnoticed.
 
 
 ```python
@@ -513,7 +513,7 @@ print("Optimal number of features :", rfecv_rfc.n_features_)
 best_rfc_feats = X_Dummy.columns[rfecv_rfc.get_support(indices= True)].values
 print("Optimal features :", best_rfc_feats)
 
-# plot number of features VS. AUC scores
+# plot number of features vs AUC scores
 plt.style.use('ggplot')
 plt.figure(figsize=(15,10))
 plt.xlabel("Number of features")
@@ -536,16 +536,16 @@ plt.show()
 </p>
 
 
-We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are included. This translates to including 24 of the 27 original features, the three not selected were 'nursery', 'internet', 'guardian'.
+We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to including 24 of the 27 original features, the three not selected were 'nursery', 'internet', and 'guardian'.
 
 ### RF - Hyperparameter Tuning
-I'll now perform a grid search on the random forest model using it's optimal set of features with 5-fold cross validation.
+I'll now perform a grid search on the random forest model using its optimal feature set, and 5-fold cross validation.
 
 
 ```python
 from sklearn.model_selection import GridSearchCV
 
-# instantiating rfc parameter grid
+# instantiate rfc parameter grid
 rfc_grid = {
             "n_estimators": np.arange(100, 501, 100),
             "criterion": ["gini", "entropy"],
@@ -555,7 +555,7 @@ rfc_grid = {
             "min_samples_leaf": [1, 3, 5]
             }
 
-# performing cross validated grid search
+# perform cross validated grid search
 rfc_gscv = GridSearchCV(rfc, rfc_grid, cv= 5, scoring= 'roc_auc')
 rfc_gscv.fit(X_Dummy[best_rfc_feats], Y_train)
 
@@ -571,12 +571,6 @@ print(rfc_gscv.best_params_)
 
 
 ```python
-def pct_change(old, new):
-    """Calculate percent change from old to new"""
-    change = new - old
-    pct = np.round((change/old)*100, 2)
-    print("Change :", pct, "%")
-
 # increase in AUC from the feature selection score
 pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_)
 ```
@@ -584,12 +578,13 @@ pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_)
     Change : 7.74 %
 
 
-The best set of parameters from the grid search improved the AUC score from before by roughly 8.1%. An AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed, an AUC of 0.5 is no better than randomly guessing; the random forest model is right in the middle.  
+The best set of parameters from the grid search improved the AUC score from before by 7.74%.  
+An AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed, an AUC of 0.5 is no better than randomly guessing; the random forest model is right in the middle.  
   
-As long as the model performs better than guessing, we've done alright.. Right?  
-Well let's just hope the logistic regression model performs better.
+As long as the model performs better than guessing, I've done alright.. Right?  
+Well, let's just hope the logistic regression model performs better.
 
-<h1><center>Logistic Regression</center></h1>
+<h2><center>Logistic Regression</center></h2>
 I will be using the same methods of feature selection and hyperparameter tuning here that I used for the random forest model.
 
 ### LR - Feature Selection
@@ -628,10 +623,11 @@ plt.show()
 
 
 
-Of the 27 original features, only three were selected. This doesn't seem right, and it's because sklearn's default logistic regression model uses ridge regression. Ridge regression is a method of regularization that applies penalty for nonessential model complexity, which is great if the dataset doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
+Of the 27 original features, only three were selected. This doesn't seem right, and it's because sklearn's default logistic regression model uses ridge regression.  
+Ridge regression is used as a method of regularization to apply penalty for nonessential complexity, which is great if your dataset doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
   
-Lasso regression, or l1 regularization, simply shinks the coeficients of the irrelevant features to zero so that they're ignored from the model.  
-The past result is insightful, but it doesn't seem to be the most reliable. Instead, I will fit a new model to see which features get excluded by l1 regularization.
+Lasso regression, or l1 regularization, simply shinks the coefficients of the irrelevant features to zero so that they're ignored from the model.  
+The past result is insightful, but it doesn't seem to be the most reliable. Instead, I'll fit a new model to see which features get excluded by l1 regularization.
 
 
 ```python
@@ -812,20 +808,6 @@ Technically I lied earlier - NOW we're ready to test the models!
 
 
 ```python
-logreg_model = logreg_l2_gscv.best_estimator_
-
-rfc_pipe = make_pipeline(preprocessor, rfc_gscv.best_estimator_)
-logreg_pipe = make_pipeline(preprocessor, SelectFromModel(logreg_gscv.best_estimator_), logreg_gscv.best_estimator_)
-
-rfc_pipe.fit(X_train, y_train)
-logreg_pipe.fit(X_train, y_train)
-
-print("Logistic Regression:", logreg_pipe.score(X_test, y_test))
-print("Random Forest:", rfc_pipe.score(X_test, y_test))
-```
-
-
-```python
 # Instantiate Final Models
 RFC_model = rfc_gscv.best_estimator_
 LogReg_model = logreg_l2_gscv.best_estimator_
@@ -863,8 +845,12 @@ print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
 With this being my first project in machine learning, I was **very** determined to obtain a high accuracy model. After much effort, I've realized it can't be done.  
   
 At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
-Then, I experimented with different models. Many, many different models.  
+  
+Then, I experimented with different models.  
+Many, many different models.  
+  
 Then I learned about stacking classifiers and using a meta model to make predictions based off the results of the ensemble.  
+  
 I even used regression to estimate the individual G1, G2, and G3 scores to use as additional features in my models here.  
   
 Some of the models performed better than these, but some also performed worse. However, I learned a very valuable lesson here.  
@@ -874,7 +860,7 @@ Some of the models performed better than these, but some also performed worse. H
 It turns out that a student's track record is the best predictor of whether or not they will pass or fail their courses in math.  
 Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included in their model and acheived a classification accuracy score of 90%.  
   
-Of course it would be very interesting (and just down right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but our result is still valuable nonetheless. For instance, devoting a bit more time exploring this concept in depth, K-12 schools could potentially be able to make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help educators identify the "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
+Of course it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but our result is still valuable nonetheless. For instance, devoting a bit more time exploring this concept in depth, K-12 schools could potentially be able to make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help educators identify the "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
 <h1><center>Post-Op: Continued Study</center></h1>
 
@@ -888,7 +874,6 @@ It turns out that the group of students in the 90th percentile have a lot in com
 * parents' education levels (both)
 * quality of family relationships  
   
-For now, I'll just leave you with the results, but I may decide to create a seperate post for this later.  
-If you've made it this far, thank you so very much; I hope that you found reading this as enjoyble as I found making it!  
-  
-I welcome all forms of advice and constructive criticism; the best way to contact me is through LinkedIn. Please feel free to message me!
+For now, I'll just leave you with the results, but I may decide to create a seperate post for this later. I welcome all forms of criticism and advice, the best way to get in contact is by messaging me on LinkedIn!  
+
+If you've made it this far, thank you so very much. I hope that you found reading this as enjoyble as I found making it!
