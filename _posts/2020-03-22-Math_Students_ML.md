@@ -357,7 +357,7 @@ There are still a few features I feel aren't relevant to passing a math class, b
 I will revisit feature selection soon, but for now I'll evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
 
 <p align="center">
-  <img src="https://media.giphy.com/media/gHVxVv3VKxdAkeFcDf/giphy.gif" width="480" height="259">
+  <img src="https://media.giphy.com/media/xT5LMFZDsj0AKUDYTS/giphy.gif" width="480" height="366">
 </p>  
 
 **If you've made it this far, you deserve a little honesty..**  
@@ -444,7 +444,7 @@ print(model_CVscores.sort_values(by= 'Score', ascending= False))
 Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.  
 
 <p align="center">
-  <img src="https://media.giphy.com/media/MOWPkhRAUbR7i/giphy.gif" width="480" height="217">
+  <img src="https://media.giphy.com/media/xT5LMzUp1Hqsparm48/giphy.gif" width="480" height="362">
 </p> 
   
 # <center>Constructing The Models</center>
@@ -799,9 +799,18 @@ preprocessor_lr = make_column_transformer(
                         (OneHotEncoder(drop= 'first'), cat_feats_lr))
 ```
 
-Technically I lied earlier -- NOW we're ready to test the models!  
+So, technically I lied earlier...
+
+<p align="center">
+  <img src="https://media.giphy.com/media/Z9ErMP3gYYlcAadEGd/giphy.gif" width="480" height="480">
+</p>  
   
-  
+**Now** we're ready to test the models!  
+
+<p align="center">
+  <img src="https://media.giphy.com/media/l3HBbltOYjoNq/giphy.gif" width="480" height="480">
+</p> 
+
 &nbsp;&nbsp;&nbsp;&nbsp; **Steps :**  
 **1.** Instantiate final models  
 **2.** Make pipelines  
