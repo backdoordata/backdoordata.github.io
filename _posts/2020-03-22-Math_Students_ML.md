@@ -16,7 +16,6 @@ toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
 I was always good at math growing up, but it was never my main interest. Somehow, it found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
-  
 I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? **Is mathematical ability genetic?** 
   
 For this project, I am attempting to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
@@ -50,19 +49,32 @@ stud = pd.read_csv('student-math.csv')
 The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric entries.  
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**  
-1.)	age - student's age (numeric: from 15 to 22)  
-2.)	Medu - mother's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education)  
-3.)	Fedu - father's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education)  
-4.)	traveltime - home to school travel time (numeric: 1 - 1 hour)  
-5.)	studytime - weekly study time (numeric: 1 - 10 hours)  
-6.)	failures - number of past class failures (numeric: n if 1<=n<3, else 4)  
-7.)	famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent)  
-8.)	freetime - free time after school (numeric: from 1 - very low to 5 - very high)  
-9.)	goout - going out with friends (numeric: from 1 - very low to 5 - very high)  
-10.)	Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)  
-11.)	Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high)  
-12.)	health - current health status (numeric: from 1 - very bad to 5 - very good)  
-13.)	absences - number of school absences (numeric: from 0 to 93)  
+1.)	age - student's age (numeric: from 15 to 22)
+
+2.)	Medu - mother's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education)
+  
+3.)	Fedu - father's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3- secondary education, or 4- higher education)
+  
+4.)	traveltime - home to school travel time (numeric: 1 - 1 hour)
+  
+5.)	studytime - weekly study time (numeric: 1 - 10 hours)
+  
+6.)	failures - number of past class failures (numeric: n if 1<=n<3, else 4)
+
+7.)	famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent)
+  
+8.)	freetime - free time after school (numeric: from 1 - very low to 5 - very high)
+  
+9.)	goout - going out with friends (numeric: from 1 - very low to 5 - very high)
+  
+10.)	Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)
+
+11.)	Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high)
+
+12.)	health - current health status (numeric: from 1 - very bad to 5 - very good)
+  
+13.)	absences - number of school absences (numeric: from 0 to 93)
+  
   
   
   
