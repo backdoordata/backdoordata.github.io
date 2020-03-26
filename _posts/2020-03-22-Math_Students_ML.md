@@ -23,7 +23,7 @@ In this project, I attempt to build a machine learning model that uses seemingly
 
 
 # <center>Data Exploration</center>  
-<iframe src="https://giphy.com/embed/l4KibOaou932EC7Dy" width="480" height="294" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/binoculars-l4KibOaou932EC7Dy">via GIPHY</a></p>
+<iframe src="https://giphy.com/embed/l4KibOaou932EC7Dy" width="480" height="294" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 The dataset I will be using is one from the UCI repository that contains the final scores of 395 students at the end of a math program, and several features that may or may not impact the futures of these young adults. The data consists of 30 predictive features, columns for the two term grades, and the final grade (G1, G2, and G3, respectively).  
 The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
   
