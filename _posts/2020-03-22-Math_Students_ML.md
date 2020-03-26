@@ -21,7 +21,8 @@ I've always assumed that these people just never gave themselves the oppurtunity
   
 In this project, I attempt to build a machine learning model that uses seemingly irrelevant information about a student to predict their mathematical ability.  
 
-# <center>Data Exploration</center>
+# <center><span style="font-size:1.8em;">Data Exploration</span></center>
+
 The dataset I will be using is one from the UCI repository that contains the final scores of 395 students at the end of a math program, and several features that may or may not impact the futures of these young adults. The data consists of 30 predictive features, columns for the two term grades, and the final grade (G1, G2, and G3, respectively).  
 
 <p align="center">
@@ -48,8 +49,7 @@ import seaborn as sns
 # load in dataset
 stud = pd.read_csv('student-math.csv')
 ```
-
-## <center>Variable Identification</center>
+## <center><span style="font-size:1.3em;">Variable Identification</span></center>
 
 The 30 predictive features are all categorical, and they contain a mix of numeric and nonnumeric entries.  
   
@@ -101,7 +101,8 @@ The 30 predictive features are all categorical, and they contain a mix of numeri
   
 **At the top of the page is a link that will redirect you to the Kaggle post where this dataset can be found!**
 
-## <center>Univariate Analysis</center>
+## <center><span style="font-size:1.3em;">Univariate Analysis</span></center>
+
 The ordinal features are all integer values, and the nominal features are all strings. Let's take a look at the distributions of the numeric columns.
 
 
@@ -122,7 +123,7 @@ The shift in distributions of the three grades is rather interesting.
 **G2 -** Higher average, lower variance, and fewer failing grades --> Student's began trying  
 **G3 -** Normally distributed (excluding the 0 values) with mean ~11 --> 40% passed, 60% failed  
 
-## <center>Bivariate Analysis</center>
+## <center><span style="font-size:1.3em;">Bivariate Analysis</span></center>
 
 To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the threshold for a minimum passing grade. 
 *(In this section the target labels are pass or fail, but in following sections they will just be 0's and 1's.)*
@@ -131,8 +132,7 @@ To predict whether a student will either pass or fail, I need to define a thresh
 ```python
 stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 ```
-
-### Target Correlation
+### <span style="font-size:1.2em;">Target Correlation</span>
 
 First, I want to evaluate how the individual features correlate with the target variable. I will use seaborn to visualize the pass/fail frequencies of each feature.  
   
@@ -154,7 +154,7 @@ You may have noticed that I only included the ordinal features in the previous s
 What's important to acknowldge here is that a student's pass/fail status is the outcome of an entire semester's work; it's more complex than just a single test grade. Similarly, making a pass/fail prediction for a student is more difficult than just evaluating one feature!  
 With this being said, I suspect the features will show more correlation with the actual 0-20 final grade. *Being in a relationship with someone probably won't cause them to fail all of their classes, but it may very easily affect their final grade by a few points.*  
 
-### Feature Correlation
+### <span style="font-size:1.2em;">Feature Correlation</span>
 Now we'll take a look at all corrolations. I'll first need to encode the features who have nonnumeric entries.
 
 
@@ -245,8 +245,8 @@ print("On average, females spend",
 ```
 ![](/images/math_ML_imgs/sex_comparison.png)
 
+# <center><span style="font-size:1.8em;">Data Cleaning</span></center>
 
-# <center>Data Cleaning</center>
 With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model.  
 
 <p align="center">
@@ -345,7 +345,8 @@ The resulting dataset has 27 features and 385 samples.
   
 There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any one of the remaining features won't be useful to the model.    
 
-# <center>Model Selection</center>
+# <center><span style="font-size:1.8em;">Model Selection</span></center>
+
 * K-Nearest Neighbors
 * Suport Vector Classifier
 * Logistic Regression
@@ -447,7 +448,7 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
   <img src="https://media.giphy.com/media/xT5LMzUp1Hqsparm48/giphy.gif" width="480" height="362">
 </p> 
   
-# <center><span style="font-size:2em;">Constructing The Models</span></center>
+# <center><span style="font-size:1.8em;">Constructing The Models</span></center>
 
 Now, I will build the models using only 70% of the data, and compare their predictions on the test set at the end. Here's what this will look like:  
   
@@ -501,9 +502,9 @@ def pct_change(old, new):
     print("Change :", pct, "%")
 ```
 
-## <center>Random Forest</center>
+## <center><span style="font-size:1.3em;">Random Forest</span></center>
 
-### Feature Selection
+### <span style="font-size:1.2em;">Feature Selection</span>
 Here, I will use a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
 
 
@@ -549,7 +550,7 @@ plt.show()
 
 We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to excluding three of the original features entirely: 'nursery', 'internet', and 'guardian'.
 
-### Hyperparameter Tuning
+### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
 I'll now perform a grid search on the model using its optimal feature set, and 5-fold cross validation.
 
 
@@ -587,10 +588,10 @@ An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be pe
   
 Well, let's just say that I hope the logistic regression model performs better.
 
-## <center>Logistic Regression</center>
+## <center><span style="font-size:1.3em;">Logistic Regression</span></center>
 Here, I'll be using the same methods of feature selection and parameter tuning that I used for the random forest model.
 
-### Feature Selection
+### <span style="font-size:1.2em;">Feature Selection</span>
 
 ```python
 # recursive feature elimination
@@ -657,8 +658,7 @@ print(best_lassoLR_feats)
   
 This seems more likely. Additionally, one of the benefits of logistic regression is that if this set still contains any useless features, the model will naturally ignore them.
 
-### Hyperparameter Tuning
-
+### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
 
 ```python
 # instantiate logreg-lasso parameter grid
@@ -719,7 +719,8 @@ print(C_gscv.best_params_)
 
 No performance increase from the refined search; C = 10 is optimal.
 
-# <center>Model Performance</center>
+# <center><span style="font-size:1.8em;">Model Performance</span></center>
+
 It's finally time to test the models on unseen data!  
 
 <p align="center">
@@ -853,8 +854,8 @@ print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
   <img src="/images/math_ML_imgs/final_model_scores.png">
 </p>
   
+# <center><span style="font-size:1.8em;">Conclusion</span></center>
 
-# <center>Conclusion</center>
 Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain high accuracy. After much more effort afterwards, I realized it can't be done.  
   
 1.  At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
@@ -870,7 +871,7 @@ It turns out that the best predictor for whether or not a student will pass or f
   
 Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to explore this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
-## <center>Post-Op: Continued Study</center>
+## <center><span style="font-size:1.3em;">Post-Op: Continued Study</span></center>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *2 weeks later ...*  
   
 As I may have hinted at earlier, I wasn't exactly "satisified" with my results. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capacity, and focus on a more *niche* group; the honor roll students.  
