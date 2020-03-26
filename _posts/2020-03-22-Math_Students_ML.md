@@ -21,12 +21,13 @@ I've always assumed that these people just never gave themselves the oppurtunity
   
 In this project, I attempt to build a machine learning model that uses seemingly irrelevant information about a student to predict their mathematical ability.  
 
+# <center>Data Exploration</center>
+The dataset I will be using is one from the UCI repository that contains the final scores of 395 students at the end of a math program, and several features that may or may not impact the futures of these young adults. The data consists of 30 predictive features, columns for the two term grades, and the final grade (G1, G2, and G3, respectively).  
+
 <p align="center">
   <img src="https://media.giphy.com/media/l4KibOaou932EC7Dy/giphy.gif" width="480" height="294">
 </p>  
 
-# <center>Data Exploration</center>
-The dataset I will be using is one from the UCI repository that contains the final scores of 395 students at the end of a math program, and several features that may or may not impact the futures of these young adults. The data consists of 30 predictive features, columns for the two term grades, and the final grade (G1, G2, and G3, respectively).  
 The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
   
   
@@ -246,7 +247,13 @@ print("On average, females spend",
 
 
 # <center>Data Cleaning</center>
-With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model. Let's take another look at the outliers we saw earlier.
+With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model.  
+
+<p align="center">
+  <img src="https://media.giphy.com/media/RjpE964WUAE5a/giphy.gif" width="480" height="374">
+</p>  
+
+Let's take another look at the outliers we saw earlier.
 
 
 ```python
