@@ -298,10 +298,10 @@ plt.figure(figsize= (40,40))
   <img src="/images/math_ML_imgs/output_30_2.png">
 </p>
 
-For 'absences', there are 46 samples in categories with no more than 5 total observations, and it's less than ideal to drop them. However, we can see that every instance where 'absences' > 24 resulted in the same outcome, a failed course. Hence, we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
+For 'absences', there are 46 samples in categories with no more than 5 total observations, and it's less than ideal to drop them all. However, we can see that every instance where 'absences' > 24 resulted in the same outcome, a failed course. Hence, we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
 
   
-It only seems natural to use '25' to denote the 25+ bin, but using a slighly larger integer, say 30, may benefit certain models where Euclidean distance is of importance.
+Although it seems natural to use '25' to denote the 25+ bin, using a slighly larger integer, say 30, may benefit certain models where Euclidean distance is of importance.
 
 
 ```python
@@ -338,9 +338,9 @@ sns.catplot(x = 'higher', data= stud, hue= 'target', kind= 'count', hue_order= [
 
 Each of these features have a dominate category with roughly 90% selection, so there's not much, if any, information to be gained by their inclusion. 
 
-*That is*, consider the case where a student does not plan on furthering their education. They'll mark 'no' for the feature 'higher', and many ML models would predecit they would fail solely due to an insufficient number of datapoints (18 of 395 students).  
+*That is*, consider the case where a student does not plan on furthering their education. They'll mark 'no' for the feature 'higher', and many ML models would predecit they would fail solely due to the insufficient amount of data (18 of 395 students).  
   
-Hence, these features will not be included in the model.
+In sum, these features will be excluded from the analysis.
 
 
 ```python
@@ -361,15 +361,15 @@ There are still a few features I feel aren't relevant to passing a math class, b
 * Random Forest Classifier
 * Gradient Boosting Classifier   
   
-I will revisit feature selection soon, but for now I'll evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
+I will revisit feature selection soon, but for now I'll evaluate the base performances of the seven classifiers listed above, and move forward with the top two.  
 
 <p align="center">
   <img src="https://media.giphy.com/media/xT5LMFZDsj0AKUDYTS/giphy.gif" width="480" height="366">
 </p>  
 
 **If you've made it this far, you deserve a little honesty..**  
-*Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. So, I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
-*Plus, this way will give me two different models to learn head-to-toe that I know will at least perform somewhat decent!*
+*Prior to this very moment, my only exposure to machine learning was in mathematical statistics my junior year when we covered linear regression over the span of two 50-minute class periods. So, I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
+*Plus, this method will give me two seperate models to learn head-to-toe that I know will perform at least somewhat decent!*
  
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -380,7 +380,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 
-# instantiate the models within a list
+# instantiate classifiers in a list
 models = []
 models.append(('KNN', KNeighborsClassifier())) 
 models.append(('SVC', SVC()))
@@ -456,7 +456,7 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
   
 # <center><span style="font-size:1.8em;">Constructing The Models</span></center>
 
-Now, I will build the models using only 70% of the data, and compare their predictions on the test set at the end. Here's what this will look like:  
+I'll build the models on 70% of the data, and compare their predictions on the test set at the end. Here's what this will look like:  
   
 &nbsp;&nbsp;&nbsp;&nbsp;**1. Random Forest**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**a.** Feature Selection  
@@ -478,7 +478,7 @@ logreg = LogisticRegression()
 # 269-116 stratified sample split
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size= 0.3, stratify= Y, random_state= 777)
 ```
-And just to make sure the sets are both split proportionally,
+And just to verify that the target labels are split proportionally..
 
 ```python
 # proportions of passing students
@@ -511,7 +511,7 @@ def pct_change(old, new):
 ## <center><span style="font-size:1.3em;">Random Forest</span></center>
 
 ### <span style="font-size:1.2em;">Feature Selection</span>
-I'll use a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
+To select the optimal set of features for the random forest model, I'll be using a recursive feature elimination method with cross-validation to help ensure that any deeper relationships between the features do not go unnoticed.
 
 
 ```python
@@ -557,7 +557,7 @@ plt.show()
 We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to excluding three of the original features entirely: 'nursery', 'internet', and 'guardian'.
 
 ### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
-I'll now perform a grid search on the model using its optimal feature set.
+I'll now perform a grid search on the model using the selected features.
 
 
 ```python
@@ -588,9 +588,9 @@ print(rfc_gscv.best_params_)
 </p>
   
 
-The best set of parameters from the grid search improved the AUC score by 7.74%.  
+The best set of parameters improved the AUC score by 7.74%.  
   
-An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle with a score of 0.77. As long as the model performs better than random, I've done good.. right?  
+An AUC of 0.5 is no better than randomly guessing, and a 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle with an AUC score of 0.77. As long as the model performs better than random, I've done good.. right?  
   
 Well, let's just say that I hope the logistic regression model performs better.
 
@@ -635,11 +635,11 @@ plt.show()
 
 Only three of the 36 features were selected, which doesn't seem right. This is because sklearn's logistic regression model uses l2 regularization by default.  
   
-L2 regularization, or ridge regression, is used to apply penalty to the model for added complexity, which is great if its input doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
+L2 regularization (ridge regression) applies penalty to the model for added complexity, which is great if the input doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
   
-L1 regularization, or lasso regression, adds coefficients to the features based on their respective importances. The coefficients of the irrelevant features simply shrink to zero and are ignored from the model.  
+L1 regularization (lasso regression) assigns coefficients to the features based on their respective importances. The coefficients of the irrelevant features simply shrink to zero, and are ignored from the model; no penalty is applied.  
   
-The past result doesn't seem too reliable, so instead, I'll fit a new model to see which features get excluded by l1 regularization.
+Using only three features as input doesn't seem too reliable, so instead, I'll fit a new model to see which features get excluded by lasso.
 
 
 ```python
@@ -663,9 +663,17 @@ print(best_lassoLR_feats)
 </p>
   
 This seems more likely.  
-Additionally, one of the benefits of logistic regression is that if the set still contains any useless features, the model will naturally ignore them.
+  
+One of the additional benefits of logistic regression is that if the set still contains any useless features, the model will naturally ignore them.
 
 ### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
+
+First, I'll fit and compare the search results of two different grids. This is primarily to compare Lasso VS. Ridge regression as the method of regularization. The grids also contain the eligible solvers for each method, and an array of 'C' values.  
+  
+The solver is just an itterative procedure used for minimizing the convex cost function.  
+*[Additional Info: Solving for true optimality is computationally expensive, rarely practical, and often isn't even possible. Different approximation methods have been developed over the years, each have their own pro's and con's, but their results generally don't deviate enough to matter. For small datasets, the selection is somewhat arbitrary.]*
+  
+Finding the best value for 'C' is more important than choosing which solver to use. This parameter determines the strength of regularization; the higher the value, the less regularization. I'm only checking the values 0, 5, 10, ..., 100 in these grids. I'll use the result to refine my search afterwards.
 
 ```python
 # instantiate logreg-lasso parameter grid
@@ -681,14 +689,14 @@ logreg_l2_grid = { "penalty": ['l2'],
                    "solver": ['liblinear', 'saga', 'sag', 'newton-cg', 'lbfgs']}
 
 
-# logreg-lasso cross-validated grid search
+# logreg-lasso CV grid search
 logreg_l1_gscv = GridSearchCV(logreg, logreg_l1_grid, cv= 5, scoring= 'roc_auc')
 logreg_l1_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
 print('Logistic Regression w/ Lasso - Results')
 print(logreg_l1_gscv.best_score_)
 print(logreg_l1_gscv.best_params_)
 
-# logreg-ridge cross-validated grid search
+# logreg-ridge CV grid search
 logreg_l2_gscv = GridSearchCV(logreg, logreg_l2_grid, cv= 5, scoring= 'roc_auc')
 logreg_l2_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
 print('Logistic Regression w/ Ridge - Results')
