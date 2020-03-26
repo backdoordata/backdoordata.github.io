@@ -15,14 +15,14 @@ toc: true
 toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
-I was always good at math growing up, but it was never my main interest. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it and would say something along the lines of *"I'm just not a math person"*.  
+I was always good at math growing up, but it was never my main interest. Somehow, it found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
   
 I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? **Is mathematical ability genetic?** 
   
-For this project, I am looking to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
+For this project, I am attempting to build a model that takes seemingly irrelevant details about students, and uses them to predict their mathematical ability. 
 
 
-<h1><center>Data Exploration</center></h1>
+# <center>Data Exploration</center>
 This is a dataset from the UCI repository that contains the final scores of 395 students at the end of a math program with several features that may or may not impact the future outcome of these young adults. The dataset consists of 30 predictive features, and columns for the two term grades and final grade (G1, G2, and G3, respectively). The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
   
   
@@ -31,8 +31,8 @@ This is a dataset from the UCI repository that contains the final scores of 395 
 1.) Variable Identification  
 2.) Univariate Analysis  
 3.) Bivariate Analysis  
-3a.) Target Correlation  
-3b.) Feature Correlation  
+&nbsp;&nbsp;&nbsp; a.) Target Correlation  
+&nbsp;&nbsp;&nbsp; b.) Feature Correlation  
   
 
 ```python
@@ -45,24 +45,24 @@ import seaborn as sns
 stud = pd.read_csv('student-math.csv')
 ```
 
-<h2><center>Variable Identification</center></h2>
+## <center>Variable Identification</center>
 
 The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric entries.  
   
-&nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**
-1.	age - student's age (numeric: from 15 to 22) 
-2.	Medu - mother's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education) 
-3.	Fedu - father's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education) 
-4.	traveltime - home to school travel time (numeric: 1 - 1 hour) 
-5.	studytime - weekly study time (numeric: 1 - 10 hours) 
-6.	failures - number of past class failures (numeric: n if 1<=n<3, else 4) 
-7.	famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent) 
-8.	freetime - free time after school (numeric: from 1 - very low to 5 - very high) 
-9.	goout - going out with friends (numeric: from 1 - very low to 5 - very high) 
-10.	Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)
-11.	Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high) 
-12.	health - current health status (numeric: from 1 - very bad to 5 - very good) 
-13.	absences - number of school absences (numeric: from 0 to 93)  
+&nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**  
+1.)	age - student's age (numeric: from 15 to 22)  
+2.)	Medu - mother's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education)  
+3.)	Fedu - father's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education)  
+4.)	traveltime - home to school travel time (numeric: 1 - 1 hour)  
+5.)	studytime - weekly study time (numeric: 1 - 10 hours)  
+6.)	failures - number of past class failures (numeric: n if 1<=n<3, else 4)  
+7.)	famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent)  
+8.)	freetime - free time after school (numeric: from 1 - very low to 5 - very high)  
+9.)	goout - going out with friends (numeric: from 1 - very low to 5 - very high)  
+10.)	Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)  
+11.)	Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high)  
+12.)	health - current health status (numeric: from 1 - very bad to 5 - very good)  
+13.)	absences - number of school absences (numeric: from 0 to 93)  
   
   
   
@@ -96,7 +96,7 @@ The 30 predictive features are all categorical, and contain a mix of numeric and
   
 **At the top of the page is a link that will redirect you to the Kaggle post where this dataset can be found!**
 
-<h2><center>Univariate Analysis</center></h2>
+## <center>Univariate Analysis</center>
 The ordinal features are all integer values, and the nominal features are all strings. Let's take a look at the distributions of the numeric columns.
 
 
@@ -114,7 +114,7 @@ We can see right away that some of the features have categories with hardly any 
   
 The shift in distributions of the three grades is rather interesting. You can see how the grades were more spread out and typically worse in the first term (G1), the students started to pick their grades up a bit in the second term (G2), and then the final grade (G3) resembles a normal distribution (excluding the 0 values) with mean ~11.
 
-<h2><center>Bivariate Analysis</center></h2>
+## <center>Bivariate Analysis</center>
 
 To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the threshold for a minimum passing grade. 
 *(In this section the target labels are pass or fail, but in following sections they will just be 0's and 1's.)*
@@ -243,7 +243,7 @@ print("On average, females spend",
 ![](/images/math_ML_imgs/sex_comparison.png)
 
 
-<h1><center>Data Cleaning</center></h1>
+# <center>Data Cleaning</center>
 With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model.  
 Let's take another look at the ones we saw earlier.
 
@@ -336,7 +336,7 @@ The resulting dataset has 27 features and 385 samples.
   
 There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any of the remaining features won't be useful to the model.    
 
-<h1><center>Model Selection</center></h1>
+# <center>Model Selection</center>
 * K-Nearest Neighbors
 * Suport Vector Classifier
 * Logistic Regression
@@ -349,7 +349,7 @@ I will revisit feature selection soon, but for now I will evaluate the base mode
   
 **If you've made it this far, you deserve a little honesty..**  
 *Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
-*Plus, this way I'll have two different models to learn head-to-toe and that I know will at least perform semi-decent!*
+*Plus, this way will give me two different models to learn head-to-toe that I know will at least perform semi-decent!*
  
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -431,7 +431,7 @@ print(model_CVscores.sort_values(by= 'Score', ascending= False))
 
 Logistic Regession and Random Forest seem to be the best two classifiers for the dataset. Both scored over 65% accuracy right out of the box with default parameters and no feature selection.  
   
-<h1><center>Constructing The Models</center></h1>
+# <center>Constructing The Models</center>
 
 First I need to split the data into training and testing sets, and then I will build each model individually and compare their predictions on the testing set at the end.  
 Here's what this will look like:  
@@ -485,9 +485,9 @@ def pct_change(old, new):
     print("Change :", pct, "%")
 ```
 
-<h2><center>Random Forest</center></h2>
+## <center>Random Forest</center>
 
-### RF - Feature Selection
+### Feature Selection
 Here, I will be using a cross validated recursive selection method to help ensure that any deeper corrolations between the features do not go unnoticed.
 
 
@@ -536,7 +536,7 @@ plt.show()
 
 We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to including 24 of the 27 original features, the three not selected were 'nursery', 'internet', and 'guardian'.
 
-### RF - Hyperparameter Tuning
+### Hyperparameter Tuning
 I'll now perform a grid search on the random forest model using its optimal feature set, and 5-fold cross validation.
 
 
@@ -582,10 +582,10 @@ An AUC of 1.0 would be perfectly seperating the group of passing students from t
 As long as the model performs better than guessing, I've done alright.. Right?  
 Well, let's just hope the logistic regression model performs better.
 
-<h2><center>Logistic Regression</center></h2>
+## <center>Logistic Regression</center>
 I will be using the same methods of feature selection and hyperparameter tuning here that I used for the random forest model.
 
-### LR - Feature Selection
+### Feature Selection
 
 ```python
 # recursive feature elimination
@@ -652,7 +652,7 @@ print(best_lassoLR_feats)
      'reason_other' 'reason_reputation']
 
 
-### LR - Hyperparameter Tuning
+### Hyperparameter Tuning
 
 
 ```python
@@ -839,7 +839,7 @@ print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
     LogReg Prediction Accuracy : 62.07 %
 
 
-<h1><center>Conclusion</center></h1>
+# <center>Conclusion</center>
 With this being my first project in machine learning, I was **very** determined to obtain a high accuracy model. After much effort, I've realized it can't be done.  
   
 At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
@@ -860,7 +860,7 @@ Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predi
   
 Of course it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but our result is still valuable nonetheless. For instance, devoting a bit more time exploring this concept in depth, K-12 schools could potentially be able to make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help educators identify the "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
-<h2><center>Post-Op: Continued Study</center></h2>
+## <center>Post-Op: Continued Study</center>
 
 As I may have hinted towards, I wasn't exactly "satisified" with the conclusion of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first project in machine learning just yet. I decided to narrow my search, and try to predict on a more *niche* group; the honor roll students.  
   
