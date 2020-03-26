@@ -14,6 +14,7 @@ excerpt: "Data Analysis & Visualizations"
 toc: true
 toc_label: " Sights-to-See:"
 toc_icon: "hiking"
+toc_sticky: true
 ---
 
 If you live in Tennessee, you've probably noticed the recent growth in popularity of Middle Tennessee. If you don't live in Tennessee, or have been completely oblivious to this fact, you've come to the right place!
