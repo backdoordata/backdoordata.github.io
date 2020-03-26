@@ -447,9 +447,9 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
   <img src="https://media.giphy.com/media/xT5LMzUp1Hqsparm48/giphy.gif" width="480" height="362">
 </p> 
   
-# <center>Constructing The Models</center>
+# <center><span style="font-size:2em;">Constructing The Models</span></center>
 
-Now, I will build the models using only 70% of the data, and compare their predictions on the testing set at the end. Here's what this will look like:  
+Now, I will build the models using only 70% of the data, and compare their predictions on the test set at the end. Here's what this will look like:  
   
 &nbsp;&nbsp;&nbsp;&nbsp;**1. Random Forest**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**a.** Feature Selection  
@@ -459,7 +459,7 @@ Now, I will build the models using only 70% of the data, and compare their predi
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**b.** Hyperparameter Tuning  
 &nbsp;&nbsp;&nbsp;&nbsp;**3. Test the Models**  
   
-First, I need to split the data into training and testing sets. 
+First, I need to split the data into training and test sets. 
 
 ```python
 from sklearn.model_selection import train_test_split
@@ -799,16 +799,17 @@ preprocessor_lr = make_column_transformer(
                         (OneHotEncoder(drop= 'first'), cat_feats_lr))
 ```
 
-So, technically I lied earlier...
+<center>So, technically I lied earlier...</center>
 
 <p align="center">
-  <img src="https://media.giphy.com/media/Z9ErMP3gYYlcAadEGd/giphy.gif" width="480" height="480">
+  <img src="https://media.giphy.com/media/Z9ErMP3gYYlcAadEGd/giphy.gif" width="400" height="400">
 </p>  
   
-**Now** we're ready to test the models!  
+<center>**NOW** we're ready to test the models!</center>
+ 
 
 <p align="center">
-  <img src="https://media.giphy.com/media/l3HBbltOYjoNq/giphy.gif" width="480" height="480">
+  <img src="https://media.giphy.com/media/l3HBbltOYjoNq/giphy.gif" width="400" height="400">
 </p> 
 
 &nbsp;&nbsp;&nbsp;&nbsp; **Steps :**  
