@@ -668,12 +668,11 @@ One of the additional benefits of logistic regression is that if the set still c
 
 ### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
 
-First, I'll fit and compare the search results of two different grids. This is primarily to compare Lasso VS. Ridge regression as the method of regularization. The grids also contain the eligible solvers for each method, and an array of 'C' values.  
+First, I'll fit and compare the search results of two different grids. This is primarily to compare lasso vs. ridge regression as the method of regularization. The grids also contain the eligible solvers for each method, and an array of 'C' values.  
   
-The solver is just an itterative procedure used for minimizing the convex cost function.  
-*[Additional Info: Solving for true optimality is computationally expensive, rarely practical, and often isn't even possible. Different approximation methods have been developed over the years, each have their own pro's and con's, but their results generally don't deviate enough to matter. For small datasets, the selection is somewhat arbitrary.]*
+**'solver' -** The solver is just an itterative procedure used for minimizing the convex cost function. A variety approximation methods have been developed over the years, each have their own pro's and con's, but their results generally don't differentiate enough to matter. For small datasets, the selection is somewhat arbitrary.
   
-Finding the best value for 'C' is more important than choosing which solver to use. This parameter determines the strength of regularization; the higher the value, the less regularization. I'm only checking the values 0, 5, 10, ..., 100 in these grids. I'll use the result to refine my search afterwards.
+**'C' -** Finding the best value for 'C' is by far more important than choosing a solver. This parameter determines the strength of regularization; the higher the value, the less regularization.  
 
 ```python
 # instantiate logreg-lasso parameter grid
