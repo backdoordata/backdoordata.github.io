@@ -14,6 +14,7 @@ excerpt: "Data Analysis & Visualizations"
 toc: true
 toc_label: " Workflow :"
 toc_icon: "hiking"
+toc_sticky: true
 ---
 I was always good at math growing up, but it was never my main interest. Somehow, it found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
 I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for failing grades? **Is mathematical ability genetic?** **Is it situational?**
@@ -21,7 +22,8 @@ I've always assumed that these people just never gave themselves the oppurtunity
 In this project, I attempt to build a machine learning model that uses seemingly irrelevant information about a student to predict their mathematical ability. 
 
 
-# <center>Data Exploration</center>
+# <center>Data Exploration</center>  
+<iframe src="https://giphy.com/embed/l4KibOaou932EC7Dy" width="480" height="294" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/binoculars-l4KibOaou932EC7Dy">via GIPHY</a></p>
 The dataset I will be using is one from the UCI repository that contains the final scores of 395 students at the end of a math program, and several features that may or may not impact the futures of these young adults. The data consists of 30 predictive features, columns for the two term grades, and the final grade (G1, G2, and G3, respectively).  
 The 30 features detail the social lives, home lives, family dynamics, and the future aspirations of the students. For obvious reasons, the two term grades, G1 and G2, will not be included in the actual model.  
   
@@ -47,7 +49,7 @@ stud = pd.read_csv('student-math.csv')
 
 ## <center>Variable Identification</center>
 
-The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric entries.  
+The 30 predictive features are all categorical, and they contain a mix of numeric and nonnumeric entries.  
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**  
 1.	age - student's age (numeric: from 15 to 22) 
@@ -111,9 +113,12 @@ stud.hist(figsize= (20,15), color= 'b');
 </p>
 
 
-We can see right away that some of the features have categories with hardly any occurances (ex: Fedu, Medu, age, and absences), which isn't a surprise having a small sample size. These outliers may cause issues later on down the road since they will likely overfit the model; I will take note of this now, and will evaluate them further in the upcoming sections.  
+We can see right away that some of the features have categories with hardly any occurances (ex: Fedu, Medu, age, and absences), which isn't surprising with a small sample size. These outliers may cause issues later on down the road, so I will take note of them now, and further evaluate them in the upcoming sections.  
   
-The shift in distributions of the three grades is rather interesting. You can see how the grades were more spread out and typically worse in the first term (G1), the students started to pick their grades up a bit in the second term (G2), and then the final grade (G3) resembles a normal distribution (excluding the 0 values) with mean ~11.
+The shift in distributions of the three grades is rather interesting.  
+**G1 -** Low average, and high variance --> Students weren't trying  
+**G2 -** Higher average, lower variance, and fewer failing grades --> Student's began trying  
+**G3 -** Normally distributed (excluding the 0 values) with mean ~11 --> 40% passed, 60% failed  
 
 ## <center>Bivariate Analysis</center>
 
@@ -217,15 +222,12 @@ sns.heatmap(G3_corr,
 
 
 **Positive Correlations:**  
--'address' and 'traveltime'
-  
--'Dalc', 'Walc', 'goout', and 'freetime'
-  
--'famsup' and 'paid'
+-'address' and 'traveltime'  
+-'Dalc', 'Walc', 'goout', and 'freetime'  
+-'famsup' and 'paid'  
   
 **Negative Correlations:**  
--'Dalc', 'Walc', and 'studytime'
-  
+-'Dalc', 'Walc', and 'studytime'  
 -'studytime' and 'sex'  
   
 These correlations seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is interesting. I'll openly admit, I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
@@ -244,7 +246,7 @@ print("On average, females spend",
 
 
 # <center>Data Cleaning</center>
-With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model. Let's take another look at the ones we saw earlier.
+With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model. Let's take another look at the outliers we saw earlier.
 
 
 ```python
@@ -269,7 +271,7 @@ sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 
 
 ![](/images/math_ML_imgs/output_28_1.png)
 
-This feature is an interesting one, but it would be far-fetched to consider samples of sizes three, one, and one as accurate representations of *any* populations.
+This feature is an interesting one, but it would be far-fetched to consider samples of sizes 3, 1, and 1 as accurate representations of *any* populations.
 
 ```python
 print(stud['absences'].value_counts())
@@ -309,7 +311,7 @@ stud['absences'] = stud['absences'].replace({25:30,
                                             75:30})
 ```
 
-A few other features stood out to me while evaluating the bivariate graphs. 
+'School', 'Pstatus', and 'higher' also caught my attention earlier. See their bivariate graphs below.
 
 
 ```python
@@ -323,8 +325,9 @@ sns.catplot(x = 'higher', data= stud, hue= 'target', kind= 'count', hue_order= [
 
 Each of these features have a dominate category with roughly 90% selection, so there's not much, if any, information to be gained by their inclusion. 
 
-That is, consider the feature 'higher'. If a student does not plan on furthering their education, many ML models would predecit that they would fail the course solely due to lack of information (18 students to 367).  
-These features will not be included in the model.
+*That is*, consider the case where a student does not plan on furthering their education. They'll mark 'no' for the feature 'higher', and many ML models would predecit they would fail solely due to an insufficient number of datapoints (18 of 395 students).  
+  
+Hence, these features will not be included in the model.
 
 
 ```python
@@ -333,7 +336,7 @@ stud = stud.drop(columns=['school', 'Pstatus', 'higher'])
 
 The resulting dataset has 27 features and 385 samples.  
   
-There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any of the remaining features won't be useful to the model.    
+There are still a few features I feel aren't relevant to passing a math class, but at this point, I cannot confirm that any one of the remaining features won't be useful to the model.    
 
 # <center>Model Selection</center>
 * K-Nearest Neighbors
@@ -347,7 +350,7 @@ There are still a few features I feel aren't relevant to passing a math class, b
 I will revisit feature selection soon, but for now I'll evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
   
 **If you've made it this far, you deserve a little honesty..**  
-*Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
+*Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. So, I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
 *Plus, this way will give me two different models to learn head-to-toe that I know will at least perform somewhat decent!*
  
 ```python
@@ -370,15 +373,13 @@ models.append(('RF', RandomForestClassifier()))
 models.append(('GB', GradientBoostingClassifier()))
 ```
 
-This dataset is from Kaggle, but I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features, and would like my model to be able to predict on new data as well.  
+The dataset is from Kaggle, but I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features, and would like for my model to be able to predict on new data as well.  
   
-For this to happen, I must estabalish a few precautionary measures.  
+**For this to happen, I must estabalish a few precautionary measures.**  
   
-**High Variance**  
-The dataset contains a less than preferrable number of samples, and because of this, testing accuracy will be highly subject to variation. I want the two best performing models of the group, but I do not want them if they can't fit to new data. In attempt to mitigate this, I will use 10 repititions of 5-fold stratified cross validation when estimating each model's out-of-sample accuracy.  
+**High Variance -** The dataset contains a less than preferrable number of samples, and because of this, testing accuracy will be highly subject to variation. I want the two best performing models of the group, but I do not want them if they can't fit to new data. In attempt to mitigate this, I will use 10 repititions of 5-fold stratified cross validation when estimating each model's out-of-sample accuracy.  
   
-**Data Leakage**  
-Instead of passing the actual models to cross_val_score, I will cross validate pipelines containing both the model, **and** the preprocessing steps. Thus, when the dataset is split into new training and test sets at each fold, the two sets will be preprocessed separately, and the chances of data leakage will be near-to-none!
+**Data Leakage -** Instead of passing the stand alone models to cross_val_score, I will cross validate pipelines containing both the model, **and** the preprocessing steps. Thus, when the dataset is split into new training and test sets at each fold, the two sets will be preprocessed separately, and the chances of data leakage will be near-to-none!
 
 
 ```python
@@ -403,7 +404,7 @@ preprocessor = make_column_transformer(
     (MinMaxScaler(), num_feats),
     (OneHotEncoder(drop= 'first'), cat_feats))
 
-# computie and store each model's average CV accuracy
+# compute and store each model's average CV accuracy
 names = []
 scores = []
 for name, model in models:
@@ -434,20 +435,21 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
 # <center>Constructing The Models</center>
 
 Now, I will build the models using only 70% of the data, and compare their predictions on the testing set at the end. Here's what this will look like:  
-* **Random Forest**
-  * Feature Selection
-  * Hyperparameter Tuning  
-* **Logistic Regression**
-  * Feature Selection
-  * Hyperparameter Tuning
-* **Test the Models**  
+  
+&nbsp;&nbsp;&nbsp;&nbsp;**1. Random Forest**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**a.** Feature Selection  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**b.** Hyperparameter Tuning  
+&nbsp;&nbsp;&nbsp;&nbsp;**2. Logistic Regression**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**a.** Feature Selection  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**b.** Hyperparameter Tuning  
+&nbsp;&nbsp;&nbsp;&nbsp;**3. Test the Models**  
   
 First, I need to split the data into training and testing sets. 
 
 ```python
 from sklearn.model_selection import train_test_split
 
-# instantiating base models
+# instantiate base models
 rfc = RandomForestClassifier()
 logreg = LogisticRegression()
 
@@ -487,7 +489,7 @@ def pct_change(old, new):
 ## <center>Random Forest</center>
 
 ### Feature Selection
-Here, I will be using a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
+Here, I will use a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
 
 
 ```python
@@ -521,12 +523,13 @@ plt.show()
 ```
 
 <p align="center">
-  <img src="/images/math_ML_imgs/rfc_feat_select.png">
+  <img src="/images/math_ML_imgs/output_2_13_1.png">
 </p>
   
 <p align="center">
-  <img src="/images/math_ML_imgs/output_2_13_1.png">
+  <img src="/images/math_ML_imgs/rfc_feat_select.png">
 </p>
+  
 
 
 We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to excluding three of the original features entirely: 'nursery', 'internet', and 'guardian'.
@@ -565,12 +568,12 @@ print(rfc_gscv.best_params_)
 
 The best set of parameters from the grid search improved the AUC score by 7.74%.  
   
-An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle with a score of 0.77. As long as the model performs better than guessing, I've done good.. Right?  
+An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle with a score of 0.77. As long as the model performs better than random, I've done good.. right?  
   
-Well, let's just hope the logistic regression model performs better.
+Well, let's just say that I hope the logistic regression model performs better.
 
 ## <center>Logistic Regression</center>
-I will be using the same methods of feature selection and parameter tuning that I used for the random forest model.
+Here, I'll be using the same methods of feature selection and parameter tuning that I used for the random forest model.
 
 ### Feature Selection
 
@@ -598,12 +601,13 @@ plt.plot(range(1, len(rfecv_logreg.grid_scores_) + 1), rfecv_logreg.grid_scores_
 plt.show()
 ```
 <p align="center">
-  <img src="/images/math_ML_imgs/logreg_feat_select1.png">
+  <img src="/images/math_ML_imgs/output_2_21_1.png">
 </p>
   
 <p align="center">
-  <img src="/images/math_ML_imgs/output_2_21_1.png">
+  <img src="/images/math_ML_imgs/logreg_feat_select1.png">
 </p>
+  
 
 
 
@@ -822,29 +826,27 @@ print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
   
 
 # <center>Conclusion</center>
-Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain high accuracy predictions. After much effort afterwards, I've realized it can't be done.  
+Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain high accuracy. After much more effort afterwards, I realized it can't be done.  
   
-At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
-  
-Then, I experimented with different models. Many, many different models.  
-  
-Using logistic regression as a 'meta model', I made a stacked ensemble of classifiers to generate multiple predictions to predict off of.  
-  
-I even used regression models to estimate the individual G1, G2, and G3 test scores to use as additional features in my models here. Still, I had no luck.  
+1.  At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
+2.  Then, I experimented with different models. Many, many different models.  
+3.  Using logistic regression as a 'meta model', I made a stacked ensemble of classifiers to generate multiple predictions to predict off of.  
+4.  I even used regression models to estimate the individual G1, G2, and G3 test scores to use as additional features in my models here. Still, I had no luck.  
   
 Some of the models performed better than these here, but some also performed worse. However, I learned a very valuable lesson here:  
 **If the data won't tell you what you want to hear, it's probably because it can't**.  
   
   
-It turns out that the best predictor of whether or not a student will pass or fail their a course is their track record. Another user on Kaggle posted [their study](https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included, and acheived a classification accuracy of 90%.  
+It turns out that the best predictor for whether or not a student will pass or fail a course is their track record. Another user on Kaggle posted [their study](https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included, and acheived a classification accuracy of 90%.  
   
 Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to explore this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
 ## <center>Post-Op: Continued Study</center>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *two weeks later...*  
-As I may have hinted at earlier, I wasn't exactly "satisified" with the results of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capacity, and focus on a more *niche* group; the honor roll students.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *2 weeks later ...*  
   
-In sum, I essentially just repeated this process, but used 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the honor roll students have a lot in common!  
+As I may have hinted at earlier, I wasn't exactly "satisified" with my results. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capacity, and focus on a more *niche* group; the honor roll students.  
+  
+In sum, I essentially just repeated this process, but used 16 as my threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the honor roll students have a lot in common!  
   
 In no specific order, the most important features were: 
 * age
@@ -853,7 +855,7 @@ In no specific order, the most important features were:
 * parents' education levels (both)
 * quality of family relationships  
   
-I may decide to create a stand alone post for this later, but I'd like to keep my "My First Machine Learning Project" genuine. So for now, I'll just leave you with the results. I welcome all forms of criticism and/or advice, and the best way to get in contact with me is through LinkedIn!  
+I may decide to create a seperate post for this later, but I'd like to keep my "My First Machine Learning Project" genuine. So for now, I'll just leave you with the results. I welcome all forms of criticism and/or advice, and the best way to get in contact with me is through LinkedIn!  
   
-If you've made it this far, thank you so very much. I hope that you found reading this post as enjoyble as I found making it!  
+If you've made it this far, thank you so very much. I hope that you've found reading this post as enjoyble as I found making it!  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Drew Woods
