@@ -15,7 +15,7 @@ toc: true
 toc_label: " Workflow :"
 toc_icon: "hiking"
 ---
-I was always good at math growing up, but never really enjoyed it. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it and would say something along the lines of "I'm just not a math person".  
+I was always good at math growing up, but it was never my main interest. It somehow became my passion early in my college career, and I decided to abandon pre-med to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it and would say something along the lines of *"I'm just not a math person"*.  
   
 I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for their failing grades? **Is mathematical ability genetic?** 
   
@@ -270,9 +270,7 @@ sns.catplot(x = 'age', data= stud, hue= 'target', kind= 'count', hue_order= [1, 
 
 ![](/images/math_ML_imgs/output_28_1.png)
 
-It would be far-fetched to consider samples of sizes three, one, and one as accurate representations of *any* populations.  
-This feature is an interesting one nonetheless.
-
+This feature is an interesting one, but it would be far-fetched to consider samples of sizes three, one, and one as accurate representations of *any* populations.
 
 ```python
 print(stud['absences'].value_counts())
@@ -722,7 +720,7 @@ print(C_gscv.best_params_)
 
 No performance increase resulted from the refined search; C = 10 is optimal.
 
-<h1><center>Model Performance</center></h1>
+# <center>Model Performance</center>
 It's finally time to test the models on unseen data!  
   
 First, I need to make new X_train and X_test sets for both models so that they include only their best features, respectively. 
