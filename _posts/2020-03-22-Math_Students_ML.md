@@ -708,9 +708,9 @@ print(logreg_l2_gscv.best_params_)
 </p>
 
 
-Using l2 regularization results in a slighly better performing model, and the higher values for the parameter 'C' imply that less regularization was needed. To me, these results are indicative of successful feature selection!  
+Using l2 regularization results in a slighly better performing model, and the increased values of 'C' imply that less regularization was needed. To me, these results are indicative of successful feature selection!  
   
-Now I'll focus in on finding the best value for C. 
+Now I'll focus on fine-tuning the regularization strength. 
 
 
 ```python
@@ -792,7 +792,7 @@ X_train_lr.replace(LRfeat_replace, inplace= True)
 X_test_lr.replace(LRfeat_replace, inplace= True)
 ```
 
-The models will also require slightly different preprocessors since they won't take the same input.
+The models will also require slightly different preprocessors since they won't be taking the same input.
 
 
 ```python
@@ -828,14 +828,15 @@ preprocessor_lr = make_column_transformer(
   <img src="https://media.giphy.com/media/l3HBbltOYjoNq/giphy.gif" width="400" height="400">
 </p> 
 
-&nbsp;&nbsp;&nbsp;&nbsp; **Steps :**  
+<!-- &nbsp;&nbsp;&nbsp;&nbsp; **Steps :**  
 **1.** Instantiate final models  
 **2.** Make pipelines  
 **3.** Get CV accuracies for comparison  
 **4.** Train the models (in the pipes)  
 **5.** Make predictions  
-**6.** Evaluate results  
-
+**6.** Evaluate results   -->
+  
+I'll also compute the CV scores for the final models since I haven't done so already; if I overfit the models, a comparison of accuracies should hint towards how much overfitting is present.
 
 ```python
 # Instantiate Final Models
@@ -878,7 +879,7 @@ Both models were slighly overfit, logistic regression wasn't bad though. However
 3.  Using logistic regression as a 'meta model', I made a stacked ensemble of classifiers to generate multiple predictions to predict off of.  
 4.  I even used regression models to estimate the individual G1, G2, and G3 test scores to use as additional features in my models here. Still, I had no luck.  
   
-Some of the models performed a tad better than these here, but some also performed worse. However, I learned a very valuable lesson here:  
+Some of the models performed a bit better than these here, but some also performed worse. However, I learned a very valuable lesson here:  
   
 **If the data won't tell you what you want to hear, it's probably because it can't.**  
   
