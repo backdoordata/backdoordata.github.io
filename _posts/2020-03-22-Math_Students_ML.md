@@ -16,8 +16,10 @@ toc_label: " Workflow :"
 toc_icon: "hiking"
 toc_sticky: true
 ---
-I was always good at math growing up, but it was never a main interest of mine. Somehow, mathematics found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
-I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for failing grades? **Is mathematical ability genetic?** **Is it situational?**
+**<center><span style="font-size:1.08em;">To what extent do the details of our adolescence have an effect on our academic success?</span></center>**
+  
+I was always good at math growing up, but it was never a main interest of mine. Early into my college career, it somehow found its way as my passion, and I decided to abandon my pre-med biology major to study mathematics full time. It wasn't long before I began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
+I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to conceptualize the material and do well. But then I got thinking, is "I'm just not a math person" a legitimate explanation for failing grades? **Is mathematical ability genetic?** **Is it situational?**
   
 In this project, I attempt to build a machine learning model that uses seemingly irrelevant information about a student to predict their mathematical ability.  
 
@@ -49,7 +51,7 @@ import seaborn as sns
 # load in dataset
 stud = pd.read_csv('student-math.csv')
 ```
-## <center><span style="font-size:1.3em;">Variable Identification</span></center>
+## <center><span style="font-size:1.3em;">Feature Identification</span></center>
 
 The 30 predictive features are all categorical, and they contain a mix of numeric and nonnumeric entries.  
   
@@ -103,7 +105,8 @@ The 30 predictive features are all categorical, and they contain a mix of numeri
 
 ## <center><span style="font-size:1.3em;">Univariate Analysis</span></center>
 
-The ordinal features are all integer values, and the nominal features are all strings. Let's take a look at the distributions of the numeric columns.
+The ordinal features contain only integer values, the nominal features contain only strings, and the grades are integer values in [0,20]. Let's see how the three grade columns and the ordinal features are distributed.
+
 
 
 ```python
@@ -121,24 +124,27 @@ We can see right away that some of the features have categories with hardly any 
 The shift in distributions of the three grades is rather interesting.  
 **G1 -** Low average, and high variance --> Students weren't trying  
 **G2 -** Higher average, lower variance, and fewer failing grades --> Student's began trying  
-**G3 -** Normally distributed (excluding the 0 values) with mean ~11 --> 40% passed, 60% failed  
+**G3 -** Normally distributed (excluding the 0 values) with mean ~11 
 
 ## <center><span style="font-size:1.3em;">Bivariate Analysis</span></center>
 
-To predict whether a student will either pass or fail, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the threshold for a minimum passing grade. 
+To determine whether a student either passed or failed the course, I need to define a threshold for G3. The minimum passing grade in the U.S. is typically considered to be a D-, so in our case, a 12/20 is the threshold for a minimum passing grade. 
 *(In this section the target labels are pass or fail, but in following sections they will just be 0's and 1's.)*
 
 
 ```python
 stud['PASS/FAIL'] = stud['G3'].apply(lambda x: 'FAIL' if x<12 else 'PASS')
 ```
+
+40% of the students classified as passing.  
+
 ### <span style="font-size:1.2em;">Target Correlation</span>
 
 First, I want to evaluate how the individual features correlate with the target variable. I will use seaborn to visualize the pass/fail frequencies of each feature.  
   
-You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because many of the nominal features only have two categories and they can be observed independently very easily in bivariate plots.  
+You may have noticed that I only included the ordinal features in the previous section. To clarify, I did this because all but four of the nominal features are boolean, and can easily be described here.  
   
-**Note that** I did evaluate the entire feature set. However, many of the features have little-to-no correlation with the target variable and were uninteresting, so I did not include them here -- the ones that *are interesting* are plotted below!  
+**Note that** I did explore the entire set of features. Many of the features have low correlation with the target variable, and were uninteresting. So, for your viewing pleasure, I opted to exclude them -- the interesting ones are plotted below!  
   
 **Ordinal features...**
 
@@ -151,11 +157,11 @@ You may have noticed that I only included the ordinal features in the previous s
 ![](/images/math_ML_imgs/output_13_0.png) ![](/images/math_ML_imgs/output_13_1.png) ![](/images/math_ML_imgs/output_13_2.png)
 
 
-What's important to acknowldge here is that a student's pass/fail status is the outcome of an entire semester's work; it's more complex than just a single test grade. Similarly, making a pass/fail prediction for a student is more difficult than just evaluating one feature!  
+What's important to acknowldge here is that a student's pass/fail status is the outcome of an entire semester; it's more complex than just a single test grade. Similarly, making a pass/fail prediction for a student is more difficult than just evaluating one feature!  
 With this being said, I suspect the features will show more correlation with the actual 0-20 final grade. *Being in a relationship with someone probably won't cause them to fail all of their classes, but it may very easily affect their final grade by a few points.*  
 
 ### <span style="font-size:1.2em;">Feature Correlation</span>
-Now we'll take a look at all corrolations. I'll first need to encode the features who have nonnumeric entries.
+Now we'll take a look at all corrolations. I'll first need to encode the features having nonnumeric entries.
 
 
 ```python
@@ -187,7 +193,7 @@ nominal_cols = ['Mjob','Fjob','reason', 'guardian']
 for col in nominal_cols:
     stud[col] = stud[col].astype('category').cat.codes
 ```
-To emphasize on my prior statement, notice how the correlation with the actual final grade seems more logical than with the 0-1 target variable.
+To emphasize on my prior statement, notice how the correlations with the final grade seem more logical than with the 0-1 target variable.
 
 ```python
 # feature correlation to target variable
@@ -200,7 +206,7 @@ print(stud.corr()['G3'].sort_values(ascending= False))
 ![](/images/math_ML_imgs/target_corr.png) ![](/images/math_ML_imgs/G3_corr.png)
 
 
-Thus, I'll use G3 for the correlation matrix heatmap.
+Hence, I'll exclude the target variable and use G3 for the correlation matrix heatmap.
 
 ```python
 # sorted correlation matrix
@@ -231,7 +237,7 @@ sns.heatmap(G3_corr,
 -'Dalc', 'Walc', and 'studytime'  
 -'studytime' and 'sex'  
   
-These correlations seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is interesting. I'll openly admit, I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
+These correlations seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is interesting. I'll openly admit I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
 
 
 ```python
