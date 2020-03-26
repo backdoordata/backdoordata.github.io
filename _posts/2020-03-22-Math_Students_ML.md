@@ -47,7 +47,7 @@ stud = pd.read_csv('student-math.csv')
 
 <h2><center>Variable Identification</center></h2>
 
-The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric data types.  
+The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric entries.  
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**
 1.	age - student's age (numeric: from 15 to 22) 
@@ -437,13 +437,13 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
 
 First I need to split the data into training and testing sets, and then I will build each model individually and compare their predictions on the testing set at the end.  
 Here's what this will look like:  
-*  **Random Forest**
+* **Random Forest**
   * Feature Selection
   * Hyperparameter Tuning  
-*  **Logistic Regression**
+* **Logistic Regression**
   * Feature Selection
   * Hyperparameter Tuning
-*  **Model Performances**
+* **Model Performances**
 
 
 
@@ -862,7 +862,7 @@ Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predi
   
 Of course it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but our result is still valuable nonetheless. For instance, devoting a bit more time exploring this concept in depth, K-12 schools could potentially be able to make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help educators identify the "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
-<h1><center>Post-Op: Continued Study</center></h1>
+<h2><center>Post-Op: Continued Study</center></h2>
 
 As I may have hinted towards, I wasn't exactly "satisified" with the conclusion of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first project in machine learning just yet. I decided to narrow my search, and try to predict on a more *niche* group; the honor roll students.  
   
