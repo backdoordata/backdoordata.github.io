@@ -4,11 +4,11 @@ date: 2020-03-22
 tags: [Data Analysis & Visualization] # Make Changes
 breadcrumbs: true
 header:
-    overlay_image: "/images/nash-header.jpg"
-    caption: "Photo credit: [**Crovean**](https://www.flickr.com/people/crovean/)"
+    overlay_image: "/images/classroom-header.png"
+    caption: "Photo credit: [**GHA**](https://www.greatheartsamerica.org)"
     actions:
-      - label: "More Info"
-        url: "https://thda.org/research-planning/tennessee-housing-market"
+      - label: "Download Dataset"
+        url: "https://www.kaggle.com/janiobachmann/math-students"
 excerpt: "Data Analysis & Visualizations"
 
 toc: true
@@ -16,7 +16,7 @@ toc_label: " Workflow :"
 toc_icon: "hiking"
 toc_sticky: true
 ---
-I was always good at math growing up, but it was never my main interest. Somehow, it found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
+I was always good at math growing up, but it was never a main interest of mine. Somehow, mathematics found its way as my passion early into my college career, and I decided to abandon my pre-med biology major to pursue a degree in actuarial science. I soon began taking notice of how people either loved math, or they absolutely hated it, and would say something along the lines of *"I'm just not a math person"*.  
 I've always assumed that these people just never gave themselves the oppurtunity to truly enjoy mathematics because they never legitimately tried to to do well, and thoroughly conceptualize the material. But then I got thinking, is "I'm just not a math person" a legitimate explanation for failing grades? **Is mathematical ability genetic?** **Is it situational?**
   
 In this project, I attempt to build a machine learning model that uses seemingly irrelevant information about a student to predict their mathematical ability.  
@@ -505,7 +505,7 @@ def pct_change(old, new):
 ## <center><span style="font-size:1.3em;">Random Forest</span></center>
 
 ### <span style="font-size:1.2em;">Feature Selection</span>
-Here, I will use a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
+I'll use a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
 
 
 ```python
@@ -551,7 +551,7 @@ plt.show()
 We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to excluding three of the original features entirely: 'nursery', 'internet', and 'guardian'.
 
 ### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
-I'll now perform a grid search on the model using its optimal feature set, and 5-fold cross validation.
+I'll now perform a grid search on the model using its optimal feature set.
 
 
 ```python
@@ -567,7 +567,7 @@ rfc_grid = {
             "min_samples_leaf": [1, 3, 5]
             }
 
-# perform cross-validated grid search
+# cross-validated grid search
 rfc_gscv = GridSearchCV(rfc, rfc_grid, cv= 5, scoring= 'roc_auc')
 rfc_gscv.fit(X_Dummy[best_rfc_feats], Y_train)
 
@@ -656,7 +656,8 @@ print(best_lassoLR_feats)
   <img src="/images/math_ML_imgs/logreg_feat_select2.png">
 </p>
   
-This seems more likely. Additionally, one of the benefits of logistic regression is that if this set still contains any useless features, the model will naturally ignore them.
+This seems more likely.  
+Additionally, one of the benefits of logistic regression is that if the set still contains any useless features, the model will naturally ignore them.
 
 ### <span style="font-size:1.2em;">Hyperparameter Tuning</span>
 
@@ -695,6 +696,7 @@ print(logreg_l2_gscv.best_params_)
 
 
 Using l2 regularization results in a slighly better performing model, and the higher values for the parameter 'C' imply that less regularization was needed. To me, these results are indicative of successful feature selection!  
+  
 Now I'll focus in on finding the best value for C. 
 
 
@@ -858,23 +860,23 @@ print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
 
 Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain high accuracy. After much more effort afterwards, I realized it can't be done.  
   
-1.  At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
+1.  At first, I continued studying and researching random forest and logistic regression in attempt to improve both models.  
 2.  Then, I experimented with different models. Many, many different models.  
 3.  Using logistic regression as a 'meta model', I made a stacked ensemble of classifiers to generate multiple predictions to predict off of.  
 4.  I even used regression models to estimate the individual G1, G2, and G3 test scores to use as additional features in my models here. Still, I had no luck.  
   
-Some of the models performed better than these here, but some also performed worse. However, I learned a very valuable lesson here:  
-**If the data won't tell you what you want to hear, it's probably because it can't**.  
+Some of the models performed a tad better than these here, but some also performed worse. However, I learned a very valuable lesson here:  
   
+**If the data won't tell you what you want to hear, it's probably because it can't.**  
   
-It turns out that the best predictor for whether or not a student will pass or fail a course is their track record. Another user on Kaggle posted [their study](https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included, and acheived a classification accuracy of 90%.  
+It turns out that the best predictor for whether or not a student will pass or fail a course is their track record. Another user on Kaggle posted [their study](https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included as features, and they acheived a classification accuracy of 90%.  
   
-Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to explore this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
+Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students mathematical ability without ever looking at their transcript, but the result is still valuable nonetheless. For instance, devoting a bit more time to explore this concept in depth, educators could potentially make long term success predictions using only the student's early academic tendencies. Even more importantly, this could assist K-12 schools identify their "at-risk" students early on so they don't go unnoticed, and to ensure that they get the support and additional attention they need.
 
 ## <center><span style="font-size:1.3em;">Post-Op: Continued Study</span></center>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *2 weeks later ...*  
   
-As I may have hinted at earlier, I wasn't exactly "satisified" with my results. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capacity, and focus on a more *niche* group; the honor roll students.  
+As I may have hinted at earlier, I wasn't exactly "satisified" with my results. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capacity, and focus on a more *niche* group: the honor roll students.  
   
 In sum, I essentially just repeated this process, but used 16 as my threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the honor roll students have a lot in common!  
   
