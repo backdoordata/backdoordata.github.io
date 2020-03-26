@@ -1,7 +1,7 @@
 ---
 title: "Predicting Student Success with Machine Learning"
 date: 2020-03-22
-tags: [Data Analysis & Visualization] # Make Changes
+tags: [Machine Learning] # Make Changes
 breadcrumbs: true
 header:
     overlay_image: "/images/classroom-header.png"
@@ -9,7 +9,7 @@ header:
     actions:
       - label: "Download Dataset"
         url: "https://www.kaggle.com/janiobachmann/math-students"
-excerpt: "Data Analysis & Visualizations"
+excerpt: "Machine Learning"
 
 toc: true
 toc_label: " Workflow :"
