@@ -49,36 +49,24 @@ stud = pd.read_csv('student-math.csv')
 The 30 predictive features are all categorical, and contain a mix of numeric and nonnumeric entries.  
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Ordinal Features:**  
-1.)	age - student's age (numeric: from 15 to 22)
+1.	age - student's age (numeric: from 15 to 22) 
+2.	Medu - mother's education (numeric: 0– none, 1- primary education (4th grade), 2- 5th to 9th grade, 3- secondary education, or 4- higher education) 
+3.	Fedu - father's education (numeric: 0– none, 1- primary education (4th grade), 2- 5th to 9th grade, 3- secondary education, or 4- higher education) 
+4.	traveltime - home to school travel time (numeric: 1 - 1 hour) 
+5.	studytime - weekly study time (numeric: 1 - 10 hours) 
+6.	failures - number of past class failures (numeric: n if 1<=n<3, else 4) 
+7.	famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent) 
+8.	freetime - free time after school (numeric: from 1 - very low to 5 - very high) 
+9.	goout - going out with friends (numeric: from 1 - very low to 5 - very high) 
+10.	Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)
+11.	Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high) 
+12.	health - current health status (numeric: from 1 - very bad to 5 - very good) 
+13.	absences - number of school absences (numeric: from 0 to 93)  
 
-2.)	Medu - mother's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3-  secondary education, or 4- higher education)
-  
-3.)	Fedu - father's education (numeric: 0 – none, 1 - primary education (4th grade), 2-  5th to 9th grade, 3- secondary education, or 4- higher education)
-  
-4.)	traveltime - home to school travel time (numeric: 1 - 1 hour)
-  
-5.)	studytime - weekly study time (numeric: 1 - 10 hours)
-  
-6.)	failures - number of past class failures (numeric: n if 1<=n<3, else 4)
-
-7.)	famrel - quality of family relationships (numeric: from 1 - very bad to 5 - excellent)
-  
-8.)	freetime - free time after school (numeric: from 1 - very low to 5 - very high)
-  
-9.)	goout - going out with friends (numeric: from 1 - very low to 5 - very high)
-  
-10.)	Dalc - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)
-
-11.)	Walc - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high)
-
-12.)	health - current health status (numeric: from 1 - very bad to 5 - very good)
-  
-13.)	absences - number of school absences (numeric: from 0 to 93)
   
   
   
-  
-&nbsp;&nbsp;&nbsp;&nbsp; **Nominal Features:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Nominal Features:**  
 1.	school - student's school (binary: 'GP' - Gabriel Pereira or 'MS' - Mousinho da Silveira)
 2.	higher - wants to take higher education (binary: yes or no)
 3.  sex - student's sex (binary: 'F' - female or 'M' - male)
@@ -100,7 +88,7 @@ The 30 predictive features are all categorical, and contain a mix of numeric and
   
   
   
-&nbsp;&nbsp;&nbsp;&nbsp; **Grade Columns:**
+&nbsp;&nbsp;&nbsp;&nbsp; **Grade Columns:**  
 1.  G1 - first term grade (numeric: from 0 to 20) 
 2.  G2 - second term grade (numeric: from 0 to 20) 
 3.  G3 - final grade (numeric: from 0 to 20, output target)  
@@ -191,7 +179,7 @@ nominal_cols = ['Mjob','Fjob','reason', 'guardian']
 for col in nominal_cols:
     stud[col] = stud[col].astype('category').cat.codes
 ```
-To emphasize on my prior statement, notice how the order of correlation with the actual final grade seems more logical than with the 0-1 target variable.
+To emphasize on my prior statement, notice how the correlation with the actual final grade seems more logical than with the 0-1 target variable.
 
 ```python
 # feature correlation to target variable
@@ -204,7 +192,7 @@ print(stud.corr()['G3'].sort_values(ascending= False))
 ![](/images/math_ML_imgs/target_corr.png) ![](/images/math_ML_imgs/G3_corr.png)
 
 
-Thus, I'll use G3 for making a correlation matrix heatmap.
+Thus, I'll use G3 for the correlation matrix heatmap.
 
 ```python
 # sorted correlation matrix
@@ -227,20 +215,19 @@ sns.heatmap(G3_corr,
 
 
 
-**Positive Correlations:**
-* 'address' and 'traveltime'
+**Positive Correlations:**  
+-'address' and 'traveltime'
   
-* 'Dalc', 'Walc', 'goout', and 'freetime'
+-'Dalc', 'Walc', 'goout', and 'freetime'
   
-* 'famsup' and 'paid'
+-'famsup' and 'paid'
   
+**Negative Correlations:**  
+-'Dalc', 'Walc', and 'studytime'
   
-**Negative Correlations:**
-* 'Dalc', 'Walc', and 'studytime'
+-'studytime' and 'sex'  
   
-* 'studytime' and 'sex'  
-  
-These correlations are seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is interesting. I'll openly admit that I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
+These correlations seem reasonable, but the inverse correlation between the sex of a student and their average time spent studying is interesting. I'll openly admit, I'm not too surprised that we fall short to our female counterparts in this area, but what's intersting is that..
 
 
 ```python
@@ -256,8 +243,7 @@ print("On average, females spend",
 
 
 # <center>Data Cleaning</center>
-With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model.  
-Let's take another look at the ones we saw earlier.
+With only 395 samples, I'd like to retain as many of them as possible. However, including underrepresented categories would ultimately result in a weak model. Let's take another look at the ones we saw earlier.
 
 
 ```python
@@ -269,7 +255,7 @@ print(stud['Fedu'].value_counts())
 ![](/images/math_ML_imgs/Medu_counts.png) ![](/images/math_ML_imgs/Fedu_counts.png)
 
 
-I will have to exclude the samples with 0 values for Medu/Fedu entirely since they are greatly underrepresented, even in comparison to the next smallest categories.  
+I will have to exclude the samples with 0 values for Medu/Fedu since they are greatly underrepresented, even in comparison to the next smallest categories.  
 
 
 ```python
@@ -296,7 +282,7 @@ plt.figure(figsize= (40,40))
   <img src="/images/math_ML_imgs/output_30_2.png">
 </p>
 
-For 'absences', there's 46 samples in categories with no more than 5 total observations, and it's not ideal to simply drop them all. However, we can see that every instance where 'absences' > 24 resulted in the same outcome, a failed course. Hence, we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
+For 'absences', there are 46 samples in categories with no more than 5 total observations, and it's less than ideal to drop them. However, we can see that every instance where 'absences' > 24 resulted in the same outcome, a failed course. Hence, we can bin these values together. Although this only accounts for a portion of the underrepresented categories, it will still greatly improve the quality of the feature as a whole.
 
   
 It only seems natural to use '25' to denote the 25+ bin, but using a slighly larger integer, say 30, may benefit certain models where Euclidean distance is of importance.
@@ -357,11 +343,11 @@ There are still a few features I feel aren't relevant to passing a math class, b
 * Random Forest Classifier
 * Gradient Boosting Classifier   
   
-I will revisit feature selection soon, but for now I will evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
+I will revisit feature selection soon, but for now I'll evaluate the base model performances of the seven classifiers above, and will move forward with the top two.  
   
 **If you've made it this far, you deserve a little honesty..**  
 *Prior to this very moment, my only exposure to machine learning was roughly one week in mathematical statistics my junior year when we lightly covered linear regression. I'm sure there has to be better ways to go about selecting the best model for my problem, but I'm eager to learn, and I'm taking this project entirely as an opputtunity to learn!*  
-*Plus, this way will give me two different models to learn head-to-toe that I know will at least perform semi-decent!*
+*Plus, this way will give me two different models to learn head-to-toe that I know will at least perform somewhat decent!*
  
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -372,7 +358,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 
-# instantiating the models within a list
+# instantiate the models within a list
 models = []
 models.append(('KNN', KNeighborsClassifier())) 
 models.append(('SVC', SVC()))
@@ -384,13 +370,14 @@ models.append(('GB', GradientBoostingClassifier()))
 ```
 
 This dataset is from Kaggle, but I'm not looking for a model that optimizes for accuracy at the expense of generality. I'm genuinely interested in the predictive capabilities of the 27 features, and would like my model to be able to predict on new data as well.  
+  
 For this to happen, I must estabalish a few precautionary measures.  
   
 **High Variance**  
-The dataset contains a less than preferrable number of samples, and because of this, the testing accuracy will be highly subject to variation. I want the two best performing models of the group, but I do not want them if they can't fit to new data. In attempt to mitigate this, I will use 10 repititions of 5-fold stratified cross validation when estimating each model's out-of-sample accuracy.  
+The dataset contains a less than preferrable number of samples, and because of this, testing accuracy will be highly subject to variation. I want the two best performing models of the group, but I do not want them if they can't fit to new data. In attempt to mitigate this, I will use 10 repititions of 5-fold stratified cross validation when estimating each model's out-of-sample accuracy.  
   
 **Data Leakage**  
-Instead of passing the actual models to cross_val_score, I will cross validated pipelines containing both the model **and** the preprocessing steps. Thus, when the dataset is split into new training/test sets at each fold, the two sets will be preprocessed separately, and the chances of data leakage will be near-to-none!
+Instead of passing the actual models to cross_val_score, I will cross validate pipelines containing both the model, **and** the preprocessing steps. Thus, when the dataset is split into new training and test sets at each fold, the two sets will be preprocessed separately, and the chances of data leakage will be near-to-none!
 
 
 ```python
@@ -445,7 +432,7 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
   
 # <center>Constructing The Models</center>
 
-First I need to split the data into training and testing sets, and then I will build each model individually and compare their predictions on the testing set at the end.  
+First, I need to split the data into training and testing sets. Then I will build the models using only the training data, and compare their predictions on the testing set at the end.  
 Here's what this will look like:  
 * **Random Forest**
   * Feature Selection
@@ -453,7 +440,7 @@ Here's what this will look like:
 * **Logistic Regression**
   * Feature Selection
   * Hyperparameter Tuning
-* **Model Performances**
+* **Test Models**
 
 
 
@@ -479,14 +466,14 @@ print("Test Set: ", Y_test.sum()/Y_test.size)
     Test Set:  0.4051724137931034
 
 
-For feature selection, I will create a copy of X_train using dummy encoding to retain column labels of the transformed features.
+For feature selection, I will preprocess the training set using dummy variables in order to retain the column labels of the transformed nominal features, which has the same effect as one-hot encoding them. I'll also scale the ordinal features as before.
 
 ```python
 X_Dummy = pd.get_dummies(X_train, columns= cat_feats, drop_first= True)
 X_Dummy[num_feats] = MinMaxScaler().fit_transform(X_Dummy[num_feats])
 ```
 
-I'll use the simple function below to measure performance inhancements during this stage. 
+I'll use the simple function below to measure performance during this stage. 
 
 
 ```python
@@ -500,13 +487,14 @@ def pct_change(old, new):
 ## <center>Random Forest</center>
 
 ### Feature Selection
-Here, I will be using a cross validated recursive selection method to help ensure that any deeper corrolations between the features do not go unnoticed.
+Here, I will be using a cross validated recursive feature selection method to help ensure that any deeper relationships between the features do not go unnoticed.
 
 
 ```python
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_selection import RFECV
 
+# define CV method
 rep_kfold2 = RepeatedStratifiedKFold(n_splits= 10, n_repeats= 4)
 
 # recursive feature elimination
@@ -514,12 +502,12 @@ rfecv_rfc = RFECV(estimator=rfc,
               step=1,
               cv= rep_kfold2,
               scoring='roc_auc')
-rfecv_rfc.fit_transform(X_Dummy, Y_train);
+rfecv_rfc.fit_transform(X_Dummy, Y_train)
 
-# print optimal number of features for rfc
+# optimal number of features selected for rfc
 print("Optimal number of features :", rfecv_rfc.n_features_)
 
-# optimal features for rfc
+# optimal feature set for rfc
 best_rfc_feats = X_Dummy.columns[rfecv_rfc.get_support(indices= True)].values
 print("Optimal features :", best_rfc_feats)
 
@@ -546,16 +534,16 @@ plt.show()
 </p>
 
 
-We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to including 24 of the 27 original features, the three not selected were 'nursery', 'internet', and 'guardian'.
+We can see that the best AUC score from our model occurs when only 25 of the 36 transformed features are used as input. This translates to excluding three of the original features entirely: 'nursery', 'internet', and 'guardian'.
 
 ### Hyperparameter Tuning
-I'll now perform a grid search on the random forest model using its optimal feature set, and 5-fold cross validation.
+I'll now perform a grid search on the model using its optimal feature set, and 5-fold cross validation.
 
 
 ```python
 from sklearn.model_selection import GridSearchCV
 
-# instantiate rfc parameter grid
+# instantiate parameter grid
 rfc_grid = {
             "n_estimators": np.arange(100, 501, 100),
             "criterion": ["gini", "entropy"],
@@ -565,7 +553,7 @@ rfc_grid = {
             "min_samples_leaf": [1, 3, 5]
             }
 
-# perform cross validated grid search
+# perform cross-validated grid search
 rfc_gscv = GridSearchCV(rfc, rfc_grid, cv= 5, scoring= 'roc_auc')
 rfc_gscv.fit(X_Dummy[best_rfc_feats], Y_train)
 
@@ -588,14 +576,14 @@ pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_)
     Change : 7.74 %
 
 
-The best set of parameters from the grid search improved the AUC score from before by 7.74%.  
-An AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed, an AUC of 0.5 is no better than randomly guessing; the random forest model is right in the middle.  
+The best set of parameters from the grid search improved the AUC score by 7.74%.  
   
-As long as the model performs better than guessing, I've done alright.. Right?  
+An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle at 0.77. As long as the model performs better than guessing, I've done good.. Right?  
+  
 Well, let's just hope the logistic regression model performs better.
 
 ## <center>Logistic Regression</center>
-I will be using the same methods of feature selection and hyperparameter tuning here that I used for the random forest model.
+I will be using the same methods of feature selection and parameter tuning that I used for the random forest model.
 
 ### Feature Selection
 
@@ -607,10 +595,10 @@ rfecv_logreg = RFECV(estimator=logreg,
               scoring='roc_auc')
 rfecv_logreg.fit_transform(X_Dummy, Y_train);
 
-# print optimal number of features for logreg
+# optimal number of features selected for logreg
 print("Optimal number of features :", rfecv_logreg.n_features_)
 
-# optimal features for logreg
+# optimal feature set for logreg
 best_logreg_feats = X_Dummy.columns[rfecv_logreg.get_support(indices= True)].values
 print("Optimal features :", best_logreg_feats)
 
@@ -633,17 +621,19 @@ plt.show()
 
 
 
-Of the 27 original features, only three were selected. This doesn't seem right, and it's because sklearn's default logistic regression model uses ridge regression.  
-Ridge regression is used as a method of regularization to apply penalty for nonessential complexity, which is great if your dataset doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
+Only three of the 36 features were selected, which doesn't seem right. This is because sklearn's logistic regression model uses l2 regularization by default.  
   
-Lasso regression, or l1 regularization, simply shinks the coefficients of the irrelevant features to zero so that they're ignored from the model.  
-The past result is insightful, but it doesn't seem to be the most reliable. Instead, I'll fit a new model to see which features get excluded by l1 regularization.
+L2 regularization, or ridge regression, is used to apply penalty to the model for added complexity, which is great if its input doesn't contain any irrelevant features because then it'll only penalize for repititive features. 
+  
+L1 regularization, or lasso regression, adds coefficients to the features based on their respective importances. The coefficients of the irrelevant features simply shrink to zero and are ignored from the model.  
+  
+The past result doesn't seem too reliable, so instead, I'll fit a new model to see which features get excluded by l1 regularization.
 
 
 ```python
 from sklearn.feature_selection import SelectFromModel
 
-# logreg using lasso regression
+# logreg using l1 regularization
 lassoLR = LogisticRegression(penalty= 'l1', max_iter= 2000, solver= 'liblinear')
 
 # feature selector
@@ -664,32 +654,33 @@ print(best_lassoLR_feats)
      'reason_other' 'reason_reputation']
 
 
+This seems more likely. Plus, one of the added benefits of logistic regression is that if this set still contains useless features, the model will naturally ignore them.
+
 ### Hyperparameter Tuning
 
 
 ```python
-# logreg with lasso regression grid
+# instantiate logreg-lasso parameter grid
 logreg_l1_grid = { "penalty": ['l1'],
                    "max_iter": [2000],
                    "C": np.linspace(0,100,21),
                    "solver": ['liblinear', 'saga']}
 
-# performing cross validated grid search
+# instantiate logreg-ridge parameter grid
+logreg_l2_grid = { "penalty": ['l2'],
+                   "max_iter": [2000],
+                   "C": np.linspace(0,100,21),
+                   "solver": ['liblinear', 'saga', 'sag', 'newton-cg', 'lbfgs']}
+
+
+# logreg-lasso cross-validated grid search
 logreg_l1_gscv = GridSearchCV(logreg, logreg_l1_grid, cv= 5, scoring= 'roc_auc')
 logreg_l1_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
 print('Logistic Regression w/ Lasso - Results')
 print(logreg_l1_gscv.best_score_)
 print(logreg_l1_gscv.best_params_)
 
-
-
-# logreg with ridge regression grid
-logreg_l2_grid = { "penalty": ['l2'],
-                   "max_iter": [2000],
-                   "C": np.linspace(0,100,21),
-                   "solver": ['liblinear', 'saga', 'sag', 'newton-cg', 'lbfgs']}
-
-# performing cross validated grid search
+# logreg-ridge cross-validated grid search
 logreg_l2_gscv = GridSearchCV(logreg, logreg_l2_grid, cv= 5, scoring= 'roc_auc')
 logreg_l2_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
 print('Logistic Regression w/ Ridge - Results')
@@ -705,7 +696,7 @@ print(logreg_l2_gscv.best_params_)
     {'C': 10.0, 'max_iter': 2000, 'penalty': 'l2', 'solver': 'liblinear'}
 
 
-Using l2 regularization results in a slighly better performing model, and the higher value for the parameter 'C' means less regularization was needed. To me, both of these results are indicative of successful feature selection!  
+Using l2 regularization results in a slighly better performing model, and the higher values for the parameter 'C' imply that less regularization was needed. To me, these results are indicative of successful feature selection!  
 Now I'll focus in on finding the best value for C. 
 
 
@@ -713,7 +704,7 @@ Now I'll focus in on finding the best value for C.
 # logreg with l2 regularization
 logreg2 = LogisticRegression(penalty= 'l2', max_iter= 2000, solver= 'liblinear')
 
-# searching 100 values of C within its known optimal range
+# testing 100 values for C within its known optimal range
 C_grid = {"C": np.linspace(7.5, 12.5, 100)}
 C_gscv = GridSearchCV(logreg2, C_grid, cv= 5, scoring= 'roc_auc')
 C_gscv.fit(X_Dummy[best_lassoLR_feats], Y_train)
@@ -730,23 +721,23 @@ print(C_gscv.best_params_)
     {'C': 9.772727272727273}
 
 
-No performance increase resulted from the refined search; C = 10 is optimal.
+No performance increase from the refined search; C = 10 is optimal.
 
 # <center>Model Performance</center>
 It's finally time to test the models on unseen data!  
   
-First, I need to make new X_train and X_test sets for both models so that they include only their best features, respectively. 
+First, I need to make new X_train and X_test sets for both models so that they include only their best features (respectively). 
 
 
 ```python
 # irrelevant features for Random Forest 
-# irrelevant features for Logistic Regression 
 RFCfeat_drop = ['nursery', 'internet', 'guardian']
+
+# irrelevant features for Logistic Regression 
 LRfeat_drop = ['freetime', 'Dalc', 'absences', 'activities', 'nursery', 'guardian']
 
 
 # multi-categorical feature changes for Random Forest
-# multi-categorical feature changes for Logistic Regression
 # unselected feature category -> 'un_imp'
 RFCfeat_replace = {'Mjob' : {'at_home' : 'un_imp', 
                              'health' : 'un_imp', 
@@ -761,6 +752,9 @@ RFCfeat_replace = {'Mjob' : {'at_home' : 'un_imp',
                    'reason' : {'course' : 'un_imp', 
                                'other' : 'un_imp'
                               }}
+
+# multi-categorical feature changes for Logistic Regression
+# unselected feature category -> 'un_imp'
 LRfeat_replace = {'Mjob' : {'at_home' : 'un_imp', 
                             'health' : 'un_imp'
                            },
@@ -782,7 +776,7 @@ X_train_lr.replace(LRfeat_replace, inplace= True)
 X_test_lr.replace(LRfeat_replace, inplace= True)
 ```
 
-The models will also require slightly different preprocessors since they don't take the same features as input.
+The models will also require slightly different preprocessors since they won't take the same input.
 
 
 ```python
@@ -805,16 +799,16 @@ preprocessor_lr = make_column_transformer(
                         (OneHotEncoder(drop= 'first'), cat_feats_lr))
 ```
 
-Technically I lied earlier - NOW we're ready to test the models!  
+Technically I lied earlier -- NOW we're ready to test the models!  
   
   
-&nbsp;&nbsp;&nbsp;&nbsp; **Workflow:**
-1.  Instantiate final models
-2.  Make pipelines
-3.  Get CV accuracies on training sets for comparison
-4.  Train the models (in the pipes)
-5.  Make predictions 
-6.  Evaluate results
+&nbsp;&nbsp;&nbsp;&nbsp; **Workflow:**  
+1.) Instantiate final models  
+2.) Make pipelines  
+3.) Get CV accuracies on training sets for comparison  
+4.) Train the models (in the pipes)  
+5.) Make predictions  
+6.) Evaluate results  
 
 
 ```python
@@ -822,11 +816,11 @@ Technically I lied earlier - NOW we're ready to test the models!
 RFC_model = rfc_gscv.best_estimator_
 LogReg_model = logreg_l2_gscv.best_estimator_
 
-# Make Preprocessing->Model Pipelines 
+# Make Pipelines 
 RFC_pipe = make_pipeline(preprocessor_rfc, RFC_model)
 LogReg_pipe = make_pipeline(preprocessor_lr, LogReg_model)
 
-# Compute CV Scores on Training Sets
+# Compute CV Scores on Training Data
 CVscore_RFC = cross_val_score(RFC_pipe, X_train_rfc, Y_train, cv= 10, scoring= 'accuracy').mean()
 CVscore_LogReg = cross_val_score(LogReg_pipe, X_train_lr, Y_train, cv= 10, scoring= 'accuracy').mean() 
 
@@ -852,38 +846,36 @@ print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
 
 
 # <center>Conclusion</center>
-With this being my first project in machine learning, I was **very** determined to obtain a high accuracy model. After much effort, I've realized it can't be done.  
+Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain a high accuracy model. After much effort afterwards, I've realized it can't be done.  
   
 At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
   
-Then, I experimented with different models.  
-Many, many different models.  
+Then, I experimented with different models. Many, many different models.  
   
-Then I learned about stacking classifiers and using a meta model to make predictions based off the results of the ensemble.  
+Using logistic regression as a 'meta model', I made a stacked ensemble of classifiers to generate multiple predictions to predict off of.  
   
-I even used regression to estimate the individual G1, G2, and G3 scores to use as additional features in my models here.  
+I even used regression models to estimate the individual G1, G2, and G3 test scores to use as additional features in my models here. Still, I had no luck.  
   
-Some of the models performed better than these, but some also performed worse. However, I learned a very valuable lesson here.  
+Some of the models performed better than these here, but some also performed worse. However, I learned a very valuable lesson here.  
 **If the data won't tell you what you want to hear, it's probably because it can't**.  
   
   
-It turns out that a student's track record is the best predictor of whether or not they will pass or fail their courses in math.  
-Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included in their model and acheived a classification accuracy score of 90%.  
+It turns out that the best predictor of whether or not a student will pass or fail their a course is their track record. Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included in their model, and acheived a classification accuracy of 90%.  
   
-Of course it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but our result is still valuable nonetheless. For instance, devoting a bit more time exploring this concept in depth, K-12 schools could potentially be able to make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help educators identify the "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
+Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to exploring this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
 ## <center>Post-Op: Continued Study</center>
-
-As I may have hinted towards, I wasn't exactly "satisified" with the conclusion of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first project in machine learning just yet. I decided to narrow my search, and try to predict on a more *niche* group; the honor roll students.  
+*2 weeks later*  
+As I may have hinted at earlier, I wasn't exactly "satisified" with the result of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first project in machine learning just yet. I decided to refine my predictive capabilities, and focus on a more *niche* group; the honor roll students.  
   
-Essentially, I repeated everything in this post, but using 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%!  
-It turns out that the group of students in the 90th percentile have a lot in common! The most important of which being: 
+In sum, I essentially just repeated the process, but using 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the group of students in the 90th percentile have a lot in common!  
+The most important of which being (in no specific order): 
 * age
 * health
 * weekly alcohol consumption
 * parents' education levels (both)
 * quality of family relationships  
   
-For now, I'll just leave you with the results, but I may decide to create a seperate post for this later. I welcome all forms of criticism and advice, the best way to get in contact is by messaging me on LinkedIn!  
-
+For now, I'll just leave you with the results. I may decide to create a stand alone post for this later, but I'd like to keep my "First Machine Learning Project" genuine. I welcome all forms of criticism and/or advice, the best way to get in contact is by messaging me on LinkedIn!  
+  
 If you've made it this far, thank you so very much. I hope that you found reading this as enjoyble as I found making it!
