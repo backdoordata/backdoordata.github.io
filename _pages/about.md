@@ -4,6 +4,7 @@ permalink: /about/
 breadcrumbs: true
 header:
     overlay_image: "/images/night-nooga-header.jpg"
+    caption: ""
     actions:
       - label: "Contact"
         url: "https://www.linkedin.com/in/drew-woods-4b609b17a/"
