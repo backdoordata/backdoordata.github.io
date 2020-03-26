@@ -61,7 +61,7 @@ def Replace_NANcounty(county_name, replacement_county):
 Making a very basic plot, we can now take a peak at the dataset!  
 
 <p align="center">
-  <img src="/images/HPI_linegraph.png">
+  <img src="/images/HPI_imgs/HPI_linegraph.png">
 </p>
 
 The graph above is not exactly ideal; it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice the increasing variation after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
@@ -109,7 +109,7 @@ To make a figure more interpretable than a graph with 88 HPI curves, we can plot
 
 
 <p align="center">
-  <img src="/images/HPI_Matplotlib_plot.png">
+  <img src="/images/HPI_imgs/HPI_Matplotlib_plot.png">
 </p>
 
 Although this is not definitively correct, I find it useful to think of this as an overhead view of a 3-Dimensional Density Plot, where time is the additional variable.  

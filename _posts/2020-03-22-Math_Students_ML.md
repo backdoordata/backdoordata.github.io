@@ -27,11 +27,11 @@ This is a dataset from the UCI repository that contains the final scores of 395 
   
   
 &nbsp;&nbsp;&nbsp;&nbsp; **Outline:**  
-1.) Variable Identification  
-2.) Univariate Analysis  
-3.) Bivariate Analysis  
-&nbsp;&nbsp;&nbsp; a.) Target Correlation  
-&nbsp;&nbsp;&nbsp; b.) Feature Correlation  
+**1.** Variable Identification  
+**2.** Univariate Analysis  
+**3.** Bivariate Analysis  
+&nbsp;&nbsp;&nbsp; **a.** Target Correlation  
+&nbsp;&nbsp;&nbsp; **b.** Feature Correlation  
   
 
 ```python
@@ -432,17 +432,16 @@ Logistic Regession and Random Forest seem to be the best two classifiers for the
   
 # <center>Constructing The Models</center>
 
-First, I need to split the data into training and testing sets. Then I will build the models using only the training data, and compare their predictions on the testing set at the end.  
-Here's what this will look like:  
+Now, I will build the models using only 70% of the data, and compare their predictions on the testing set at the end. Here's what this will look like:  
 * **Random Forest**
   * Feature Selection
   * Hyperparameter Tuning  
 * **Logistic Regression**
   * Feature Selection
   * Hyperparameter Tuning
-* **Test Models**
-
-
+* **Test the Models**  
+  
+First, I need to split the data into training and testing sets. 
 
 ```python
 from sklearn.model_selection import train_test_split
@@ -454,10 +453,10 @@ logreg = LogisticRegression()
 # 269-116 stratified sample split
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size= 0.3, stratify= Y, random_state= 777)
 ```
-And just to make sure the sets are both split equally,
+And just to make sure the sets are both split proportionally,
 
 ```python
-# proportion of passing students in train and test sets
+# proportions of passing students
 print("Train Set: ", Y_train.sum()/Y_train.size)
 print("Test Set: ", Y_test.sum()/Y_test.size)
 ```
@@ -520,15 +519,10 @@ plt.plot(range(1, len(rfecv_rfc.grid_scores_) + 1), rfecv_rfc.grid_scores_)
 plt.show()
 ```
 
-    Optimal number of features : 25
-    Optimal features : ['age' 'Medu' 'Fedu' 'traveltime' 'studytime' 'failures' 'famrel'
-     'freetime' 'goout' 'Dalc' 'Walc' 'health' 'absences' 'sex_M' 'address_U'
-     'famsize_LE3' 'schoolsup_yes' 'famsup_yes' 'paid_yes' 'activities_yes'
-     'romantic_yes' 'Mjob_other' 'Fjob_other' 'reason_home'
-     'reason_reputation']
-
-
-
+<p align="center">
+  <img src="/images/math_ML_imgs/rfc_feat_select.png">
+</p>
+  
 <p align="center">
   <img src="/images/math_ML_imgs/output_2_13_1.png">
 </p>
@@ -559,26 +553,18 @@ rfc_gscv.fit(X_Dummy[best_rfc_feats], Y_train)
 
 # results
 print(rfc_gscv.best_score_)
-print(pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_))
+pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_)
 print(rfc_gscv.best_params_)
 ```
 
-    0.7709310850439882
-    {'criterion': 'entropy', 'max_depth': 10, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 100}
-
-
-
-```python
-# increase in AUC from the feature selection score
-pct_change(old= max(rfecv_rfc.grid_scores_), new= rfc_gscv.best_score_)
-```
-
-    Change : 7.74 %
-
+<p align="center">
+  <img src="/images/math_ML_imgs/rfc_grid_results.png">
+</p>
+  
 
 The best set of parameters from the grid search improved the AUC score by 7.74%.  
   
-An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle at 0.77. As long as the model performs better than guessing, I've done good.. Right?  
+An AUC of 0.5 is no better than randomly guessing, and an AUC of 1.0 would be perfectly seperating the group of passing students from the group who failed. The random forest model is right in the middle with a score of 0.77. As long as the model performs better than guessing, I've done good.. Right?  
   
 Well, let's just hope the logistic regression model performs better.
 
@@ -610,11 +596,10 @@ plt.ylabel("AUC")
 plt.plot(range(1, len(rfecv_logreg.grid_scores_) + 1), rfecv_logreg.grid_scores_)
 plt.show()
 ```
-
-    Optimal number of features : 3
-    Optimal features : ['age' 'failures' 'schoolsup_yes']
-
-
+<p align="center">
+  <img src="/images/math_ML_imgs/logreg_feat_select1.png">
+</p>
+  
 <p align="center">
   <img src="/images/math_ML_imgs/output_2_21_1.png">
 </p>
@@ -646,15 +631,11 @@ print("Number of features :", len(best_lassoLR_feats))
 print(best_lassoLR_feats)
 ```
 
-    Number of features : 26
-    ['age' 'Medu' 'Fedu' 'traveltime' 'studytime' 'failures' 'famrel' 'goout'
-     'Walc' 'health' 'sex_M' 'address_U' 'famsize_LE3' 'schoolsup_yes'
-     'famsup_yes' 'paid_yes' 'internet_yes' 'romantic_yes' 'Mjob_other'
-     'Mjob_services' 'Mjob_teacher' 'Fjob_health' 'Fjob_teacher' 'reason_home'
-     'reason_other' 'reason_reputation']
-
-
-This seems more likely. Plus, one of the added benefits of logistic regression is that if this set still contains useless features, the model will naturally ignore them.
+<p align="center">
+  <img src="/images/math_ML_imgs/logreg_feat_select2.png">
+</p>
+  
+This seems more likely. Additionally, one of the benefits of logistic regression is that if this set still contains any useless features, the model will naturally ignore them.
 
 ### Hyperparameter Tuning
 
@@ -688,12 +669,9 @@ print(logreg_l2_gscv.best_score_)
 print(logreg_l2_gscv.best_params_)
 ```
 
-    Logistic Regression w/ Lasso - Results
-    0.7582019794721407
-    {'C': 100.0, 'max_iter': 2000, 'penalty': 'l1', 'solver': 'saga'}
-    Logistic Regression w/ Ridge - Results
-    0.7593383431085045
-    {'C': 10.0, 'max_iter': 2000, 'penalty': 'l2', 'solver': 'liblinear'}
+<p align="center">
+  <img src="/images/math_ML_imgs/logreg_grid.png">
+</p>
 
 
 Using l2 regularization results in a slighly better performing model, and the higher values for the parameter 'C' imply that less regularization was needed. To me, these results are indicative of successful feature selection!  
@@ -715,11 +693,9 @@ print(pct_change(logreg_l2_gscv.best_score_, C_gscv.best_score_))
 print(C_gscv.best_params_)
 ```
 
-    0.7593383431085045
-    Change : 0.0 %
-    None
-    {'C': 9.772727272727273}
-
+<p align="center">
+  <img src="/images/math_ML_imgs/logreg_Cgrid.png">
+</p>
 
 No performance increase from the refined search; C = 10 is optimal.
 
@@ -802,13 +778,13 @@ preprocessor_lr = make_column_transformer(
 Technically I lied earlier -- NOW we're ready to test the models!  
   
   
-&nbsp;&nbsp;&nbsp;&nbsp; **Workflow:**  
-1.) Instantiate final models  
-2.) Make pipelines  
-3.) Get CV accuracies on training sets for comparison  
-4.) Train the models (in the pipes)  
-5.) Make predictions  
-6.) Evaluate results  
+&nbsp;&nbsp;&nbsp;&nbsp; **Steps :**  
+**1.** Instantiate final models  
+**2.** Make pipelines  
+**3.** Get CV accuracies on training sets for comparison  
+**4.** Train the models (in the pipes)  
+**5.** Make predictions  
+**6.** Evaluate results  
 
 
 ```python
@@ -839,14 +815,13 @@ print("RFC Prediction Accuracy :", np.round(Test_RFC*100, 2), "%")
 print("LogReg Prediction Accuracy :", np.round(Test_LogReg*100, 2), "%")
 ```
 
-    RFC CV Accuracy : 71.37 %
-    LogReg CV Accuracy : 68.05 %
-    RFC Prediction Accuracy : 60.34 %
-    LogReg Prediction Accuracy : 62.07 %
-
+<p align="center">
+  <img src="/images/math_ML_imgs/final_model_scores.png">
+</p>
+  
 
 # <center>Conclusion</center>
-Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain a high accuracy model. After much effort afterwards, I've realized it can't be done.  
+Both models were slighly overfit, logistic regression wasn't bad though. However, neither performed as well as I had hoped. With this being my first project in machine learning, I was **very** determined to obtain high accuracy predictions. After much effort afterwards, I've realized it can't be done.  
   
 At first, I continued studying and researching random forest and logistic regression in attempt to improve these two models.  
   
@@ -862,20 +837,23 @@ Some of the models performed better than these here, but some also performed wor
   
 It turns out that the best predictor of whether or not a student will pass or fail their a course is their track record. Another user on Kaggle posted their study (https://www.kaggle.com/keddy730/predicting-student-performance-in-mathematics) with G1 and G2 included in their model, and acheived a classification accuracy of 90%.  
   
-Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to exploring this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
+Of course, it would be very interesting (and just down-right cool) to be able to *accurately* predict any given students capabilities without ever looking at their transcripts, but the result is still valuable nonetheless. For instance, devoting a bit more time to explore this concept in depth, educators could potentially make long term success predictions using nothing other than the student's early academic tendencies. Even more importantly, this could help K-12 schools identify their "at-risk" students early on so that they don't go unnoticed, and to help ensure they get the additional support and attention they need.
 
 ## <center>Post-Op: Continued Study</center>
-*2 weeks later*  
-As I may have hinted at earlier, I wasn't exactly "satisified" with the result of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first project in machine learning just yet. I decided to refine my predictive capabilities, and focus on a more *niche* group; the honor roll students.  
+&nbsp;&nbsp;&nbsp;&nbsp; *2 weeks later*  
+As I may have hinted at earlier, I wasn't exactly "satisified" with the results of this study. Given how much time and effort I devoted to this, I wasn't quite ready to wave goodbye to my first ML project just yet. I decided to refine my predictive capabilities, and focus on a more *niche* group; the honor roll students.  
   
-In sum, I essentially just repeated the process, but using 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the group of students in the 90th percentile have a lot in common!  
-The most important of which being (in no specific order): 
+In sum, I essentially just repeated this process, but used 16 as the threshold for 'G3' rather than 12. My top performing model was a random forest, which achieved a classification accuracy of 91.6%! It turns out that the honor roll students have a lot in common!  
+  
+In no specific order, the most important features were: 
 * age
 * health
 * weekly alcohol consumption
 * parents' education levels (both)
 * quality of family relationships  
   
-For now, I'll just leave you with the results. I may decide to create a stand alone post for this later, but I'd like to keep my "First Machine Learning Project" genuine. I welcome all forms of criticism and/or advice, the best way to get in contact is by messaging me on LinkedIn!  
+I may decide to create a stand alone post for this later, but I'd like to keep my "My First Machine Learning Project" genuine. So for now, I'll just leave you with the results. I welcome all forms of criticism and/or advice, the best way to get in contact is by messaging me on LinkedIn!  
   
-If you've made it this far, thank you so very much. I hope that you found reading this as enjoyble as I found making it!
+If you've made it this far, thank you so very much. I hope that you found reading this post as enjoyble as I found making it!  
+  
+&nbsp;&nbsp;&nbsp;&nbsp; - Drew
