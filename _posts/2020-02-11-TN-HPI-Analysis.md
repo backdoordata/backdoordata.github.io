@@ -28,16 +28,16 @@ On the Quandl website, you'll find lots of open-source data that can be easily a
 **Note that if you wish to use this method, the native column labels will be URL's, so be sure to have the county names at hand in the same order that you queried the data!*  
   
 ## Data Preparation
-Zillow does a good job structuring their data and making it easily explorable, so there wasn't much cleaning needed for our datset to become workable except for assessing the NaN valued entries! Seven of the columns were completely missing since Zillow doesn't service those counties apparently, so I just dropped them from the dataframe.  
+Zillow does a good job structuring their data and making it easily explorable, so there wasn't much cleaning needed for our datset to become workable except for assessing the NaN values! Seven county datasets weren't successfully queried, so I suppose Zillow doesn't service those counties. I'll continue with the remaining 88 counties.
   
-Next, I noticed some missing entries from either the beginning or end of the collection. Since our dataframe contains the monthly HPI from 1996-2018, and we are only using the latter portion for our visualization, the missing early entries weren't of much concern. However, I went ahead and filled them too incase I decide to revisit this dataset later.  
-As you'll soon see, the counties are highly correlated with one another. Taking advantage of this, the following code approximates and fills the missing values.
+The missing entries occur at either the beginning dates or the end dates. The dataset contains HPI data from 1996-2018, but since I'm only using the data *after* the 2008 recession, the missing entries from before then aren't an issue. However, I went ahead and filled them as well incase I want to revisit the dataset.  
+As you'll soon see, the county HPI's are highly correlated. Taking advantage of this, I can use the data from a similar county to fill the missing entries of another county.
 
 
 ```python
 def Find_Most_Similar(county_name):
-    """Finds and sorts remaining counties by difference in average HPI, prints top 5, and 
-    plots the county (county_name) alongside the top 2 most similar"""
+    """Sorts counties by similarity to county_name, prints top 5, and 
+    returns a plot of county_name vs. the two most similar"""
     
     Closest_County = []
     
@@ -65,10 +65,10 @@ Making a very basic plot, we can now take a peak at the dataset!
   <img src="/images/HPI_imgs/HPI_linegraph.png">
 </p>
 
-The graph above is not exactly ideal; it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice the increasing variation after the '08 recession as the HPI curves begin to uncluster. This is what we will focus on.
+The graph above is not exactly ideal; it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice how the curves begin to uncluster after the '08 recession. This is what we want to focus on.
 
 # Creating Visualizations
-The Great Recession 'officially' ended in June of 2009, but as you can tell from the graph, the housing market continued to suffer. In the following lines of code, the dataframe is altered to only include years of post-recession recovery.
+The Great Recession 'officially' ended in June of 2009, but as you can tell from the graph, the housing market continued to suffer. I want to know when the housing markets began recovering, and then use that as the new starting date.
 
 
 ```python
@@ -89,8 +89,7 @@ start_date = max(set(min_months), key=min_months.count)
 df = df[df.index >= start_date]
 ```
 
-As I'm not concerned with previous years, I'm also not concerned with the HPI values from those years. Rather, I will use percentages as a measure of growth and improvement. The following lines produce the desired dataframe.
-
+The starting HPI value for each county will be used as a basis to measure their growth.
 
 ```python
 # create new dataframe with entries as %change in HPI from May 2012
@@ -106,27 +105,27 @@ for i in df2.columns:
 df2.columns = new_cols
 ```
 ## Visualizing Post-Recession Growth
-To make a figure more interpretable than a graph with 88 HPI curves, we can plot summary statistics instead! I created the figure below using the graphical plotting library in Matplotlib.
+To make a figure that's more informative than the previous one, I'll utilize the summary statistics. I created the figure below using Matplotlib's graphical plotting library!
 
 
 <p align="center">
   <img src="/images/HPI_imgs/HPI_Matplotlib_plot.png">
 </p>
 
-Although this is not definitively correct, I find it useful to think of this as an overhead view of a 3-Dimensional Density Plot, where time is the additional variable.  
-This isn't too far-fetched either. I say this because the HPI data is normally distributed at each point along the x-axis. Implying that, by the Empirical Rule, the opacity of the shaded regions accurately depict the density of datapoints in each interval.  
+Although this is not definitively correct, I find that it's useful to view this as an overhead 3-dimensional density plot, with time being the third variable.  
+This isn't too far-fetched either since the data is normally distributed at each point on the x-axis. Using the Empirical Rule, each shaded regions degree of opacity accurately depicts the density.  
   
-Also included are the individual data points of the two counties at either end of the distribution. Davidson County (Nashville) had the highest overall increase of 93%, nearly doubling its HPI; the lowest in the state was Weakley County, only increasing 9%.  
+Also included is the individual monthly data for the counties at opposing ends of the distribution. Davidson County, or Nashville, nearly doubled in HPI (93% growth), while Weakley County's HPI only increased by 9%.  
 
 ## Building An Interactive Choropleth Map
-To show individual county data **and** the housing market as a whole in a single figure, I utilized the extremely powerful data analysis toolset found in the Plotly Express library. Specifically, an interactive thematic geo-map of Tennessee partioned by its counties.  
+To show both county specific data, **and** the entire Tennessee housing market, I'll utilize the powerful data analysis toolset found in the Plotly Express library. Specifically, I'll build an interactive thematic geo-map of Tennessee and its' counties.  
   
-To define the geographical boundaries of the map, I used county specific codes from the Federal Information Processing Standards (FIPS) and a json file containing the corresponding latitude and longitude strings, which can be found [here](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json).  
-Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring. I did this for both dataframes to include both the percent change and the HPI of each county in the figure.  
+To define the geographical boundaries of the map, I used county specific codes from the Federal Information Processing Standards, called FIPS codes, and a json file that contains the correct latitude and longitude coordinates(which can be found [here](https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json)).  
+Plotly likes "tidy" data with as few columns as possible. Having 88 columns, this took quite a bit of restructuring, which I did for both dataframes, old and new, in order to have the percent change data **and** the HPI data in the figure.  
   
-The major downside to a choropleth map is that it can be very computationally expensive. Since this is an interactive map, it has to reiterate through the data each frame, increasingly introducing more latency.  
+The major downside to a choropleth map is that it can be very computationally demanding. Since this is an interactive map, it has to reiterate through the data constantly, introducing more latency with each update.  
   
-To mitigate complexity of the figure, I reduced the number of observation dates we pass to it.
+To mitigate the complexity of the figure, I'll simply reduce the amount of data that's used in it.
 
 
 ```python
@@ -146,14 +145,14 @@ dfFig = df2[df2['Date'].isin(biyearly_dates)]
 dfFig.reset_index(drop = True, inplace = True)
 ```
 
-The dataframe used in the figure below, dfFig, consists of two observations for each year in 2012-2018, and the five columns: 'FIPS_code', 'County_Name', 'Date', 'HPI', 'Percent_Change'.
+The dataframe used in the figure below (dfFig) contains two observations for each year in 2012-2018 for each county, and has five columns labeled 'FIPS_code', 'County_Name', 'Date', 'HPI', and 'Percent_Change'.
 
   
 {% include TennHPI_Choropleth.html %}
  
-  
+As you can see, you can manually select a date to view by using the slider, or you can click the play button to see the entire progression. You can also hover over any county to see its' data for the current date.
+
 # Conclusion
-Both types of visualizations, static and interactive, have their place in data analysis. In this project, the static Matplotlib visualizations excels in relaying the bulk summary of the data very efficiently and quickly, but lacks valuable details of the individual counties. The interactive Plotly figure contains the individual datapoints and is also easily interpretable, but it wouldn't be the type of content you'd want to bring into a meeting or to present to a crowd since it entirely relies on user input. Aside from the Static vs. Interactive comparison, geographical data is almost ALWAYS best visualized using some form of a thematic map!  
-  
-Personally, I think the most enjoyable part of making visualizations is that there's never just one right answer, or one "Go-To" figure for all the different datasets. Sure it's easy to make some pretty atrocious visualizations, but there's a thousand different ways to skin a cat, right? It's up to you to determine which way's the best way.
+Both visualizations, static and interactive, have their place in data analysis. In this project, the first graph excels by communicating a summary of the dataset very efficiently. It's highly interpretable, but it lacks the valuable details of each county. The interactive Plotly map summerizes the whole dataset, contains the individual counties' data, and is also easy to interpret. However, it's not something you'd present at a meeting or to a crowd of people since it relies on the viewer's input.  
+To me, the most enjoyable aspect of making visualizations is that there's never just one right answer, or a "go-to graph".
 
