@@ -104,7 +104,7 @@ for i in df2.columns:
     
 df2.columns = new_cols
 ```
-## Visualizing Post-Recession Growth
+## Plotting Summary Statistics
 To make a figure that's more informative than the previous one, I'll utilize the summary statistics. I created the figure below using Matplotlib's graphical plotting library!
 
 
