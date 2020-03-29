@@ -1,5 +1,5 @@
 ---
-title: "Visualizing Post-Recession Housing Markets"
+title: "Tennessee Housing Market: Post-Recession"
 date: 2020-02-11
 tags: [Data Analysis & Visualization]
 breadcrumbs: true
