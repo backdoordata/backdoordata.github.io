@@ -17,10 +17,10 @@ toc_icon: "hiking"
 toc_sticky: true
 ---
 
-If you live in Tennessee, you've probably noticed the recent growth in popularity of Middle Tennessee. If you don't live in Tennessee, or have been completely oblivious to this fact, you've come to the right place!
+# <center>HPI Data</center>
+If you live in Tennessee, you've probably noticed the growth in popularity of Middle Tennessee. If you don't live in Tennessee, or you've been completely oblivious to this fact, you've come to the right place!  
   
-# The Data
-The Housing Price Index (HPI) data used in this project was collected by Zillow, and can be found in the Quandl databases.  
+My aim for this project is to familiarize myself with the Pandas library, a few of the popular visualization libraries in Python, and to show the change in Tennessee since the '08 recession using historical Housing Price Index (HPI) data. The data I used in this project was collected by Zillow, which I queried from the Quandl database.  
 
 ## Query
 On the Quandl website, you'll find lots of open-source data that can be easily accessed with a free account. To grab the data for all 95 Tennessee counties, I made a query for each individual county dataset by itteratively calling the quandl.get method on the respective URL's, and then merging them to a pandas dataframe at the end of each iteration. Since all of the data is of the same measure and same state, the URL's only differed by a 3-4 digit string, which can easily be scraped from the [documentation page](https://www.quandl.com/data/ZILLOW-Zillow-Real-Estate-Research/documentation).  
@@ -67,7 +67,7 @@ Making a very basic plot, we can now take a peak at the dataset!
 
 The graph above is not exactly ideal; it's so detailed that it's hard to see anything besides the obvious correlation between the counties. However, notice how the curves begin to uncluster after the '08 recession. This is what we want to focus on.
 
-# Creating Visualizations
+# <center>Making the Visualizations</center>
 The Great Recession 'officially' ended in June of 2009, but as you can tell from the graph, the housing market continued to suffer. I want to know when the housing markets began recovering, and then use that as the new starting date.
 
 
@@ -153,6 +153,16 @@ The dataframe used in the figure below (dfFig) contains two observations for eac
 As you can see, you can manually select a date to view by using the slider, or you can click the play button to see the entire progression. You can also hover over any county to see its' data for the current date.
 
 # Conclusion
-Both visualizations, static and interactive, have their place in data analysis. In this project, the first graph excels by communicating a summary of the dataset very efficiently. It's highly interpretable, but it lacks the valuable details of each county. The interactive Plotly map summerizes the whole dataset, contains the individual counties' data, and is also easy to interpret. However, it's not something you'd present at a meeting or to a crowd of people since it relies on the viewer's input.  
-To me, the most enjoyable aspect of making visualizations is that there's never just one right answer, or a "go-to graph".
+Both visualizations, static and interactive, have their place in data analysis. In this project, the first graph excels by communicating a summary of the dataset very efficiently. It's highly interpretable, but it lacks the valuable details of each county. The interactive Plotly map summerizes the whole dataset, contains the individual county data, and is also easy to interpret. However, it's not something you'd present at a meeting or to a crowd of people since it relies on the viewer's input.  
+  
+To me, the most enjoyable aspect of making data visualizations is that there's never just one right answer, or one "go-to graph". The best visual to use entirely depends on how well you answer the questions:  
+  
+*  "Who's going to be viewing this visual?"  
+*  "What setting will the intended audience be in?"  
+*  "Do I need to sacrifice detail for simplicity?"  
+*  "What is the most vital information to portray?"  
+*  "How can I relay this information so that the results are undeniable, but without sacrificing integrity?"  
+
+
+
 
