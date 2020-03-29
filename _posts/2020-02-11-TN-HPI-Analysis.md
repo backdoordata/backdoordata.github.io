@@ -17,7 +17,7 @@ toc_icon: "hiking"
 toc_sticky: true
 ---
 
-# <center>HPI Data</center>
+# <center>Housing Price Index</center>
 If you live in Tennessee, you've probably noticed the growth in popularity of Middle Tennessee. If you don't live in Tennessee, or you've been completely oblivious to this fact, you've come to the right place!  
   
 My aim for this project is to familiarize myself with the Pandas library, a few of the popular visualization libraries in Python, and to show the change in Tennessee since the '08 recession using historical Housing Price Index (HPI) data. The data I used in this project was collected by Zillow, which I queried from the Quandl database.  
